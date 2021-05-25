@@ -8,6 +8,11 @@ package io.github.amrjlg.response;
  * @author jiang
  **/
 public interface Result<T> {
+
+    default int getCode() {
+        return 200;
+    }
+
     /**
      * judge this result is successful
      *

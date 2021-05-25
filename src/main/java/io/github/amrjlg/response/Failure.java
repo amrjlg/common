@@ -8,6 +8,13 @@ package io.github.amrjlg.response;
  * @author jiang
  **/
 public interface Failure<T> extends Result<T> {
+
+    @Override
+    default int getCode() {
+//        return Result.super.getCode();
+        return 400;
+    }
+
     @Override
     default boolean isSuccess() {
         return false;
