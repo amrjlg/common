@@ -2,12 +2,13 @@ package io.github.amrjlg.id;
 
 /**
  * the id composition and structure
- * <p>
- * 10                  20                  30                  40                  50                  60      64
+ * <pre>
+ * 10                  20                  30                  40                  50                  60                64
  * 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
  * 0|0 0 0 0 0 0 0 0 0 0 0 0|0 0 0|0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0|0 0 0 0 0 0 0
  *        dataCenter          machineId                               timestamp                                           sequence
  * 1        12                  3                                       41                                                  7
+ * <pre />
  */
 public class Snowflake {
     /**

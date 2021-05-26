@@ -5,17 +5,19 @@ import java.math.BigInteger;
 
 /**
  * the id composition and structure
- * <p>
- * 10                  20                  30                  40                  50                  60      64
+ * <pre>
+ * 10                  20                  30                  40                  50                  60                64
  * 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
  * 0|0 0 0 0 0|0 0 0 0 0|0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0|0 0 0 0 0 0 0 0 0 0 0 0
  *      dataCenter  machineId                               timestamp                                           sequence
  * 1        5          5                                       41                                                  12
+ * <pre>
  */
 public class SnowIdWorker {
 
     /**
-     * 返回12位压缩后的可见字符
+     * 转为36进制数 最长12位
+     * {@link Character#MAX_RADIX}
      *
      * @return
      */
