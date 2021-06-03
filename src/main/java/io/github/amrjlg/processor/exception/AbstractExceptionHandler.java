@@ -4,7 +4,7 @@ import io.github.amrjlg.processor.Support;
 
 /**
  * 异常处理抽象类
- * <p></p>
+ * <br>
  * 针对不同异常进行响应实现
  */
 public abstract class AbstractExceptionHandler<T extends Exception> implements ExceptionHandler<T>, Support<T> {

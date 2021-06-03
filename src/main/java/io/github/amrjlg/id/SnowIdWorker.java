@@ -5,13 +5,12 @@ import java.math.BigInteger;
 
 /**
  * the id composition and structure
- * <pre>
- * 10                  20                  30                  40                  50                  60                64
- * 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
- * 0|0 0 0 0 0|0 0 0 0 0|0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0|0 0 0 0 0 0 0 0 0 0 0 0
- *      dataCenter  machineId                               timestamp                                           sequence
- * 1        5          5                                       41                                                  12
- * <pre>
+ * <br>
+ * 10                  20                  30                  40                  50                  60                64<br>
+ * 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0<br>
+ * 0|0 0 0 0 0|0 0 0 0 0|0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0|0 0 0 0 0 0 0 0 0 0 0 0<br>
+ * dataCenter  machineId                               timestamp                                           sequence<br>
+ * 1        5          5                                       41                                                  12<br>
  */
 public class SnowIdWorker {
 
@@ -19,7 +18,7 @@ public class SnowIdWorker {
      * 转为36进制数 最长12位
      * {@link Character#MAX_RADIX}
      *
-     * @return
+     * @return 36进制数
      */
     public String nextCondensedString() {
         long id = nextId();

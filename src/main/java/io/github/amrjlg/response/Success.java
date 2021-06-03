@@ -23,7 +23,8 @@ public interface Success<T> extends Result<T> {
      * simple implements
      *
      * @param data response data could be null
-     * @return success result
+     * @param <T> type
+     * @return success
      */
     static <T> Success<T> ok(T data) {
         return () -> data;
