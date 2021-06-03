@@ -1,5 +1,6 @@
 package io.github.amrjlg.utils;
 
+
 /**
  * the byte utils
  * <p>
@@ -127,23 +128,28 @@ public class ByteUtil {
         return (src & 128) >> 7;
     }
 
-    public static String bytesToHexString(byte[] src) {
-        StringBuilder stringBuilder = new StringBuilder();
-        if (src == null || src.length <= 0) {
-            return null;
+    /**
+     * Parses the byte array into a hexadecimal string, with each hexadecimal separated by a space character
+     *
+     * @param src byte array
+     * @return hex string
+     */
+    public static String toHex(byte... src) {
+        if (ArrayUtil.empty(src)) {
+            return "";
         }
-        for (byte b : src) {
-            String hv = Integer.toHexString(b);
-            if (hv.length() < 2) {
-                stringBuilder.append(0);
-            }
-            if (hv.length() > 2) {
-                hv = hv.substring(hv.length() - 2);
-            }
-            stringBuilder.append(hv);
-            stringBuilder.append(" ");
-        }
-        return stringBuilder.toString();
+        return toHex(src, " ");
+    }
+
+    /**
+     * The byte array is parsed into hexadecimal strings, each separated by a specific sequence of characters
+     *
+     * @param src       fellow byte
+     * @param separator the specific separate char sequence
+     * @return hex string
+     */
+    public static String toHex(byte[] src, CharSequence separator) {
+        return HexUtil.parse(src, separator);
     }
 
 
@@ -152,26 +158,46 @@ public class ByteUtil {
         return src & 0xF0;
     }
 
-    public static int higherHalf(int src) {
-        return src & 0xFFFF0000;
-    }
+//    public static int higherHalf(int src) {
+//        return src & 0xFFFF0000;
+//    }
 
     public static int lowerHalf(byte src) {
         // 0X0F=00001111
         return src & 0x0F;
     }
 
-    public static int lowerHalf(int src) {
-        // 0X0F=00001111
-        return src & 0x0000FFFF;
-    }
+//    public static int lowerHalf(int src) {
+//        // 0X0F=00001111
+//        return src & 0x0000FFFF;
+//    }
 
     public static byte toByte(int src) {
-         return (byte) (0XFF & src);
+        return (byte) (0XFF & src);
     }
 
     public static int toInt(byte src) {
         return src & 0XFF;
+    }
+
+    public static byte[] toBytes(int v) {
+        byte a = (byte) ((v & 0xff000000) >> 24);
+        byte b = (byte) ((v & 0xff0000) >> 16);
+        byte c = (byte) ((v & 0xff00) >> 8);
+        byte d = (byte) (v & 0xff);
+        return ArrayUtil.array(a, b, c, d);
+    }
+
+    public static byte[] toBytes(long v) {
+        byte a = (byte) ((v & 0xff00000000000000L) >> 56);
+        byte b = (byte) ((v & 0xff000000000000L) >> 48);
+        byte c = (byte) ((v & 0xff0000000000L) >> 40);
+        byte d = (byte) ((v & 0xff00000000L) >> 32);
+        byte e = (byte) ((v & 0xff000000) >> 24);
+        byte f = (byte) ((v & 0xff0000) >> 16);
+        byte g = (byte) ((v & 0xff00) >> 8);
+        byte h = (byte) ((v & 0xff));
+        return ArrayUtil.array(a, b, c, d, e, f, g, h);
     }
 
 }
