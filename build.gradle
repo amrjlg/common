@@ -5,7 +5,7 @@ plugins {
 }
 
 group 'io.github.amrjlg'
-version '1.0-SNAPSHOT'
+version '1.1-SNAPSHOT'
 archivesBaseName = "commons"
 
 
@@ -26,14 +26,14 @@ test {
 tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
 }
-
+// for more information https://docs.gradle.org/current/javadoc/org/gradle/external/javadoc/StandardJavadocDocletOptions.html
 tasks.withType(Javadoc) {
     options {
         encoding "UTF-8"
         charSet "UTF-8"
         author true
         version true
-
+        // 需要https才能生效
         links "https://docs.oracle.com/javase/8/docs/api"
         title "common"
     }
