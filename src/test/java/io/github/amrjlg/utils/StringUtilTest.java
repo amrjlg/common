@@ -10,9 +10,6 @@ class StringUtilTest {
     void toCharStringArray() {
         System.out.println(String.join(",", StringUtil.toCharStringArray(value)));
         System.out.println(String.join(",", StringUtil.toCharStringArray("我爱你")));
-        for (char c : "我爱你".toCharArray()) {
-            System.out.println(c);
-        }
     }
 
     @Test
@@ -47,15 +44,15 @@ class StringUtilTest {
     @Test
     void text() {
 
-         // It is '\t', U+0009 HORIZONTAL TABULATION.
-         // It is '\n', U+000A LINE FEED.
-         // It is '\u000B', U+000B VERTICAL TABULATION.
-         // It is '\f', U+000C FORM FEED.
-         // It is '\r', U+000D CARRIAGE RETURN.
-         // It is '\u001C', U+001C FILE SEPARATOR.
-         // It is '\u001D', U+001D GROUP SEPARATOR.
-         // It is '\u001E', U+001E RECORD SEPARATOR.
-         // It is '\u001F', U+001F UNIT SEPARATOR.
+        // It is '\t', U+0009 HORIZONTAL TABULATION.
+        // It is '\n', U+000A LINE FEED.
+        // It is '\u000B', U+000B VERTICAL TABULATION.
+        // It is '\f', U+000C FORM FEED.
+        // It is '\r', U+000D CARRIAGE RETURN.
+        // It is '\u001C', U+001C FILE SEPARATOR.
+        // It is '\u001D', U+001D GROUP SEPARATOR.
+        // It is '\u001E', U+001E RECORD SEPARATOR.
+        // It is '\u001F', U+001F UNIT SEPARATOR.
         System.out.println(StringUtil.text(value));
         System.out.println(StringUtil.text("\t\t"));
         System.out.println(StringUtil.text("\n\n"));
