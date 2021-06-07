@@ -34,7 +34,7 @@ tasks.withType(Javadoc) {
         author true
         version true
 
-        links "http://docs.oracle.com/javase/8/docs/api"
+        links "https://docs.oracle.com/javase/8/docs/api"
         title "common"
     }
 
@@ -59,7 +59,7 @@ signing {
     sign configurations.archives
 }
 
-uploadArchives {
+/*uploadArchives {
     repositories {
         mavenDeployer {
             beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
@@ -88,7 +88,7 @@ uploadArchives {
                 licenses {
                     license {
                         name 'The Apache License, Version 2.0'
-                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        url 'https://www.apache.org/licenses/LICENSE-2.0.txt'
                     }
                 }
 
@@ -102,4 +102,4 @@ uploadArchives {
             }
         }
     }
-}
+}*/
