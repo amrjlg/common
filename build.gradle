@@ -1,17 +1,20 @@
 plugins {
     id 'java'
+    id 'maven'
+    id 'signing'
 }
 
 group 'io.github.amrjlg'
 version '1.0-SNAPSHOT'
+archivesBaseName = "commons"
+
 
 repositories {
-    mavenLocal()
-    maven { url "https://maven.aliyun.com/repository/public" }
     mavenCentral()
 }
 
 dependencies {
+    testImplementation 'org.apache.commons:commons-lang3:3.6'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
 }
@@ -22,4 +25,81 @@ test {
 
 tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
+}
+
+tasks.withType(Javadoc) {
+    options {
+        encoding "UTF-8"
+        charSet "UTF-8"
+        author true
+        version true
+
+        links "http://docs.oracle.com/javase/8/docs/api"
+        title "common"
+    }
+
+}
+
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives javadocJar, sourcesJar
+}
+
+signing {
+    sign configurations.archives
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+            repository(url: "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: "${ossrhUsername}", password: "${ossrhPassword}")
+            }
+
+            snapshotRepository(url: "https://s01.oss.sonatype.org/content/repositories/snapshots/") {
+                authentication(userName: "${ossrhUsername}", password: "${ossrhPassword}")
+            }
+
+            pom.project {
+                name 'common utils.'
+                packaging 'jar'
+                // optionally artifactId can be defined here
+                description 'common utils.'
+                url 'https://github.com/amrjlg/common'
+
+                scm {
+                    connection 'https://github.com/amrjlg/common.git'
+                    developerConnection 'https://github.com/amrjlg/common.git'
+                    url 'https://github.com/amrjlg/common'
+                }
+
+                licenses {
+                    license {
+                        name 'The Apache License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id 'amrjlg'
+                        name 'amrjlg'
+                        email '2899297045@qq.com'
+                    }
+                }
+            }
+        }
+    }
 }

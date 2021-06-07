@@ -32,6 +32,8 @@ public interface Success<T> extends Result<T> {
 
     /**
      * the result signed success
+     * @param <T> dat type
+     * @return only sign success
      */
     static <T> Success<T> ok() {
         return () -> null;
