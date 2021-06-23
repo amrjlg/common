@@ -26,7 +26,7 @@ import io.github.amrjlg.processor.Support;
  * @param <T> type of exception
  * @author jiang
  */
-public abstract class AbstractExceptionHandler<T extends Exception> implements ExceptionHandler<T>, Support<T> {
+public abstract class AbstractExceptionHandler<T extends Exception> implements ExceptionHandler<T> {
 
     private final Support<Class<? extends Exception>> predicate;
 
@@ -34,6 +34,9 @@ public abstract class AbstractExceptionHandler<T extends Exception> implements E
         this.predicate = predicate;
     }
 
+    public AbstractExceptionHandler(Class<? extends Exception> tClass) {
+        this.predicate = tClass::isAssignableFrom;
+    }
 
     @Override
     public final boolean support(T t) {
@@ -43,20 +46,3 @@ public abstract class AbstractExceptionHandler<T extends Exception> implements E
         return predicate.support(t.getClass());
     }
 }
-// 另一种接口方式
-//public abstract class AbstractExceptionHandler<T extends Exception> implements ExceptionHandler<T>, Support<T> {
-//
-//    private final Class<?> supportedClass;
-//
-//    protected AbstractExceptionHandler(Class<?> supportedClass) {
-//        this.supportedClass = supportedClass;
-//    }
-//
-//    @Override
-//    public final boolean support(T t) {
-//        if (t == null) {
-//            return false;
-//        }
-//        return this.supportedClass.isAssignableFrom(t.getClass());
-//    }
-//}
