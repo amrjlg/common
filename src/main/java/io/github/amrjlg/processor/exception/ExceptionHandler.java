@@ -17,6 +17,7 @@
 package io.github.amrjlg.processor.exception;
 
 import io.github.amrjlg.processor.Handler;
+import io.github.amrjlg.processor.Support;
 
 /**
  * exception handler
@@ -25,7 +26,7 @@ import io.github.amrjlg.processor.Handler;
  *
  * @author jiang
  **/
-public interface ExceptionHandler<T extends Exception> extends Handler<String, T> {
+public interface ExceptionHandler<T extends Exception> extends Handler<String, T>, Support<T> {
     /**
      * 处理异常
      *
