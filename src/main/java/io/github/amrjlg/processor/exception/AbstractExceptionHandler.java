@@ -39,10 +39,10 @@ public abstract class AbstractExceptionHandler<T extends Exception> implements E
     }
 
     @Override
-    public final boolean support(T t) {
-        if (t == null) {
+    public final boolean support(Exception e) {
+        if (e == null) {
             return false;
         }
-        return predicate.support(t.getClass());
+        return predicate.support(e.getClass());
     }
 }

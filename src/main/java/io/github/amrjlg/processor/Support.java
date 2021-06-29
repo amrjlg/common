@@ -19,7 +19,7 @@ package io.github.amrjlg.processor;
 import java.util.function.Predicate;
 
 /**
- * interface to predicate  one object of {@link T} is could do something
+ * interface to predicate  one object of {@link T}  can do something
  *
  * @param <T> type
  * @author jiang

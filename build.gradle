@@ -5,7 +5,7 @@ plugins {
 }
 
 group 'io.github.amrjlg'
-version '1.2-RELEASE'
+version '1.2.1-RELEASE'
 archivesBaseName = "commons"
 
 
