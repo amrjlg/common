@@ -26,7 +26,7 @@ import io.github.amrjlg.processor.Support;
  *
  * @author jiang
  **/
-public interface ExceptionHandler<T extends Exception> extends Handler<String, T>, Support<T> {
+public interface ExceptionHandler<T extends Exception> extends Handler<String, T>, Support<Exception> {
     /**
      * 处理异常
      *

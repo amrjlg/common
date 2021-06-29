@@ -16,6 +16,7 @@
 
 package io.github.amrjlg.utils;
 
+import java.util.Arrays;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -89,10 +90,7 @@ public class ArrayUtil {
     }
 
     public static <T> void consumer(T[] ts, Consumer<T> consumer) {
-        int length = ts.length;
-        for (int i = 0; i < length; i++) {
-            consumer.accept(ts[i]);
-        }
+        Arrays.stream(ts).forEach(consumer);
     }
 
     public static boolean empty(boolean[] booleans) {
