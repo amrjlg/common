@@ -2,6 +2,8 @@ plugins {
     id 'java'
 }
 
+apply from: '../gradle/sign.gradle'
+
 group 'io.github.amrjlg'
 version '1.3-SNAPSHOT'
 
