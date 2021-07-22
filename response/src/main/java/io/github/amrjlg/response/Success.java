@@ -17,12 +17,15 @@
 package io.github.amrjlg.response;
 
 
+import java.util.Collection;
+
 /**
  * Success result
  * <p>
  * 2021/3/4
  *
  * @author jiang
+ * @see Result
  **/
 public interface Success<T> extends Result<T> {
     @Override
@@ -36,23 +39,54 @@ public interface Success<T> extends Result<T> {
     }
 
     /**
-     * simple implements
+     * Result with no data
      *
-     * @param data response data could be null
-     * @param <T> type
-     * @return success
-     */
-    static <T> Success<T> ok(T data) {
-        return () -> data;
-    }
-
-    /**
-     * the result signed success
      * @param <T> dat type
-     * @return only sign success
+     * @return {@link Result}
      */
     static <T> Success<T> ok() {
         return () -> null;
     }
 
+    /**
+     * Single Result
+     *
+     * @param data response data could be null
+     * @param <T>  type
+     * @return success with single data
+     */
+    static <T> Success<T> ok(T data) {
+        if (data == null) {
+            return ok();
+        }
+        return () -> data;
+    }
+
+    /**
+     * Collection Result
+     *
+     * @param data response data could be null
+     * @param <T>  type
+     * @return success with collection data
+     */
+    static <T> Success<Collection<T>> ok(Collection<T> data) {
+        if (data == null) {
+            return ok();
+        }
+        return () -> data;
+    }
+
+    /**
+     * Array Result
+     *
+     * @param data response data could be null
+     * @param <T>  type
+     * @return success with array data
+     */
+    static <T> Success<T[]> ok(T[] data) {
+        if (data == null) {
+            return ok();
+        }
+        return () -> data;
+    }
 }

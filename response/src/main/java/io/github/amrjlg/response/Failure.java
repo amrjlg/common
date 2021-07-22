@@ -17,7 +17,7 @@
 package io.github.amrjlg.response;
 
 /**
- * failure
+ * failure result
  * <p>
  * 2021/3/4
  *
@@ -27,7 +27,6 @@ public interface Failure<T> extends Result<T> {
 
     @Override
     default int getCode() {
-//        return Result.super.getCode();
         return 400;
     }
 
@@ -50,7 +49,7 @@ public interface Failure<T> extends Result<T> {
     String getMsg();
 
     /**
-     * simple implements
+     * default implements
      *
      * @param msg failure message
      * @param <T> directed set null

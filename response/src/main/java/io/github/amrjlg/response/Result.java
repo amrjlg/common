@@ -17,14 +17,17 @@
 package io.github.amrjlg.response;
 
 /**
- * 返回值
+ * common result
  * <p>
  * 2021/3/4
  *
  * @author jiang
  **/
 public interface Result<T> {
-
+    /**
+     * status code
+     * @return <code>int</code>
+     */
     default int getCode() {
         return 200;
     }
