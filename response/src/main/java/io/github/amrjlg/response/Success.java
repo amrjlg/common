@@ -24,7 +24,7 @@ import java.util.Collection;
  * <p>
  * 2021/3/4
  *
- * @author jiang
+ * @author amrjlg
  * @see Result
  **/
 public interface Success<T> extends Result<T> {

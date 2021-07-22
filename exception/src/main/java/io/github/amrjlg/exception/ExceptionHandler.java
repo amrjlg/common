@@ -24,7 +24,7 @@ import io.github.amrjlg.api.Support;
  * <p>
  * 2021/3/4
  *
- * @author jiang
+ * @author amrjlg
  **/
 public interface ExceptionHandler<T extends Exception> extends Handler<String, T>, Support<Exception> {
     /**

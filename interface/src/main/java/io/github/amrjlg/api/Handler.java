@@ -23,7 +23,7 @@ import java.util.function.Function;
  *
  * @param <Result> output type
  * @param <Src>    source type
- * @author jiang
+ * @author amrjlg
  */
 public interface Handler<Result, Src> extends Function<Src, Result> {
 

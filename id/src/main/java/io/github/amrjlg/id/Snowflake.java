@@ -24,7 +24,7 @@ package io.github.amrjlg.id;
  * 0|0 0 0 0 0 0 0 0 0 0 0 0|0 0 0|0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0|0 0 0 0 0 0 0<br>
  * dataCenter          machineId                               timestamp                                           sequence<br>
  * 1        12                  3                                       41                                                  7<br>
- * @author jiang
+ * @author amrjlg
  */
 
 public class Snowflake {

@@ -22,7 +22,7 @@ import java.util.function.Predicate;
  * interface to predicate  one object of {@link T}  can do something
  *
  * @param <T> type
- * @author jiang
+ * @author amrjlg
  */
 public interface Support<T> extends Predicate<T> {
     /**

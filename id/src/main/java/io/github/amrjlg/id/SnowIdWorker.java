@@ -27,7 +27,7 @@ import java.math.BigInteger;
  * 0|0 0 0 0 0|0 0 0 0 0|0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0|0 0 0 0 0 0 0 0 0 0 0 0<br>
  * dataCenter  machineId                               timestamp                                           sequence<br>
  * 1        5          5                                       41                                                  12<br>
- * @author jiang
+ * @author amrjlg
  */
 public class SnowIdWorker {
 

@@ -26,7 +26,7 @@ import java.util.regex.Pattern;
 /**
  * some format of date  , date format and date pattern
  *
- * @author jiang
+ * @author amrjlg
  */
 public class DateTimeUtil {
 

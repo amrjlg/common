@@ -24,7 +24,7 @@ import io.github.amrjlg.api.Support;
  * 针对不同异常进行响应实现
  *
  * @param <T> type of exception
- * @author jiang
+ * @author amrjlg
  */
 public abstract class AbstractExceptionHandler<T extends Exception> implements ExceptionHandler<T> {
 

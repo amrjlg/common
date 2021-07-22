@@ -22,7 +22,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
- * @author jiang
+ * @author amrjlg
  */
 public class ArrayUtil {
     public static boolean[] array(boolean... booleans) {
