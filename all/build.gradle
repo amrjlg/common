@@ -1,0 +1,21 @@
+plugins {
+    id 'java'
+}
+apply from: '../gradle/sign.gradle'
+
+group 'io.github.amrjlg'
+version parent.version
+
+description 'all'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile project(":util")
+    compile project(":response")
+    compile project(":interface")
+    compile project(":exception")
+    compile project(":id")
+}
