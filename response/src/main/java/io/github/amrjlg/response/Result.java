@@ -21,7 +21,7 @@ package io.github.amrjlg.response;
  * <p>
  * 2021/3/4
  *
- * @author jiang
+ * @author amrjlg
  **/
 public interface Result<T> {
     /**

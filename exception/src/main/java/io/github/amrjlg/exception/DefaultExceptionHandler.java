@@ -17,7 +17,7 @@
 package io.github.amrjlg.exception;
 
 /**
- * @author jiang
+ * @author amrjlg
  */
 public class DefaultExceptionHandler extends AbstractExceptionHandler<Exception> {
 

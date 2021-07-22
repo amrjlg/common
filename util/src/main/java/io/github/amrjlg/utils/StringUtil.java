@@ -22,7 +22,7 @@ import java.util.StringTokenizer;
 /**
  * string util
  *
- * @author jiang
+ * @author amrjlg
  */
 public class StringUtil {
     /**

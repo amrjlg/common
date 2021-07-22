@@ -22,7 +22,7 @@ package io.github.amrjlg.utils;
  * <p>
  * 2021/3/2
  *
- * @author jiang
+ * @author amrjlg
  **/
 public class ByteUtil {
     /**

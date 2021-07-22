@@ -22,7 +22,7 @@ import static io.github.amrjlg.utils.ByteUtil.lowerHalf;
 /**
  * hex util
  *
- * @author jiang
+ * @author amrjlg
  */
 public class HexUtil {
 
