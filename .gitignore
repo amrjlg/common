@@ -2,4 +2,5 @@
 /traget/
 /.idea/
 /.gradle/
-/build/
+*/build/
+build
