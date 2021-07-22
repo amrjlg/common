@@ -25,7 +25,7 @@ tasks.withType(Javadoc) {
         version true
         // 需要https才能生效
         links "https://docs.oracle.com/javase/8/docs/api"
-        title "common"
+        title project.group + '-' + project.name
     }
 
 }
