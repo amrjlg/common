@@ -1,2 +1,8 @@
 rootProject.name = 'common'
+include 'util'
+include 'response'
+include 'interface'
+include 'exception'
+include 'id'
+include 'all'
 
