@@ -15,20 +15,23 @@
  *
  */
 
-package io.github.amrjlg.exception.handler;
+package io.github.amrjlg.exception;
 
-import io.github.amrjlg.exception.NoStackTraceException;
 import org.junit.jupiter.api.Test;
 
 /**
  * @author amrjlg
  **/
-class DefaultExceptionHandlerTest {
+class NoStackTraceExceptionTest {
+
 
     @Test
-    void resolve() {
-        String message = "error";
-        String error = new DefaultExceptionHandler().resolve(new NoStackTraceException(message));
-        assert message.equals(error);
+    void exception() {
+        NoStackTraceException test = new NoStackTraceException("");
+        Throwable throwable = test.fillInStackTrace();
+        throwable.printStackTrace();
+        test.printStackTrace();
     }
+
+
 }
