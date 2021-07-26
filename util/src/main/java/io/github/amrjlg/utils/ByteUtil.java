@@ -25,6 +25,9 @@ package io.github.amrjlg.utils;
  * @author amrjlg
  **/
 public class ByteUtil {
+    public static final int MAX_BIT = 8;
+    public static final int MIN_BIT = 1;
+
     /**
      * Gets the specified location(range 1 to 8) of the byte
      *
@@ -42,7 +45,7 @@ public class ByteUtil {
      * @return int  bit value 1 or 0
      */
     public static int bit(byte src, int bit) {
-        if (bit < 1 || bit > 8) {
+        if (bit < MIN_BIT || bit > MAX_BIT) {
             return 0;
         }
         return (src >> (bit - 1)) & 1;
@@ -174,19 +177,12 @@ public class ByteUtil {
         return src & 0xF0;
     }
 
-//    public static int higherHalf(int src) {
-//        return src & 0xFFFF0000;
-//    }
 
     public static int lowerHalf(byte src) {
         // 0X0F=00001111
         return src & 0x0F;
     }
 
-//    public static int lowerHalf(int src) {
-//        // 0X0F=00001111
-//        return src & 0x0000FFFF;
-//    }
 
     public static byte toByte(int src) {
         return (byte) (0XFF & src);
