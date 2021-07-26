@@ -16,8 +16,7 @@
 
 package io.github.amrjlg.exception;
 
-import io.github.amrjlg.api.Handler;
-import io.github.amrjlg.api.Support;
+import io.github.amrjlg.api.SupportHandler;
 
 /**
  * exception handler
@@ -26,14 +25,6 @@ import io.github.amrjlg.api.Support;
  *
  * @author amrjlg
  **/
-public interface ExceptionHandler<T extends Exception> extends Handler<String, T>, Support<Exception> {
-    /**
-     * 处理异常
-     *
-     * @param e 异常
-     * @return 异常处理结果
-     */
-    @Override
-    String resolve(T e);
+public interface ExceptionHandler<T extends Exception> extends SupportHandler<T, String, Exception> {
 
 }
