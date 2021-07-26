@@ -171,15 +171,15 @@ public class ArrayUtil {
      *
      * @param src       源数组
      * @param start     起始索引 0开始
-     * @param desc      目标数组
+     * @param des      目标数组
      * @param destStart 目标索引 0开始
      * @param length    总长度
      * @param transform 转换器
      * @param <T>       源类型
      * @param <R>       目标类型
      */
-    public static <T, R> void map(T[] src, int start, R[] desc, int destStart, int length, Function<T, R> transform) {
-        if (src == null) {
+    public static <T, R> void map(T[] src, int start, R[] des, int destStart, int length, Function<T, R> transform) {
+        if (src == null || src.length == 0 || des == null || des.length == 0 || length < 1) {
             return;
         }
         int srcTotal = src.length;
@@ -189,7 +189,7 @@ public class ArrayUtil {
         if (srcTotal < start + length) {
             throw new IllegalArgumentException(String.format("src array not enough only %d form %d and total is %d", srcTotal - start, start, srcTotal));
         }
-        int desTotal = desc.length;
+        int desTotal = des.length;
         if (desTotal <= destStart) {
             throw new IndexOutOfBoundsException(String.format("index start:{%d} out of range,should be {0,%d}", destStart, desTotal - 1));
         }
@@ -197,7 +197,7 @@ public class ArrayUtil {
             throw new IllegalArgumentException(String.format("src array not enough only %d form %d and total is %d", desTotal - destStart, destStart, desTotal));
         }
         for (int i = start; i < start + length; i++) {
-            desc[i] = transform.apply(src[i]);
+            des[i] = transform.apply(src[i]);
         }
 
     }
