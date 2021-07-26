@@ -18,8 +18,10 @@
 package io.github.amrjlg.api;
 
 /**
+ * predicate handler
+ *
  * @author amrjlg
  **/
-public interface SupportHandler<S,R,T> extends Handler<R,S>,Support<T> {
+public interface SupportHandler<S, R, T> extends Handler<R, S>, Support<T> {
 
 }

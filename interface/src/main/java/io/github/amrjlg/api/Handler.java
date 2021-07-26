@@ -19,16 +19,27 @@ package io.github.amrjlg.api;
 import java.util.function.Function;
 
 /**
- * handler object of {@link Src} type to {@link Result} object
+ * parse one <code>Src</code> to <code>Result</code>
  *
  * @param <Result> output type
  * @param <Src>    source type
  * @author amrjlg
  */
 public interface Handler<Result, Src> extends Function<Src, Result> {
-
+    /**
+     * parse one <code>Src</code> to <code>Result</code>
+     *
+     * @param src param
+     * @return result
+     */
     Result resolve(Src src);
 
+    /**
+     * parse one <code>Src</code> to <code>Result</code>
+     *
+     * @param src param
+     * @return result
+     */
     @Override
     default Result apply(Src src) {
         return resolve(src);
