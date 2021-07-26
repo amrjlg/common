@@ -133,6 +133,9 @@ public class DateTimeUtil {
         if (isDate(date)) {
             return LocalDate.parse(date, DATE_FORMATTER);
         }
+        if (isDateTime(date)) {
+            return LocalDateTime.parse(date, DATE_TIME_FORMATTER).toLocalDate();
+        }
         return null;
     }
 
@@ -146,6 +149,9 @@ public class DateTimeUtil {
     public static LocalTime toTime(String time) {
         if (isTime(time)) {
             return LocalTime.parse(time, TIME_FORMATTER);
+        }
+        if (isDateTime(time)) {
+            return LocalDateTime.parse(time, DATE_TIME_FORMATTER).toLocalTime();
         }
         return null;
     }
