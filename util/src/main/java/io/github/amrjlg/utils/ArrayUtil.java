@@ -150,6 +150,14 @@ public class ArrayUtil {
         return rs;
     }
 
+    public static <T, R> R[] map(Supplier<T[]> ts, Function<T, R> transform, Supplier<R[]> rs) {
+        R[] r = rs.get();
+        if (ts == null) {
+            return r;
+        }
+        return map(ts.get(), transform, rs);
+    }
+
     public static <T, R> R[] map(T[] ts, Function<T, R> transform, Supplier<R[]> supplier) {
         R[] rs = supplier.get();
         if (rs == null) {
