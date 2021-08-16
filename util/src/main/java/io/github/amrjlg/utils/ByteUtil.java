@@ -192,6 +192,40 @@ public class ByteUtil {
         return src & 0XFF;
     }
 
+    public static int[] toInts(byte[] bytes) {
+        if (ArrayUtil.empty(bytes)) {
+            return new int[0];
+        }
+        int count = bytes.length / 4 + 1;
+        int[] numbers = new int[count];
+        for (int i = 0; i < numbers.length; i++) {
+            int j = i * 4;
+            if (j >= bytes.length) {
+                break;
+            }
+
+            int v = 0;
+            v = v | toInt(bytes[j]);
+            if (j + 1 >= bytes.length) {
+                numbers[i] = v;
+                break;
+            }
+            v = v << 8 | toInt(bytes[j + 1]);
+            if (j + 2 >= bytes.length) {
+                numbers[i] = v;
+                break;
+            }
+            v = v << 8 | toInt(bytes[j + 2]);
+            if (j + 3 >= bytes.length) {
+                numbers[i] = v;
+                break;
+            }
+            v = v << 8 | toInt(bytes[j + 3]);
+            numbers[i] = v;
+        }
+        return numbers;
+    }
+
     public static byte[] toBytes(int v) {
         byte a = (byte) ((v & 0xff000000) >> 24);
         byte b = (byte) ((v & 0xff0000) >> 16);
