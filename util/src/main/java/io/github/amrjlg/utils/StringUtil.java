@@ -25,6 +25,9 @@ import java.util.StringTokenizer;
  * @author amrjlg
  */
 public class StringUtil {
+
+    public static String SPACE = " ";
+
     /**
      * 将字符按照字符拆分
      *

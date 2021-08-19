@@ -6,3 +6,6 @@ group 'io.github.amrjlg'
 version '1.4-RELEASE'
 archivesBaseName = "common"
 
+jar {
+    enabled(false)
+}
