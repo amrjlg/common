@@ -24,6 +24,7 @@ import java.util.function.Predicate;
  * @param <T> type
  * @author amrjlg
  */
+@FunctionalInterface
 public interface Support<T> extends Predicate<T> {
     /**
      * 支持的对象
