@@ -5,4 +5,5 @@ include 'interface'
 include 'exception'
 include 'id'
 include 'all'
+include 'function'
 
