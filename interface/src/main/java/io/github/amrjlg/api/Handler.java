@@ -25,6 +25,7 @@ import java.util.function.Function;
  * @param <Src>    source type
  * @author amrjlg
  */
+@FunctionalInterface
 public interface Handler<Result, Src> extends Function<Src, Result> {
     /**
      * parse one <code>Src</code> to <code>Result</code>
