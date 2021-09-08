@@ -37,6 +37,94 @@ public abstract class Spliterators {
     private Spliterators() {
 
     }
+    /**
+     * base empty spliterator
+     * @param <T>
+     * @param <S>
+     * @param <C>
+     */
+    public static abstract class EmptySpliterator<T, S extends Spliterator<T>, C> {
+
+        EmptySpliterator() {
+        }
+
+        public S trySplit() {
+            return null;
+        }
+
+        public boolean tryAdvance(C consumer) {
+            Objects.requireNonNull(consumer);
+            return false;
+        }
+
+        public void forEachRemaining(C consumer) {
+            Objects.requireNonNull(consumer);
+        }
+
+        public long estimateSize() {
+            return 0;
+        }
+
+        public int characteristics() {
+            return Spliterator.SIZED | Spliterator.SUBSIZED;
+        }
+
+        public static final class OfRef<T>
+                extends EmptySpliterator<T, Spliterator<T>, Consumer<? super T>>
+                implements Spliterator<T> {
+            OfRef() {
+            }
+        }
+
+        public static final class OfByte extends EmptySpliterator<Byte, Spliterator.OfByte, ByteConsumer> {
+            public OfByte() {
+            }
+        }
+
+        public static final class OfChar extends EmptySpliterator<Character, Spliterator.OfChar, ByteConsumer> {
+            public OfChar() {
+            }
+        }
+
+        public static final class OfShort extends EmptySpliterator<Short, Spliterator.OfShort, ByteConsumer> {
+            public OfShort() {
+            }
+        }
+
+
+        public static final class OfInt
+                extends EmptySpliterator<Integer, Spliterator.OfInt, IntConsumer>
+                implements Spliterator.OfInt {
+            public OfInt() {
+            }
+        }
+
+        public static final class OfLong
+                extends EmptySpliterator<Long, Spliterator.OfLong, LongConsumer>
+                implements Spliterator.OfLong {
+            public OfLong() {
+            }
+        }
+
+        public static final class OfFloat extends EmptySpliterator<Float, Spliterator.OfFloat, ByteConsumer> {
+            public OfFloat() {
+            }
+        }
+
+        public static final class OfDouble
+                extends EmptySpliterator<Double, Spliterator.OfDouble, DoubleConsumer>
+                implements Spliterator.OfDouble {
+            public OfDouble() {
+            }
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> Spliterator<T> emptySpliterator() {
+        return (Spliterator<T>) EMPTY_SPLITERATOR;
+    }
+
+    private static final Spliterator<Object> EMPTY_SPLITERATOR = new EmptySpliterator.OfRef<>();
 
     public static class ArraySpliterator<T> implements Spliterator<T> {
         private final T[] array;
