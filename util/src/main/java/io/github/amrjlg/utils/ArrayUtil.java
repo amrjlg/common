@@ -17,8 +17,17 @@
 package io.github.amrjlg.utils;
 
 import io.github.amrjlg.function.ByteConsumer;
+import io.github.amrjlg.function.ByteToDoubleFunction;
+import io.github.amrjlg.function.ByteToIntFunction;
+import io.github.amrjlg.function.ByteToLongFunction;
 import io.github.amrjlg.function.CharConsumer;
+import io.github.amrjlg.function.CharToDoubleFunction;
+import io.github.amrjlg.function.CharToIntFunction;
+import io.github.amrjlg.function.CharToLongFunction;
 import io.github.amrjlg.function.ShortConsumer;
+import io.github.amrjlg.function.ShortToDoubleFunction;
+import io.github.amrjlg.function.ShortToIntFunction;
+import io.github.amrjlg.function.ShortToLongFunction;
 
 import java.util.Arrays;
 import java.util.function.Consumer;
@@ -26,6 +35,9 @@ import java.util.function.Function;
 import java.util.function.IntConsumer;
 import java.util.function.LongConsumer;
 import java.util.function.Supplier;
+import java.util.function.ToDoubleFunction;
+import java.util.function.ToIntFunction;
+import java.util.function.ToLongFunction;
 
 /**
  * @author amrjlg
@@ -177,6 +189,117 @@ public class ArrayUtil {
     public static <T> boolean emptyArray(T[] ts) {
         return ts == null || ts.length == 0;
     }
+
+    public static <T> int[] mapToInt(T[] source, ToIntFunction<T> function) {
+        int length = emptyArray(source) ? 0 : source.length;
+        int[] ints = new int[length];
+        for (int i = 0; i < ints.length; i++) {
+            ints[i] = function.applyAsInt(source[i]);
+        }
+        return ints;
+    }
+
+    public static int[] mapToInt(byte[] source, ByteToIntFunction function) {
+        int length = empty(source) ? 0 : source.length;
+        int[] ints = new int[length];
+        for (int i = 0; i < ints.length; i++) {
+            ints[i] = function.applyAsInt(source[i]);
+        }
+        return ints;
+    }
+
+    public static int[] mapToInt(short[] source, ShortToIntFunction function) {
+        int length = empty(source) ? 0 : source.length;
+        int[] ints = new int[length];
+        for (int i = 0; i < ints.length; i++) {
+            ints[i] = function.applyAsInt(source[i]);
+        }
+        return ints;
+    }
+
+    public static int[] mapToInt(char[] source, CharToIntFunction function) {
+        int length = empty(source) ? 0 : source.length;
+        int[] ints = new int[length];
+        for (int i = 0; i < ints.length; i++) {
+            ints[i] = function.applyAsInt(source[i]);
+        }
+        return ints;
+    }
+
+
+    public static <T> long[] mapToLong(T[] source, ToLongFunction<T> function) {
+        int length = emptyArray(source) ? 0 : source.length;
+        long[] ints = new long[length];
+        for (int i = 0; i < ints.length; i++) {
+            ints[i] = function.applyAsLong(source[i]);
+        }
+        return ints;
+    }
+
+    public static long[] mapToLong(byte[] source, ByteToLongFunction function) {
+        int length = empty(source) ? 0 : source.length;
+        long[] ints = new long[length];
+        for (int i = 0; i < ints.length; i++) {
+            ints[i] = function.applyAsLong(source[i]);
+        }
+        return ints;
+    }
+
+    public static long[] mapToLong(short[] source, ShortToLongFunction function) {
+        int length = empty(source) ? 0 : source.length;
+        long[] ints = new long[length];
+        for (int i = 0; i < ints.length; i++) {
+            ints[i] = function.applyAsLong(source[i]);
+        }
+        return ints;
+    }
+
+    public static long[] mapToLong(char[] source, CharToLongFunction function) {
+        int length = empty(source) ? 0 : source.length;
+        long[] ints = new long[length];
+        for (int i = 0; i < ints.length; i++) {
+            ints[i] = function.applyAsLong(source[i]);
+        }
+        return ints;
+    }
+
+
+    public static <T> double[] mapToDouble(T[] source, ToDoubleFunction<T> function) {
+        int length = emptyArray(source) ? 0 : source.length;
+        double[] ints = new double[length];
+        for (int i = 0; i < ints.length; i++) {
+            ints[i] = function.applyAsDouble(source[i]);
+        }
+        return ints;
+    }
+
+    public static double[] mapToDouble(byte[] source, ByteToDoubleFunction function) {
+        int length = empty(source) ? 0 : source.length;
+        double[] ints = new double[length];
+        for (int i = 0; i < ints.length; i++) {
+            ints[i] = function.applyAsDouble(source[i]);
+        }
+        return ints;
+    }
+
+    public static double[] mapToDouble(short[] source, ShortToDoubleFunction function) {
+        int length = empty(source) ? 0 : source.length;
+        double[] ints = new double[length];
+        for (int i = 0; i < ints.length; i++) {
+            ints[i] = function.applyAsDouble(source[i]);
+        }
+        return ints;
+    }
+
+    public static double[] mapToDouble(char[] source, CharToDoubleFunction function) {
+        int length = empty(source) ? 0 : source.length;
+        double[] ints = new double[length];
+        for (int i = 0; i < ints.length; i++) {
+            ints[i] = function.applyAsDouble(source[i]);
+        }
+        return ints;
+    }
+
 
     /**
      * 将数组通过
