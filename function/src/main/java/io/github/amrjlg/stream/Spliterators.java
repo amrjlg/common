@@ -198,17 +198,17 @@ public abstract class Spliterators {
         }
     }
 
-    public static class ByteSpliterator implements Spliterator.OfByte {
+    public static class ByteArraySpliterator implements Spliterator.OfByte {
         private final byte[] array;
         private int index;        // current index, modified on advance/split
         private final int fence;  // one past last index
         private final int characteristics;
 
-        public ByteSpliterator(byte[] array, int additionalCharacteristics) {
+        public ByteArraySpliterator(byte[] array, int additionalCharacteristics) {
             this(array, 0, array.length, additionalCharacteristics);
         }
 
-        public ByteSpliterator(byte[] array, int origin, int fence, int additionalCharacteristics) {
+        public ByteArraySpliterator(byte[] array, int origin, int fence, int additionalCharacteristics) {
             this.array = array;
             this.index = origin;
             this.fence = fence;
@@ -220,7 +220,7 @@ public abstract class Spliterators {
             int lo = index, mid = (lo + fence) >>> 1;
             return (lo >= mid)
                     ? null
-                    : new Spliterators.ByteSpliterator(array, lo, index = mid, characteristics);
+                    : new Spliterators.ByteArraySpliterator(array, lo, index = mid, characteristics);
         }
 
         @Override
@@ -266,17 +266,17 @@ public abstract class Spliterators {
         }
     }
 
-    public static class CharSpliterator implements Spliterator.OfChar {
+    public static class CharArraySpliterator implements Spliterator.OfChar {
         private final char[] array;
         private int index;        // current index, modified on advance/split
         private final int fence;  // one past last index
         private final int characteristics;
 
-        public CharSpliterator(char[] array, int additionalCharacteristics) {
+        public CharArraySpliterator(char[] array, int additionalCharacteristics) {
             this(array, 0, array.length, additionalCharacteristics);
         }
 
-        public CharSpliterator(char[] array, int origin, int fence, int additionalCharacteristics) {
+        public CharArraySpliterator(char[] array, int origin, int fence, int additionalCharacteristics) {
             this.array = array;
             this.index = origin;
             this.fence = fence;
@@ -288,7 +288,7 @@ public abstract class Spliterators {
             int lo = index, mid = (lo + fence) >>> 1;
             return (lo >= mid)
                     ? null
-                    : new Spliterators.CharSpliterator(array, lo, index = mid, characteristics);
+                    : new Spliterators.CharArraySpliterator(array, lo, index = mid, characteristics);
         }
 
         @Override
@@ -334,17 +334,17 @@ public abstract class Spliterators {
         }
     }
 
-    public static class ShortSpliterator implements Spliterator.OfShort {
+    public static class ShortArraySpliterator implements Spliterator.OfShort {
         private final short[] array;
         private int index;        // current index, modified on advance/split
         private final int fence;  // one past last index
         private final int characteristics;
 
-        public ShortSpliterator(short[] array, int additionalCharacteristics) {
+        public ShortArraySpliterator(short[] array, int additionalCharacteristics) {
             this(array, 0, array.length, additionalCharacteristics);
         }
 
-        public ShortSpliterator(short[] array, int origin, int fence, int additionalCharacteristics) {
+        public ShortArraySpliterator(short[] array, int origin, int fence, int additionalCharacteristics) {
             this.array = array;
             this.index = origin;
             this.fence = fence;
@@ -356,7 +356,7 @@ public abstract class Spliterators {
             int lo = index, mid = (lo + fence) >>> 1;
             return (lo >= mid)
                     ? null
-                    : new Spliterators.ShortSpliterator(array, lo, index = mid, characteristics);
+                    : new Spliterators.ShortArraySpliterator(array, lo, index = mid, characteristics);
         }
 
         @Override
@@ -402,17 +402,17 @@ public abstract class Spliterators {
         }
     }
 
-    public static class IntSpliterator implements Spliterator.OfInt {
+    public static class IntArraySpliterator implements Spliterator.OfInt {
         private final int[] array;
         private int index;        // current index, modified on advance/split
         private final int fence;  // one past last index
         private final int characteristics;
 
-        public IntSpliterator(int[] array, int additionalCharacteristics) {
+        public IntArraySpliterator(int[] array, int additionalCharacteristics) {
             this(array, 0, array.length, additionalCharacteristics);
         }
 
-        public IntSpliterator(int[] array, int origin, int fence, int additionalCharacteristics) {
+        public IntArraySpliterator(int[] array, int origin, int fence, int additionalCharacteristics) {
             this.array = array;
             this.index = origin;
             this.fence = fence;
@@ -424,7 +424,7 @@ public abstract class Spliterators {
             int lo = index, mid = (lo + fence) >>> 1;
             return (lo >= mid)
                     ? null
-                    : new Spliterators.IntSpliterator(array, lo, index = mid, characteristics);
+                    : new Spliterators.IntArraySpliterator(array, lo, index = mid, characteristics);
         }
 
         @Override
@@ -470,17 +470,17 @@ public abstract class Spliterators {
         }
     }
 
-    public static class LongSpliterator implements Spliterator.OfLong {
+    public static class LongArraySpliterator implements Spliterator.OfLong {
         private final long[] array;
         private int index;        // current index, modified on advance/split
         private final int fence;  // one past last index
         private final int characteristics;
 
-        public LongSpliterator(long[] array, int additionalCharacteristics) {
+        public LongArraySpliterator(long[] array, int additionalCharacteristics) {
             this(array, 0, array.length, additionalCharacteristics);
         }
 
-        public LongSpliterator(long[] array, int origin, int fence, int additionalCharacteristics) {
+        public LongArraySpliterator(long[] array, int origin, int fence, int additionalCharacteristics) {
             this.array = array;
             this.index = origin;
             this.fence = fence;
@@ -492,7 +492,7 @@ public abstract class Spliterators {
             int lo = index, mid = (lo + fence) >>> 1;
             return (lo >= mid)
                     ? null
-                    : new Spliterators.LongSpliterator(array, lo, index = mid, characteristics);
+                    : new Spliterators.LongArraySpliterator(array, lo, index = mid, characteristics);
         }
 
         @Override
@@ -538,17 +538,17 @@ public abstract class Spliterators {
         }
     }
 
-    public static class FloatSpliterator implements Spliterator.OfFloat {
+    public static class FloatArraySpliterator implements Spliterator.OfFloat {
         private final float[] array;
         private int index;        // current index, modified on advance/split
         private final int fence;  // one past last index
         private final int characteristics;
 
-        public FloatSpliterator(float[] array, int additionalCharacteristics) {
+        public FloatArraySpliterator(float[] array, int additionalCharacteristics) {
             this(array, 0, array.length, additionalCharacteristics);
         }
 
-        public FloatSpliterator(float[] array, int origin, int fence, int additionalCharacteristics) {
+        public FloatArraySpliterator(float[] array, int origin, int fence, int additionalCharacteristics) {
             this.array = array;
             this.index = origin;
             this.fence = fence;
@@ -560,7 +560,7 @@ public abstract class Spliterators {
             int lo = index, mid = (lo + fence) >>> 1;
             return (lo >= mid)
                     ? null
-                    : new Spliterators.FloatSpliterator(array, lo, index = mid, characteristics);
+                    : new Spliterators.FloatArraySpliterator(array, lo, index = mid, characteristics);
         }
 
         @Override
@@ -606,17 +606,17 @@ public abstract class Spliterators {
         }
     }
 
-    public static class DoubleSpliterator implements Spliterator.OfDouble {
+    public static class DoubleArraySpliterator implements Spliterator.OfDouble {
         private final double[] array;
         private int index;        // current index, modified on advance/split
         private final int fence;  // one past last index
         private final int characteristics;
 
-        public DoubleSpliterator(double[] array, int additionalCharacteristics) {
+        public DoubleArraySpliterator(double[] array, int additionalCharacteristics) {
             this(array, 0, array.length, additionalCharacteristics);
         }
 
-        public DoubleSpliterator(double[] array, int origin, int fence, int additionalCharacteristics) {
+        public DoubleArraySpliterator(double[] array, int origin, int fence, int additionalCharacteristics) {
             this.array = array;
             this.index = origin;
             this.fence = fence;
@@ -628,7 +628,7 @@ public abstract class Spliterators {
             int lo = index, mid = (lo + fence) >>> 1;
             return (lo >= mid)
                     ? null
-                    : new Spliterators.DoubleSpliterator(array, lo, index = mid, characteristics);
+                    : new Spliterators.DoubleArraySpliterator(array, lo, index = mid, characteristics);
         }
 
         @Override
