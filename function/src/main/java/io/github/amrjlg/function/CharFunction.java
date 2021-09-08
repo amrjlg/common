@@ -20,6 +20,6 @@ package io.github.amrjlg.function;
 /**
  * @author amrjlg
  **/
-public interface CharFunction {
-    char apply(char c);
+public interface CharFunction<R> {
+    R apply(char c);
 }

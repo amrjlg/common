@@ -20,6 +20,6 @@ package io.github.amrjlg.function;
 /**
  * @author amrjlg
  **/
-public interface CharToObjFunction<R> {
-    R apply(char c);
+public interface ByteToLongFunction {
+    long applyAsLong(byte value);
 }

@@ -20,6 +20,6 @@ package io.github.amrjlg.function;
 /**
  * @author amrjlg
  **/
-public interface DoubleFunction {
-    double apply(double d);
+public interface ByteToDoubleFunction {
+    double applyAsDouble(byte value);
 }

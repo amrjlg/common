@@ -20,8 +20,8 @@ package io.github.amrjlg.function;
 /**
  * @author amrjlg
  **/
-public interface ByteFunction {
+public interface ByteFunction<R> {
 
-    byte apply(byte t);
+    R apply(byte t);
 
 }
