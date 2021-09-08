@@ -20,6 +20,6 @@ package io.github.amrjlg.function;
 /**
  * @author amrjlg
  **/
-public interface ShortToObjFunction<R> {
-    R apply(short s);
+public interface ByteSupplier {
+    byte get();
 }

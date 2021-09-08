@@ -20,6 +20,6 @@ package io.github.amrjlg.function;
 /**
  * @author amrjlg
  **/
-public interface ShortFunction {
-    short apply(short s);
+public interface ShortFunction<R> {
+    R apply(short s);
 }

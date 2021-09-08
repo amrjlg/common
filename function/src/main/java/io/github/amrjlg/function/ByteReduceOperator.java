@@ -20,7 +20,7 @@ package io.github.amrjlg.function;
 /**
  * @author amrjlg
  **/
-public interface ByteToObjFunction<R> {
+public interface ByteReduceOperator {
 
-    R apply(byte b);
+    int reduce(int state,byte value);
 }
