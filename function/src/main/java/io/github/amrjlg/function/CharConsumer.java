@@ -34,7 +34,7 @@ public interface CharConsumer {
 
     default CharConsumer andThen(CharConsumer after) {
         Objects.requireNonNull(after);
-        return c -> {
+        return (char c) -> {
             accept(c);
             after.accept(c);
         };

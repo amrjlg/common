@@ -34,7 +34,7 @@ public interface ByteConsumer {
 
     default ByteConsumer andThen(ByteConsumer after) {
         Objects.requireNonNull(after);
-        return b -> {
+        return (byte b) -> {
             accept(b);
             after.accept(b);
         };
