@@ -16,9 +16,15 @@
 
 package io.github.amrjlg.utils;
 
+import io.github.amrjlg.function.ByteConsumer;
+import io.github.amrjlg.function.CharConsumer;
+import io.github.amrjlg.function.ShortConsumer;
+
 import java.util.Arrays;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.IntConsumer;
+import java.util.function.LongConsumer;
 import java.util.function.Supplier;
 
 /**
@@ -89,8 +95,51 @@ public class ArrayUtil {
         return ts;
     }
 
+
+    public static <T> void consumer(byte[] bytes, ByteConsumer consumer) {
+        if (!empty(bytes)) {
+            for (byte b : bytes) {
+                consumer.accept(b);
+            }
+        }
+    }
+
+    public static <T> void consumer(char[] bytes, CharConsumer consumer) {
+        if (!empty(bytes)) {
+            for (char b : bytes) {
+                consumer.accept(b);
+            }
+        }
+    }
+
+    public static <T> void consumer(short[] bytes, ShortConsumer consumer) {
+        if (!empty(bytes)) {
+            for (short b : bytes) {
+                consumer.accept(b);
+            }
+        }
+    }
+
+    public static <T> void consumer(int[] bytes, IntConsumer consumer) {
+        if (!empty(bytes)) {
+            for (int b : bytes) {
+                consumer.accept(b);
+            }
+        }
+    }
+
+    public static <T> void consumer(long[] bytes, LongConsumer consumer) {
+        if (!empty(bytes)) {
+            for (long b : bytes) {
+                consumer.accept(b);
+            }
+        }
+    }
+
+
     public static <T> void consumer(T[] ts, Consumer<T> consumer) {
-        Arrays.stream(ts).forEach(consumer);
+        if (!emptyArray(ts))
+            Arrays.stream(ts).forEach(consumer);
     }
 
     public static boolean empty(boolean[] booleans) {
@@ -171,7 +220,7 @@ public class ArrayUtil {
      *
      * @param src       源数组
      * @param start     起始索引 0开始
-     * @param des      目标数组
+     * @param des       目标数组
      * @param destStart 目标索引 0开始
      * @param length    总长度
      * @param transform 转换器
