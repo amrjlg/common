@@ -38,6 +38,78 @@ public abstract class Spliterators {
 
     }
 
+    public static class ArraySpliterator<T> implements Spliterator<T> {
+        private final T[] array;
+        // current index, modified on advance/split
+        private int index;
+        // one past last index
+        private final int fence;
+        private final int characteristics;
+
+        public ArraySpliterator(T[] array, int additionalCharacteristics) {
+            this(array, 0, array.length, additionalCharacteristics);
+        }
+
+        public ArraySpliterator(T[] array, int origin, int fence, int additionalCharacteristics) {
+            this.array = array;
+            this.index = origin;
+            this.fence = fence;
+            this.characteristics = additionalCharacteristics | Spliterator.SIZED | Spliterator.SUBSIZED;
+        }
+
+        @Override
+        public Spliterator<T> trySplit() {
+            int lo = index, mid = (lo + fence) >>> 1;
+            return (lo >= mid)
+                    ? null
+                    : new ArraySpliterator<>(array, lo, index = mid, characteristics);
+        }
+
+
+        @Override
+        public void forEachRemaining(Consumer<? super T> action) {
+            T[] a;
+            int i, hi; // hoist accesses and checks from loop
+            if (action == null)
+                throw new NullPointerException();
+            if ((a = array).length >= (hi = fence) &&
+                    (i = index) >= 0 && i < (index = hi)) {
+                do {
+                    action.accept(a[i]);
+                } while (++i < hi);
+            }
+        }
+
+        @Override
+        public boolean tryAdvance(Consumer<? super T> action) {
+            if (action == null)
+                throw new NullPointerException();
+            if (index >= 0 && index < fence) {
+                T e = array[index++];
+                action.accept(e);
+                return true;
+            }
+            return false;
+        }
+
+        @Override
+        public long estimateSize() {
+            return fence - index;
+        }
+
+        @Override
+        public int characteristics() {
+            return characteristics;
+        }
+
+        @Override
+        public Comparator<? super T> getComparator() {
+            if (hasCharacteristics(Spliterator.SORTED))
+                return null;
+            throw new IllegalStateException();
+        }
+    }
+
     public static class ByteSpliterator implements Spliterator.OfByte {
         private final byte[] array;
         private int index;        // current index, modified on advance/split
