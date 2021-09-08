@@ -33,7 +33,7 @@ public interface FloatConsumer {
 
     default FloatConsumer andThen(FloatConsumer after) {
         Objects.requireNonNull(after);
-        return f -> {
+        return (float f) -> {
             accept(f);
             after.accept(f);
         };

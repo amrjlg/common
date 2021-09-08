@@ -33,7 +33,7 @@ public interface ShortConsumer {
 
     default ShortConsumer andThen(ShortConsumer after) {
         Objects.requireNonNull(after);
-        return s -> {
+        return (short s) -> {
             accept(s);
             after.accept(s);
         };
