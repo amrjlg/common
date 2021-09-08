@@ -23,6 +23,7 @@ import io.github.amrjlg.function.FloatConsumer;
 import io.github.amrjlg.function.ShortConsumer;
 
 
+import java.util.Comparator;
 import java.util.function.Consumer;
 import java.util.function.DoubleConsumer;
 import java.util.function.IntConsumer;
@@ -33,9 +34,45 @@ import java.util.function.LongConsumer;
  **/
 public interface Spliterator<T> extends java.util.Spliterator<T> {
 
+    boolean tryAdvance(Consumer<? super T> action);
+
+    default void forEachRemaining(Consumer<? super T> action) {
+        do { } while (tryAdvance(action));
+    }
+
+    Spliterator<T> trySplit();
+
+    long estimateSize();
+
+    default long getExactSizeIfKnown() {
+        return (characteristics() & SIZED) == 0 ? -1L : estimateSize();
+    }
+
+
+    int characteristics();
+
+    default boolean hasCharacteristics(int characteristics) {
+        return (characteristics() & characteristics) == characteristics;
+    }
+
+    default Comparator<? super T> getComparator() {
+        throw new IllegalStateException();
+    }
+
+
     interface OfPrimitive<T, PrimitiveConsumer, PrimitiveSpliterator extends OfPrimitive<T, PrimitiveConsumer, PrimitiveSpliterator>>
             extends Spliterator<T>, java.util.Spliterator.OfPrimitive<T, PrimitiveConsumer, PrimitiveSpliterator> {
 
+        @Override
+        PrimitiveSpliterator trySplit();
+
+        @Override
+        boolean tryAdvance(PrimitiveConsumer action);
+
+        @Override
+        default void forEachRemaining(PrimitiveConsumer action) {
+            do { } while (tryAdvance(action));
+        }
     }
 
     interface OfByte extends OfPrimitive<Byte, ByteConsumer, OfByte> {
@@ -51,12 +88,6 @@ public interface Spliterator<T> extends java.util.Spliterator<T> {
             return tryAdvance(consumer);
         }
 
-        @Override
-        default void forEachRemaining(ByteConsumer action) {
-            do {
-
-            } while (tryAdvance(action));
-        }
 
         @Override
         default void forEachRemaining(Consumer<? super Byte> action) {
@@ -72,12 +103,6 @@ public interface Spliterator<T> extends java.util.Spliterator<T> {
         @Override
         boolean tryAdvance(CharConsumer action);
 
-        @Override
-        default void forEachRemaining(CharConsumer action) {
-            do {
-
-            } while (tryAdvance(action));
-        }
 
         @Override
         default boolean tryAdvance(Consumer<? super Character> action) {
@@ -107,13 +132,6 @@ public interface Spliterator<T> extends java.util.Spliterator<T> {
         }
 
         @Override
-        default void forEachRemaining(ShortConsumer action) {
-            do {
-
-            } while (tryAdvance(action));
-        }
-
-        @Override
         default void forEachRemaining(Consumer<? super Short> action) {
             ShortConsumer consumer = action instanceof ShortConsumer ? (ShortConsumer) action : action::accept;
             forEachRemaining(consumer);
@@ -135,13 +153,6 @@ public interface Spliterator<T> extends java.util.Spliterator<T> {
                 return tryAdvance((IntConsumer) action::accept);
             }
         }
-
-        @Override
-        default void forEachRemaining(IntConsumer action) {
-            do {
-            } while (tryAdvance(action));
-        }
-
 
         @Override
         default void forEachRemaining(Consumer<? super Integer> action) {
@@ -167,13 +178,6 @@ public interface Spliterator<T> extends java.util.Spliterator<T> {
         }
 
         @Override
-        default void forEachRemaining(LongConsumer action) {
-            do {
-
-            } while (tryAdvance(action));
-        }
-
-        @Override
         default void forEachRemaining(Consumer<? super Long> action) {
             LongConsumer consumer = action instanceof LongConsumer ? (LongConsumer) action : action::accept;
             forEachRemaining(consumer);
@@ -186,13 +190,6 @@ public interface Spliterator<T> extends java.util.Spliterator<T> {
 
         @Override
         boolean tryAdvance(FloatConsumer action);
-
-        @Override
-        default void forEachRemaining(FloatConsumer action) {
-            do {
-
-            } while (tryAdvance(action));
-        }
 
         @Override
         default boolean tryAdvance(Consumer<? super Float> action) {
@@ -213,13 +210,6 @@ public interface Spliterator<T> extends java.util.Spliterator<T> {
 
         @Override
         boolean tryAdvance(DoubleConsumer action);
-
-        @Override
-        default void forEachRemaining(DoubleConsumer action) {
-            do {
-
-            } while (tryAdvance(action));
-        }
 
         @Override
         default boolean tryAdvance(Consumer<? super Double> action) {

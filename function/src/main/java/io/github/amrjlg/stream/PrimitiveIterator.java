@@ -35,6 +35,9 @@ import java.util.function.LongConsumer;
  **/
 public interface PrimitiveIterator<Primitive, PrimitiveConsumer> extends java.util.PrimitiveIterator<Primitive, PrimitiveConsumer> {
 
+    @Override
+    void forEachRemaining(PrimitiveConsumer action);
+
     interface OfByte extends PrimitiveIterator<Byte, ByteConsumer> {
         byte nextByte();
 
