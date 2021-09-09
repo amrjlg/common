@@ -17,11 +17,12 @@
 
 package io.github.amrjlg.stream;
 
+import io.github.amrjlg.exception.NotImplementedException;
 import io.github.amrjlg.function.ByteConsumer;
 import io.github.amrjlg.function.CharConsumer;
 import io.github.amrjlg.function.FloatConsumer;
 import io.github.amrjlg.function.ShortConsumer;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 
 import java.util.function.Consumer;
 import java.util.function.DoubleConsumer;
