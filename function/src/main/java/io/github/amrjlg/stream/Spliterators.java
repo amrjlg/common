@@ -41,6 +41,36 @@ public abstract class Spliterators {
 
     }
 
+
+    @SuppressWarnings("unchecked")
+    public static <T> Spliterator<T> emptySpliterator() {
+        return (Spliterator<T>) EMPTY_SPLITERATOR;
+    }
+
+    public static Spliterator.OfByte emptyByteSpliterator() {
+        return new EmptySpliterator.OfByte();
+    }
+    public static Spliterator.OfShort emptyShortSpliterator() {
+        return new EmptySpliterator.OfShort();
+    }
+    public static Spliterator.OfChar emptyCharSpliterator() {
+        return new EmptySpliterator.OfChar();
+    }
+    public static Spliterator.OfInt emptyIntSpliterator() {
+        return new EmptySpliterator.OfInt();
+    }
+    public static Spliterator.OfLong emptyLongSpliterator() {
+        return new EmptySpliterator.OfLong();
+    }
+    public static Spliterator.OfFloat emptyFloatSpliterator() {
+        return new EmptySpliterator.OfFloat();
+    }
+    public static Spliterator.OfDouble emptyDoubleSpliterator() {
+        return new EmptySpliterator.OfDouble();
+    }
+
+
+
     /**
      * base empty spliterator
      *
@@ -81,17 +111,20 @@ public abstract class Spliterators {
             }
         }
 
-        public static final class OfByte extends EmptySpliterator<Byte, Spliterator.OfByte, ByteConsumer> {
+        public static final class OfByte extends EmptySpliterator<Byte, Spliterator.OfByte, ByteConsumer>
+                implements Spliterator.OfByte {
             public OfByte() {
             }
         }
 
-        public static final class OfChar extends EmptySpliterator<Character, Spliterator.OfChar, ByteConsumer> {
+        public static final class OfChar extends EmptySpliterator<Character, Spliterator.OfChar, CharConsumer>
+                implements Spliterator.OfChar {
             public OfChar() {
             }
         }
 
-        public static final class OfShort extends EmptySpliterator<Short, Spliterator.OfShort, ByteConsumer> {
+        public static final class OfShort extends EmptySpliterator<Short, Spliterator.OfShort, ShortConsumer>
+                implements Spliterator.OfShort {
             public OfShort() {
             }
         }
@@ -111,7 +144,8 @@ public abstract class Spliterators {
             }
         }
 
-        public static final class OfFloat extends EmptySpliterator<Float, Spliterator.OfFloat, ByteConsumer> {
+        public static final class OfFloat extends EmptySpliterator<Float, Spliterator.OfFloat, FloatConsumer>
+                implements Spliterator.OfFloat {
             public OfFloat() {
             }
         }
@@ -122,11 +156,6 @@ public abstract class Spliterators {
             public OfDouble() {
             }
         }
-    }
-
-    @SuppressWarnings("unchecked")
-    public static <T> Spliterator<T> emptySpliterator() {
-        return (Spliterator<T>) EMPTY_SPLITERATOR;
     }
 
     private static final Spliterator<Object> EMPTY_SPLITERATOR = new EmptySpliterator.OfRef<>();
@@ -1245,7 +1274,7 @@ public abstract class Spliterators {
 
         @Override
         public Comparator<? super Long> getComparator() {
-            if (hasCharacteristics(Spliterator.SORTED)){
+            if (hasCharacteristics(Spliterator.SORTED)) {
                 return null;
             }
 
@@ -1262,21 +1291,21 @@ public abstract class Spliterators {
 
             PrimitiveIterator.OfLong iterator = this.iterator;
             long estimateSize = this.estimateSize;
-            if (estimateSize >1 && iterator.hasNext()){
+            if (estimateSize > 1 && iterator.hasNext()) {
                 int split = batch + BATCH_UNIT;
-                split = (int) Math.max(split,estimateSize);
-                split = Math.min(split,MAX_BATCH);
+                split = (int) Math.max(split, estimateSize);
+                split = Math.min(split, MAX_BATCH);
                 long[] longs = new long[split];
                 int offset = 0;
-                while (offset < split && iterator.hasNext()){
+                while (offset < split && iterator.hasNext()) {
                     longs[offset++] = iterator.nextLong();
                 }
                 batch = offset;
-                if (this.estimateSize != Long.MAX_VALUE){
+                if (this.estimateSize != Long.MAX_VALUE) {
                     this.estimateSize -= offset;
                 }
 
-                return new LongArraySpliterator(longs,0,offset,characteristics);
+                return new LongArraySpliterator(longs, 0, offset, characteristics);
             }
             return null;
         }
@@ -1284,7 +1313,7 @@ public abstract class Spliterators {
         @Override
         public boolean tryAdvance(LongConsumer action) {
             Objects.requireNonNull(action);
-            if (iterator.hasNext()){
+            if (iterator.hasNext()) {
                 action.accept(iterator.nextLong());
                 return true;
             }
@@ -1360,7 +1389,7 @@ public abstract class Spliterators {
 
         @Override
         public Comparator<? super Float> getComparator() {
-            if (hasCharacteristics(Spliterator.SORTED)){
+            if (hasCharacteristics(Spliterator.SORTED)) {
                 return null;
             }
             throw new IllegalStateException();
@@ -1420,10 +1449,10 @@ public abstract class Spliterators {
 
         @Override
         public Comparator<? super Double> getComparator() {
-           if (hasCharacteristics(Spliterator.SORTED)){
-               return null;
-           }
-           throw new IllegalStateException();
+            if (hasCharacteristics(Spliterator.SORTED)) {
+                return null;
+            }
+            throw new IllegalStateException();
         }
 
         @Override
@@ -1435,20 +1464,20 @@ public abstract class Spliterators {
         public OfDouble trySplit() {
             PrimitiveIterator.OfDouble iterator = this.iterator;
             long estimateSize = this.estimateSize;
-            if (estimateSize >1 && iterator.hasNext()){
+            if (estimateSize > 1 && iterator.hasNext()) {
                 int split = batch + BATCH_UNIT;
-                split = (int) Math.max(split,estimateSize);
-                split = Math.min(split,MAX_BATCH);
+                split = (int) Math.max(split, estimateSize);
+                split = Math.min(split, MAX_BATCH);
                 double[] doubles = new double[split];
                 int offset = 0;
-                while (offset < split && iterator.hasNext()){
+                while (offset < split && iterator.hasNext()) {
                     doubles[offset++] = iterator.nextDouble();
                 }
                 batch = offset;
-                if (this.estimateSize != Long.MAX_VALUE){
+                if (this.estimateSize != Long.MAX_VALUE) {
                     this.estimateSize -= offset;
                 }
-                return new DoubleArraySpliterator(doubles,0,offset,characteristics);
+                return new DoubleArraySpliterator(doubles, 0, offset, characteristics);
             }
 
             return null;
@@ -1457,7 +1486,7 @@ public abstract class Spliterators {
         @Override
         public boolean tryAdvance(DoubleConsumer action) {
             Objects.requireNonNull(action);
-            if (iterator.hasNext()){
+            if (iterator.hasNext()) {
                 action.accept(iterator.nextDouble());
                 return true;
             }
