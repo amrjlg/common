@@ -50,26 +50,118 @@ public abstract class Spliterators {
     public static Spliterator.OfByte emptyByteSpliterator() {
         return new EmptySpliterator.OfByte();
     }
+
     public static Spliterator.OfShort emptyShortSpliterator() {
         return new EmptySpliterator.OfShort();
     }
+
     public static Spliterator.OfChar emptyCharSpliterator() {
         return new EmptySpliterator.OfChar();
     }
+
     public static Spliterator.OfInt emptyIntSpliterator() {
         return new EmptySpliterator.OfInt();
     }
+
     public static Spliterator.OfLong emptyLongSpliterator() {
         return new EmptySpliterator.OfLong();
     }
+
     public static Spliterator.OfFloat emptyFloatSpliterator() {
         return new EmptySpliterator.OfFloat();
     }
+
     public static Spliterator.OfDouble emptyDoubleSpliterator() {
         return new EmptySpliterator.OfDouble();
     }
 
+    public static <T> Spliterator<T> spliterator(T[] array, int additionalCharacteristics) {
+        return new Spliterators.ArraySpliterator<>(Objects.requireNonNull(array), additionalCharacteristics);
+    }
 
+    public static <T> Spliterator<T> spliterator(T[] array, int fromIndex, int toIndex,
+                                                 int additionalCharacteristics) {
+        checkFromToBounds(Objects.requireNonNull(array).length, fromIndex, toIndex);
+        return new Spliterators.ArraySpliterator<>(array, fromIndex, toIndex, additionalCharacteristics);
+    }
+
+    public static Spliterator.OfByte spliterator(byte[] bytes, int characteristics) {
+        return new ByteArraySpliterator(bytes, characteristics);
+    }
+
+    public static Spliterator.OfByte spliterator(byte[] bytes, int fromIndex, int toIndex, int characteristics) {
+        checkFromToBounds(bytes.length,fromIndex,toIndex);
+        return new ByteArraySpliterator(bytes, fromIndex, toIndex, characteristics);
+    }
+
+    public static Spliterator.OfChar spliterator(char[] chars, int characteristics) {
+        return new CharArraySpliterator(chars, characteristics);
+    }
+
+    public static Spliterator.OfChar spliterator(char[] chars, int fromIndex, int toIndex, int characteristics) {
+        checkFromToBounds(chars.length,fromIndex,toIndex);
+        return new CharArraySpliterator(chars, fromIndex, toIndex, characteristics);
+    }
+
+    public static Spliterator.OfShort spliterator(short[] shorts, int characteristics) {
+        return new ShortArraySpliterator(shorts, characteristics);
+    }
+
+    public static Spliterator.OfShort spliterator(short[] shorts, int fromIndex, int toIndex, int characteristics) {
+        checkFromToBounds(shorts.length,fromIndex,toIndex);
+        return new ShortArraySpliterator(shorts, fromIndex, toIndex, characteristics);
+    }
+
+
+    public static Spliterator.OfInt spliterator(int[] shorts, int characteristics) {
+        return new IntArraySpliterator(shorts, characteristics);
+    }
+
+    public static Spliterator.OfInt spliterator(int[] shorts, int fromIndex, int toIndex, int characteristics) {
+        checkFromToBounds(shorts.length,fromIndex,toIndex);
+        return new IntArraySpliterator(shorts, fromIndex, toIndex, characteristics);
+    }
+
+    public static Spliterator.OfLong spliterator(long[] longs, int characteristics) {
+        return new LongArraySpliterator(longs, characteristics);
+    }
+
+    public static Spliterator.OfLong spliterator(long[] longs, int fromIndex, int toIndex, int characteristics) {
+        checkFromToBounds(longs.length,fromIndex,toIndex);
+        return new LongArraySpliterator(longs, fromIndex, toIndex, characteristics);
+    }
+
+    public static Spliterator.OfFloat spliterator(float[] floats, int characteristics) {
+        return new FloatArraySpliterator(floats, characteristics);
+    }
+
+    public static Spliterator.OfFloat spliterator(float[] floats, int fromIndex, int toIndex, int characteristics) {
+        checkFromToBounds(floats.length,fromIndex,toIndex);
+        return new FloatArraySpliterator(floats, fromIndex, toIndex, characteristics);
+    }
+
+    public static Spliterator.OfDouble spliterator(double[] doubles, int characteristics) {
+        return new DoubleArraySpliterator(doubles, characteristics);
+    }
+
+    public static Spliterator.OfDouble spliterator(double[] doubles, int fromIndex, int toIndex, int characteristics) {
+        checkFromToBounds(doubles.length,fromIndex,toIndex);
+        return new DoubleArraySpliterator(doubles, fromIndex, toIndex, characteristics);
+    }
+
+
+    private static void checkFromToBounds(int arrayLength, int origin, int fence) {
+        if (origin > fence) {
+            throw new ArrayIndexOutOfBoundsException(
+                    "origin(" + origin + ") > fence(" + fence + ")");
+        }
+        if (origin < 0) {
+            throw new ArrayIndexOutOfBoundsException(origin);
+        }
+        if (fence > arrayLength) {
+            throw new ArrayIndexOutOfBoundsException(fence);
+        }
+    }
 
     /**
      * base empty spliterator
