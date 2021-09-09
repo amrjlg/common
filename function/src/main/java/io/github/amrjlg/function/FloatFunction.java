@@ -20,6 +20,6 @@ package io.github.amrjlg.function;
 /**
  * @author amrjlg
  **/
-public interface FloatFunction {
-    float apply(float f);
+public interface FloatFunction<T> {
+    T apply(float value);
 }
