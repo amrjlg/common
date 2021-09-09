@@ -29,13 +29,13 @@ import java.util.Objects;
  **/
 @FunctionalInterface
 public interface FloatConsumer {
-    void accept(float f);
+    void accept(float value);
 
     default FloatConsumer andThen(FloatConsumer after) {
         Objects.requireNonNull(after);
-        return (float f) -> {
-            accept(f);
-            after.accept(f);
+        return (float value) -> {
+            accept(value);
+            after.accept(value);
         };
     }
 }
