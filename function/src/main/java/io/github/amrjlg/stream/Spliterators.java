@@ -22,8 +22,11 @@ import io.github.amrjlg.function.CharConsumer;
 import io.github.amrjlg.function.FloatConsumer;
 import io.github.amrjlg.function.ShortConsumer;
 
+import java.util.Collection;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.Objects;
+
 import java.util.function.Consumer;
 import java.util.function.DoubleConsumer;
 import java.util.function.IntConsumer;
@@ -37,8 +40,10 @@ public abstract class Spliterators {
     private Spliterators() {
 
     }
+
     /**
      * base empty spliterator
+     *
      * @param <T>
      * @param <S>
      * @param <C>
@@ -671,6 +676,792 @@ public abstract class Spliterators {
             if (hasCharacteristics(Spliterator.SORTED))
                 return null;
             throw new IllegalStateException();
+        }
+    }
+
+    /**
+     * object iterator spliterator
+     *
+     * @param <T>
+     */
+    public static class IteratorSpliterator<T> implements Spliterator<T> {
+        static final int BATCH_UNIT = 1 << 10;  // batch array size increment
+        static final int MAX_BATCH = 1 << 25;  // max batch array size;
+        private final Collection<? extends T> collection; // null OK
+        private Iterator<? extends T> it;
+        private final int characteristics;
+        private long est;             // size estimate
+        private int batch;            // batch size for splits
+
+        public IteratorSpliterator(Collection<? extends T> collection, int characteristics) {
+            this.collection = collection;
+            this.it = null;
+            this.characteristics = (characteristics & Spliterator.CONCURRENT) == 0
+                    ? characteristics | Spliterator.SIZED | Spliterator.SUBSIZED
+                    : characteristics;
+        }
+
+        public IteratorSpliterator(Iterator<? extends T> iterator, long size, int characteristics) {
+            this.collection = null;
+            this.it = iterator;
+            this.est = size;
+            this.characteristics = (characteristics & Spliterator.CONCURRENT) == 0
+                    ? characteristics | Spliterator.SIZED | Spliterator.SUBSIZED
+                    : characteristics;
+        }
+
+        public IteratorSpliterator(Iterator<? extends T> iterator, int characteristics) {
+            this.collection = null;
+            this.it = iterator;
+            this.est = Long.MAX_VALUE;
+            this.characteristics = characteristics & ~(Spliterator.SIZED | Spliterator.SUBSIZED);
+        }
+
+        @Override
+        public Spliterator<T> trySplit() {
+            Iterator<? extends T> i;
+            long s;
+            if ((i = it) == null) {
+                i = it = collection.iterator();
+                s = est = (long) collection.size();
+            } else
+                s = est;
+            if (s > 1 && i.hasNext()) {
+                int n = batch + BATCH_UNIT;
+                if (n > s)
+                    n = (int) s;
+                if (n > MAX_BATCH)
+                    n = MAX_BATCH;
+                Object[] a = new Object[n];
+                int j = 0;
+                do {
+                    a[j] = i.next();
+                } while (++j < n && i.hasNext());
+                batch = j;
+                if (est != Long.MAX_VALUE)
+                    est -= j;
+                return new ArraySpliterator<>((T[]) a, 0, j, characteristics);
+            }
+            return null;
+        }
+
+        @Override
+        public void forEachRemaining(Consumer<? super T> action) {
+            if (action == null) throw new NullPointerException();
+            Iterator<? extends T> i;
+            if ((i = it) == null) {
+                i = it = collection.iterator();
+                est = (long) collection.size();
+            }
+            i.forEachRemaining(action);
+        }
+
+        @Override
+        public boolean tryAdvance(Consumer<? super T> action) {
+            if (action == null) throw new NullPointerException();
+            if (it == null) {
+                it = collection.iterator();
+                est = (long) collection.size();
+            }
+            if (it.hasNext()) {
+                action.accept(it.next());
+                return true;
+            }
+            return false;
+        }
+
+        @Override
+        public long estimateSize() {
+            if (it == null) {
+                it = collection.iterator();
+                return est = (long) collection.size();
+            }
+            return est;
+        }
+
+        @Override
+        public int characteristics() {
+            return characteristics;
+        }
+
+        @Override
+        public Comparator<? super T> getComparator() {
+            if (hasCharacteristics(Spliterator.SORTED))
+                return null;
+            throw new IllegalStateException();
+        }
+    }
+
+    /**
+     * byte iterator spliterator
+     */
+    public static class ByteIteratorSpliterator implements Spliterator.OfByte {
+        static final int BATCH_UNIT = IteratorSpliterator.BATCH_UNIT;
+        static final int MAX_BATCH = IteratorSpliterator.MAX_BATCH;
+        private PrimitiveIterator.OfByte iterator;
+        private final int characteristics;
+        private long estimateSize;             // size estimate
+        private int batch;            // batch size for splits
+
+        /**
+         * Creates a spliterator using the given iterator
+         * for traversal, and reporting the given initial size
+         * and characteristics.
+         *
+         * @param iterator        the iterator for the source
+         * @param size            the number of elements in the source
+         * @param characteristics properties of this spliterator's
+         *                        source or elements.
+         */
+        public ByteIteratorSpliterator(PrimitiveIterator.OfByte iterator, long size, int characteristics) {
+            this.iterator = iterator;
+            this.estimateSize = size;
+            this.characteristics = (characteristics & java.util.Spliterator.CONCURRENT) == 0
+                    ? characteristics | Spliterator.SIZED | Spliterator.SUBSIZED
+                    : characteristics;
+        }
+
+        /**
+         * Creates a spliterator using the given iterator for a
+         * source of unknown size, reporting the given
+         * characteristics.
+         *
+         * @param iterator        the iterator for the source
+         * @param characteristics properties of this spliterator's
+         *                        source or elements.
+         */
+        public ByteIteratorSpliterator(PrimitiveIterator.OfByte iterator, int characteristics) {
+            this.iterator = iterator;
+            this.estimateSize = Long.MAX_VALUE;
+            this.characteristics = characteristics & ~(Spliterator.SIZED | Spliterator.SUBSIZED);
+        }
+
+        @Override
+        public long estimateSize() {
+            return estimateSize;
+        }
+
+        @Override
+        public int characteristics() {
+            return characteristics;
+        }
+
+        @Override
+        public OfByte trySplit() {
+            PrimitiveIterator.OfByte iterator = this.iterator;
+            long estimateSize = this.estimateSize;
+            if (estimateSize > 1 && iterator.hasNext()) {
+                int n = batch + BATCH_UNIT;
+                if (n > estimateSize) {
+                    n = (int) estimateSize;
+                }
+                if (n > MAX_BATCH) {
+                    n = MAX_BATCH;
+                }
+                byte[] bytes = new byte[n];
+                int offset = 0;
+                do {
+                    bytes[offset++] = iterator.nextByte();
+                } while (offset < n && iterator.hasNext());
+                batch = offset;
+                if (this.estimateSize != Long.MAX_VALUE) {
+                    this.estimateSize -= offset;
+                }
+                return new ByteArraySpliterator(bytes, 0, offset, characteristics);
+            }
+
+            return null;
+        }
+
+        @Override
+        public boolean tryAdvance(ByteConsumer action) {
+            Objects.requireNonNull(action);
+            if (iterator.hasNext()) {
+                action.accept(iterator.nextByte());
+                return true;
+            }
+            return false;
+        }
+
+        @Override
+        public void forEachRemaining(ByteConsumer action) {
+            iterator.forEachRemaining(Objects.requireNonNull(action));
+        }
+
+        @Override
+        public Comparator<? super Byte> getComparator() {
+            if (hasCharacteristics(Spliterator.SORTED)) {
+                return null;
+            }
+            throw new IllegalStateException();
+        }
+    }
+
+    public static class CharIteratorSpliterator implements Spliterator.OfChar {
+        static final int BATCH_UNIT = IteratorSpliterator.BATCH_UNIT;
+        static final int MAX_BATCH = IteratorSpliterator.MAX_BATCH;
+        private PrimitiveIterator.OfChar iterator;
+        private final int characteristics;
+        private long estimateSize;             // size estimate
+        private int batch;            // batch size for splits
+
+        /**
+         * Creates a spliterator using the given iterator
+         * for traversal, and reporting the given initial size
+         * and characteristics.
+         *
+         * @param iterator        the iterator for the source
+         * @param size            the number of elements in the source
+         * @param characteristics properties of this spliterator's
+         *                        source or elements.
+         */
+        public CharIteratorSpliterator(PrimitiveIterator.OfChar iterator, long size, int characteristics) {
+            this.iterator = iterator;
+            this.estimateSize = size;
+            this.characteristics = (characteristics & java.util.Spliterator.CONCURRENT) == 0
+                    ? characteristics | Spliterator.SIZED | Spliterator.SUBSIZED
+                    : characteristics;
+        }
+
+        /**
+         * Creates a spliterator using the given iterator for a
+         * source of unknown size, reporting the given
+         * characteristics.
+         *
+         * @param iterator        the iterator for the source
+         * @param characteristics properties of this spliterator's
+         *                        source or elements.
+         */
+        public CharIteratorSpliterator(PrimitiveIterator.OfChar iterator, int characteristics) {
+            this.iterator = iterator;
+            this.estimateSize = Long.MAX_VALUE;
+            this.characteristics = characteristics & ~(Spliterator.SIZED | Spliterator.SUBSIZED);
+        }
+
+        @Override
+        public long estimateSize() {
+            return estimateSize;
+        }
+
+        @Override
+        public int characteristics() {
+            return characteristics;
+        }
+
+        @Override
+        public Comparator<? super Character> getComparator() {
+            if (hasCharacteristics(Spliterator.SORTED)) {
+                return null;
+            }
+            throw new IllegalStateException();
+        }
+
+        @Override
+        public void forEachRemaining(CharConsumer action) {
+            iterator.forEachRemaining(Objects.requireNonNull(action));
+        }
+
+        @Override
+        public OfChar trySplit() {
+            PrimitiveIterator.OfChar iterator = this.iterator;
+            long estimateSize = this.estimateSize;
+            if (estimateSize > 1 && iterator.hasNext()) {
+                int split = batch + MAX_BATCH;
+                split = (int) Math.max(split, estimateSize);
+                split = (int) Math.max(split, MAX_BATCH);
+                char[] chars = new char[split];
+                int offset = 0;
+                do {
+                    chars[offset++] = iterator.nextChar();
+                } while (offset < split && iterator.hasNext());
+                batch = offset;
+                if (this.estimateSize != Long.MAX_VALUE) {
+                    this.estimateSize -= offset;
+                }
+                return new CharArraySpliterator(chars, 0, offset, characteristics);
+
+            }
+
+            return null;
+        }
+
+        @Override
+        public boolean tryAdvance(CharConsumer action) {
+            Objects.requireNonNull(action);
+            if (iterator.hasNext()) {
+                action.accept(iterator.nextChar());
+                return true;
+            }
+            return false;
+        }
+    }
+
+    public static class ShortIteratorSpliterator implements Spliterator.OfShort {
+        static final int BATCH_UNIT = IteratorSpliterator.BATCH_UNIT;
+        static final int MAX_BATCH = IteratorSpliterator.MAX_BATCH;
+        private PrimitiveIterator.OfShort iterator;
+        private final int characteristics;
+        private long estimateSize;             // size estimate
+        private int batch;            // batch size for splits
+
+        /**
+         * Creates a spliterator using the given iterator
+         * for traversal, and reporting the given initial size
+         * and characteristics.
+         *
+         * @param iterator        the iterator for the source
+         * @param size            the number of elements in the source
+         * @param characteristics properties of this spliterator's
+         *                        source or elements.
+         */
+        public ShortIteratorSpliterator(PrimitiveIterator.OfShort iterator, long size, int characteristics) {
+            this.iterator = iterator;
+            this.estimateSize = size;
+            this.characteristics = (characteristics & java.util.Spliterator.CONCURRENT) == 0
+                    ? characteristics | Spliterator.SIZED | Spliterator.SUBSIZED
+                    : characteristics;
+        }
+
+        /**
+         * Creates a spliterator using the given iterator for a
+         * source of unknown size, reporting the given
+         * characteristics.
+         *
+         * @param iterator        the iterator for the source
+         * @param characteristics properties of this spliterator's
+         *                        source or elements.
+         */
+        public ShortIteratorSpliterator(PrimitiveIterator.OfShort iterator, int characteristics) {
+            this.iterator = iterator;
+            this.estimateSize = Long.MAX_VALUE;
+            this.characteristics = characteristics & ~(Spliterator.SIZED | Spliterator.SUBSIZED);
+        }
+
+        @Override
+        public long estimateSize() {
+            return estimateSize;
+        }
+
+        @Override
+        public int characteristics() {
+            return characteristics;
+        }
+
+        @Override
+        public Comparator<? super Short> getComparator() {
+            if (hasCharacteristics(Spliterator.SORTED)) {
+                return null;
+            }
+            throw new IllegalStateException();
+        }
+
+        @Override
+        public void forEachRemaining(ShortConsumer action) {
+            iterator.forEachRemaining(Objects.requireNonNull(action));
+        }
+
+        @Override
+        public OfShort trySplit() {
+            PrimitiveIterator.OfShort iterator = this.iterator;
+            long estimateSize = this.estimateSize;
+            if (estimateSize > 1 && iterator.hasNext()) {
+                int split = batch + BATCH_UNIT;
+                split = (int) Math.max(split, estimateSize);
+                split = (int) Math.max(split, MAX_BATCH);
+                short[] shorts = new short[split];
+                int offset = 0;
+                while (offset < split && iterator.hasNext()) {
+                    shorts[offset++] = iterator.nextShot();
+                }
+                batch = offset;
+                if (this.estimateSize != Long.MAX_VALUE) {
+                    this.estimateSize -= offset;
+                }
+                return new ShortArraySpliterator(shorts, 0, offset, characteristics);
+
+            }
+            return null;
+        }
+
+        @Override
+        public boolean tryAdvance(ShortConsumer action) {
+            Objects.requireNonNull(action);
+            if (iterator.hasNext()) {
+                action.accept(iterator.nextShot());
+                return true;
+            }
+            return false;
+        }
+    }
+
+    public static class IntIteratorSpliterator implements Spliterator.OfInt {
+        static final int BATCH_UNIT = IteratorSpliterator.BATCH_UNIT;
+        static final int MAX_BATCH = IteratorSpliterator.MAX_BATCH;
+        private PrimitiveIterator.OfInt iterator;
+        private final int characteristics;
+        private long estimateSize;             // size estimate
+        private int batch;            // batch size for splits
+
+        /**
+         * Creates a spliterator using the given iterator
+         * for traversal, and reporting the given initial size
+         * and characteristics.
+         *
+         * @param iterator        the iterator for the source
+         * @param size            the number of elements in the source
+         * @param characteristics properties of this spliterator's
+         *                        source or elements.
+         */
+        public IntIteratorSpliterator(PrimitiveIterator.OfInt iterator, long size, int characteristics) {
+            this.iterator = iterator;
+            this.estimateSize = size;
+            this.characteristics = (characteristics & java.util.Spliterator.CONCURRENT) == 0
+                    ? characteristics | Spliterator.SIZED | Spliterator.SUBSIZED
+                    : characteristics;
+        }
+
+        /**
+         * Creates a spliterator using the given iterator for a
+         * source of unknown size, reporting the given
+         * characteristics.
+         *
+         * @param iterator        the iterator for the source
+         * @param characteristics properties of this spliterator's
+         *                        source or elements.
+         */
+        public IntIteratorSpliterator(PrimitiveIterator.OfInt iterator, int characteristics) {
+            this.iterator = iterator;
+            this.estimateSize = Long.MAX_VALUE;
+            this.characteristics = characteristics & ~(Spliterator.SIZED | Spliterator.SUBSIZED);
+        }
+
+        @Override
+        public long estimateSize() {
+            return estimateSize;
+        }
+
+        @Override
+        public int characteristics() {
+            return characteristics;
+        }
+
+        @Override
+        public Comparator<? super Integer> getComparator() {
+            if (hasCharacteristics(Spliterator.SORTED)) {
+                return null;
+            }
+            throw new IllegalStateException();
+        }
+
+        @Override
+        public void forEachRemaining(IntConsumer action) {
+            iterator.forEachRemaining(Objects.requireNonNull(action));
+        }
+
+        @Override
+        public OfInt trySplit() {
+            PrimitiveIterator.OfInt iterator = this.iterator;
+            long estimateSize = this.estimateSize;
+            if (estimateSize > 1 && iterator.hasNext()) {
+                int split = batch + BATCH_UNIT;
+                split = (int) Math.max(estimateSize, split);
+                split = Math.max(split, MAX_BATCH);
+
+                int[] ints = new int[split];
+                int offset = 0;
+                while (offset < split && iterator.hasNext()) {
+                    ints[offset++] = iterator.nextInt();
+                }
+                batch = offset;
+                if (this.estimateSize != Long.MAX_VALUE) {
+                    this.estimateSize -= offset;
+                }
+                return new IntArraySpliterator(ints, 0, offset, characteristics);
+            }
+            return null;
+        }
+
+        @Override
+        public boolean tryAdvance(IntConsumer action) {
+            Objects.requireNonNull(action);
+            if (iterator.hasNext()) {
+                action.accept(iterator.nextInt());
+                return true;
+            }
+            return false;
+        }
+    }
+
+    public static class LongIteratorSpliterator implements Spliterator.OfLong {
+        static final int BATCH_UNIT = IteratorSpliterator.BATCH_UNIT;
+        static final int MAX_BATCH = IteratorSpliterator.MAX_BATCH;
+        private PrimitiveIterator.OfLong iterator;
+        private final int characteristics;
+        private long estimateSize;             // size estimate
+        private int batch;            // batch size for splits
+
+        /**
+         * Creates a spliterator using the given iterator
+         * for traversal, and reporting the given initial size
+         * and characteristics.
+         *
+         * @param iterator        the iterator for the source
+         * @param size            the number of elements in the source
+         * @param characteristics properties of this spliterator's
+         *                        source or elements.
+         */
+        public LongIteratorSpliterator(PrimitiveIterator.OfLong iterator, long size, int characteristics) {
+            this.iterator = iterator;
+            this.estimateSize = size;
+            this.characteristics = (characteristics & java.util.Spliterator.CONCURRENT) == 0
+                    ? characteristics | Spliterator.SIZED | Spliterator.SUBSIZED
+                    : characteristics;
+        }
+
+        /**
+         * Creates a spliterator using the given iterator for a
+         * source of unknown size, reporting the given
+         * characteristics.
+         *
+         * @param iterator        the iterator for the source
+         * @param characteristics properties of this spliterator's
+         *                        source or elements.
+         */
+        public LongIteratorSpliterator(PrimitiveIterator.OfLong iterator, int characteristics) {
+            this.iterator = iterator;
+            this.estimateSize = Long.MAX_VALUE;
+            this.characteristics = characteristics & ~(Spliterator.SIZED | Spliterator.SUBSIZED);
+        }
+
+        @Override
+        public long estimateSize() {
+            return estimateSize;
+        }
+
+        @Override
+        public int characteristics() {
+            return characteristics;
+        }
+
+        @Override
+        public Comparator<? super Long> getComparator() {
+            if (hasCharacteristics(Spliterator.SORTED)){
+                return null;
+            }
+
+            throw new IllegalStateException();
+        }
+
+        @Override
+        public void forEachRemaining(LongConsumer action) {
+            OfLong.super.forEachRemaining(action);
+        }
+
+        @Override
+        public OfLong trySplit() {
+
+            PrimitiveIterator.OfLong iterator = this.iterator;
+            long estimateSize = this.estimateSize;
+            if (estimateSize >1 && iterator.hasNext()){
+                int split = batch + BATCH_UNIT;
+                split = (int) Math.max(split,estimateSize);
+                split = Math.min(split,MAX_BATCH);
+                long[] longs = new long[split];
+                int offset = 0;
+                while (offset < split && iterator.hasNext()){
+                    longs[offset++] = iterator.nextLong();
+                }
+                batch = offset;
+                if (this.estimateSize != Long.MAX_VALUE){
+                    this.estimateSize -= offset;
+                }
+
+                return new LongArraySpliterator(longs,0,offset,characteristics);
+            }
+            return null;
+        }
+
+        @Override
+        public boolean tryAdvance(LongConsumer action) {
+            Objects.requireNonNull(action);
+            if (iterator.hasNext()){
+                action.accept(iterator.nextLong());
+                return true;
+            }
+            return false;
+        }
+    }
+
+    public static class FloatIteratorSpliterator implements Spliterator.OfFloat {
+        static final int BATCH_UNIT = IteratorSpliterator.BATCH_UNIT;
+        static final int MAX_BATCH = IteratorSpliterator.MAX_BATCH;
+        private PrimitiveIterator.OfFloat iterator;
+        private final int characteristics;
+        private long estimateSize;             // size estimate
+        private int batch;            // batch size for splits
+
+        /**
+         * Creates a spliterator using the given iterator
+         * for traversal, and reporting the given initial size
+         * and characteristics.
+         *
+         * @param iterator        the iterator for the source
+         * @param size            the number of elements in the source
+         * @param characteristics properties of this spliterator's
+         *                        source or elements.
+         */
+        public FloatIteratorSpliterator(PrimitiveIterator.OfFloat iterator, long size, int characteristics) {
+            this.iterator = iterator;
+            this.estimateSize = size;
+            this.characteristics = (characteristics & java.util.Spliterator.CONCURRENT) == 0
+                    ? characteristics | Spliterator.SIZED | Spliterator.SUBSIZED
+                    : characteristics;
+        }
+
+        /**
+         * Creates a spliterator using the given iterator for a
+         * source of unknown size, reporting the given
+         * characteristics.
+         *
+         * @param iterator        the iterator for the source
+         * @param characteristics properties of this spliterator's
+         *                        source or elements.
+         */
+        public FloatIteratorSpliterator(PrimitiveIterator.OfFloat iterator, int characteristics) {
+            this.iterator = iterator;
+            this.estimateSize = Long.MAX_VALUE;
+            this.characteristics = characteristics & ~(Spliterator.SIZED | Spliterator.SUBSIZED);
+        }
+
+        @Override
+        public long estimateSize() {
+            return estimateSize;
+        }
+
+        @Override
+        public int characteristics() {
+            return characteristics;
+        }
+
+        @Override
+        public void forEachRemaining(FloatConsumer action) {
+            iterator.forEachRemaining(Objects.requireNonNull(action));
+        }
+
+        @Override
+        public OfFloat trySplit() {
+            return null;
+        }
+
+        @Override
+        public boolean tryAdvance(FloatConsumer action) {
+            return false;
+        }
+
+        @Override
+        public Comparator<? super Float> getComparator() {
+            if (hasCharacteristics(Spliterator.SORTED)){
+                return null;
+            }
+            throw new IllegalStateException();
+        }
+    }
+
+    public static class DoubleIteratorSpliterator implements Spliterator.OfDouble {
+        static final int BATCH_UNIT = IteratorSpliterator.BATCH_UNIT;
+        static final int MAX_BATCH = IteratorSpliterator.MAX_BATCH;
+        private PrimitiveIterator.OfDouble iterator;
+        private final int characteristics;
+        private long estimateSize;             // size estimate
+        private int batch;            // batch size for splits
+
+        /**
+         * Creates a spliterator using the given iterator
+         * for traversal, and reporting the given initial size
+         * and characteristics.
+         *
+         * @param iterator        the iterator for the source
+         * @param size            the number of elements in the source
+         * @param characteristics properties of this spliterator's
+         *                        source or elements.
+         */
+        public DoubleIteratorSpliterator(PrimitiveIterator.OfDouble iterator, long size, int characteristics) {
+            this.iterator = iterator;
+            this.estimateSize = size;
+            this.characteristics = (characteristics & java.util.Spliterator.CONCURRENT) == 0
+                    ? characteristics | Spliterator.SIZED | Spliterator.SUBSIZED
+                    : characteristics;
+        }
+
+        /**
+         * Creates a spliterator using the given iterator for a
+         * source of unknown size, reporting the given
+         * characteristics.
+         *
+         * @param iterator        the iterator for the source
+         * @param characteristics properties of this spliterator's
+         *                        source or elements.
+         */
+        public DoubleIteratorSpliterator(PrimitiveIterator.OfDouble iterator, int characteristics) {
+            this.iterator = iterator;
+            this.estimateSize = Long.MAX_VALUE;
+            this.characteristics = characteristics & ~(Spliterator.SIZED | Spliterator.SUBSIZED);
+        }
+
+        @Override
+        public long estimateSize() {
+            return estimateSize;
+        }
+
+        @Override
+        public int characteristics() {
+            return characteristics;
+        }
+
+        @Override
+        public Comparator<? super Double> getComparator() {
+           if (hasCharacteristics(Spliterator.SORTED)){
+               return null;
+           }
+           throw new IllegalStateException();
+        }
+
+        @Override
+        public void forEachRemaining(DoubleConsumer action) {
+            iterator.forEachRemaining(Objects.requireNonNull(action));
+        }
+
+        @Override
+        public OfDouble trySplit() {
+            PrimitiveIterator.OfDouble iterator = this.iterator;
+            long estimateSize = this.estimateSize;
+            if (estimateSize >1 && iterator.hasNext()){
+                int split = batch + BATCH_UNIT;
+                split = (int) Math.max(split,estimateSize);
+                split = Math.min(split,MAX_BATCH);
+                double[] doubles = new double[split];
+                int offset = 0;
+                while (offset < split && iterator.hasNext()){
+                    doubles[offset++] = iterator.nextDouble();
+                }
+                batch = offset;
+                if (this.estimateSize != Long.MAX_VALUE){
+                    this.estimateSize -= offset;
+                }
+                return new DoubleArraySpliterator(doubles,0,offset,characteristics);
+            }
+
+            return null;
+        }
+
+        @Override
+        public boolean tryAdvance(DoubleConsumer action) {
+            Objects.requireNonNull(action);
+            if (iterator.hasNext()){
+                action.accept(iterator.nextDouble());
+                return true;
+            }
+            return false;
         }
     }
 }
