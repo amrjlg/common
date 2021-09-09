@@ -90,7 +90,7 @@ public abstract class Spliterators {
     }
 
     public static Spliterator.OfByte spliterator(byte[] bytes, int fromIndex, int toIndex, int characteristics) {
-        checkFromToBounds(bytes.length,fromIndex,toIndex);
+        checkFromToBounds(bytes.length, fromIndex, toIndex);
         return new ByteArraySpliterator(bytes, fromIndex, toIndex, characteristics);
     }
 
@@ -99,7 +99,7 @@ public abstract class Spliterators {
     }
 
     public static Spliterator.OfChar spliterator(char[] chars, int fromIndex, int toIndex, int characteristics) {
-        checkFromToBounds(chars.length,fromIndex,toIndex);
+        checkFromToBounds(chars.length, fromIndex, toIndex);
         return new CharArraySpliterator(chars, fromIndex, toIndex, characteristics);
     }
 
@@ -108,7 +108,7 @@ public abstract class Spliterators {
     }
 
     public static Spliterator.OfShort spliterator(short[] shorts, int fromIndex, int toIndex, int characteristics) {
-        checkFromToBounds(shorts.length,fromIndex,toIndex);
+        checkFromToBounds(shorts.length, fromIndex, toIndex);
         return new ShortArraySpliterator(shorts, fromIndex, toIndex, characteristics);
     }
 
@@ -118,7 +118,7 @@ public abstract class Spliterators {
     }
 
     public static Spliterator.OfInt spliterator(int[] shorts, int fromIndex, int toIndex, int characteristics) {
-        checkFromToBounds(shorts.length,fromIndex,toIndex);
+        checkFromToBounds(shorts.length, fromIndex, toIndex);
         return new IntArraySpliterator(shorts, fromIndex, toIndex, characteristics);
     }
 
@@ -127,7 +127,7 @@ public abstract class Spliterators {
     }
 
     public static Spliterator.OfLong spliterator(long[] longs, int fromIndex, int toIndex, int characteristics) {
-        checkFromToBounds(longs.length,fromIndex,toIndex);
+        checkFromToBounds(longs.length, fromIndex, toIndex);
         return new LongArraySpliterator(longs, fromIndex, toIndex, characteristics);
     }
 
@@ -136,7 +136,7 @@ public abstract class Spliterators {
     }
 
     public static Spliterator.OfFloat spliterator(float[] floats, int fromIndex, int toIndex, int characteristics) {
-        checkFromToBounds(floats.length,fromIndex,toIndex);
+        checkFromToBounds(floats.length, fromIndex, toIndex);
         return new FloatArraySpliterator(floats, fromIndex, toIndex, characteristics);
     }
 
@@ -145,21 +145,21 @@ public abstract class Spliterators {
     }
 
     public static Spliterator.OfDouble spliterator(double[] doubles, int fromIndex, int toIndex, int characteristics) {
-        checkFromToBounds(doubles.length,fromIndex,toIndex);
+        checkFromToBounds(doubles.length, fromIndex, toIndex);
         return new DoubleArraySpliterator(doubles, fromIndex, toIndex, characteristics);
     }
 
 
-    private static void checkFromToBounds(int arrayLength, int origin, int fence) {
-        if (origin > fence) {
+    private static void checkFromToBounds(int arrayLength, int begin, int end) {
+        if (begin > end) {
             throw new ArrayIndexOutOfBoundsException(
-                    "origin(" + origin + ") > fence(" + fence + ")");
+                    "begin(" + begin + ") > end(" + end + ")");
         }
-        if (origin < 0) {
-            throw new ArrayIndexOutOfBoundsException(origin);
+        if (begin < 0) {
+            throw new ArrayIndexOutOfBoundsException(begin);
         }
-        if (fence > arrayLength) {
-            throw new ArrayIndexOutOfBoundsException(fence);
+        if (end > arrayLength) {
+            throw new ArrayIndexOutOfBoundsException(end);
         }
     }
 
@@ -257,28 +257,27 @@ public abstract class Spliterators {
         // current index, modified on advance/split
         private int index;
         // one past last index
-        private final int fence;
+        private final int end;
         private final int characteristics;
 
         public ArraySpliterator(T[] array, int additionalCharacteristics) {
             this(array, 0, array.length, additionalCharacteristics);
         }
 
-        public ArraySpliterator(T[] array, int origin, int fence, int additionalCharacteristics) {
+        public ArraySpliterator(T[] array, int origin, int end, int additionalCharacteristics) {
             this.array = array;
             this.index = origin;
-            this.fence = fence;
+            this.end = end;
             this.characteristics = additionalCharacteristics | Spliterator.SIZED | Spliterator.SUBSIZED;
         }
 
         @Override
         public Spliterator<T> trySplit() {
-            int lo = index, mid = (lo + fence) >>> 1;
+            int lo = index, mid = (lo + end) >>> 1;
             return (lo >= mid)
                     ? null
                     : new ArraySpliterator<>(array, lo, index = mid, characteristics);
         }
-
 
         @Override
         public void forEachRemaining(Consumer<? super T> action) {
@@ -286,7 +285,7 @@ public abstract class Spliterators {
             int i, hi; // hoist accesses and checks from loop
             if (action == null)
                 throw new NullPointerException();
-            if ((a = array).length >= (hi = fence) &&
+            if ((a = array).length >= (hi = end) &&
                     (i = index) >= 0 && i < (index = hi)) {
                 do {
                     action.accept(a[i]);
@@ -298,7 +297,7 @@ public abstract class Spliterators {
         public boolean tryAdvance(Consumer<? super T> action) {
             if (action == null)
                 throw new NullPointerException();
-            if (index >= 0 && index < fence) {
+            if (index >= 0 && index < end) {
                 T e = array[index++];
                 action.accept(e);
                 return true;
@@ -308,7 +307,7 @@ public abstract class Spliterators {
 
         @Override
         public long estimateSize() {
-            return fence - index;
+            return end - index;
         }
 
         @Override
@@ -327,23 +326,23 @@ public abstract class Spliterators {
     public static class ByteArraySpliterator implements Spliterator.OfByte {
         private final byte[] array;
         private int index;        // current index, modified on advance/split
-        private final int fence;  // one past last index
+        private final int end;  // one past last index
         private final int characteristics;
 
         public ByteArraySpliterator(byte[] array, int additionalCharacteristics) {
             this(array, 0, array.length, additionalCharacteristics);
         }
 
-        public ByteArraySpliterator(byte[] array, int origin, int fence, int additionalCharacteristics) {
+        public ByteArraySpliterator(byte[] array, int origin, int end, int additionalCharacteristics) {
             this.array = array;
             this.index = origin;
-            this.fence = fence;
+            this.end = end;
             this.characteristics = additionalCharacteristics | Spliterator.SIZED | Spliterator.SUBSIZED;
         }
 
         @Override
         public Spliterator.OfByte trySplit() {
-            int lo = index, mid = (lo + fence) >>> 1;
+            int lo = index, mid = (lo + end) >>> 1;
             return (lo >= mid)
                     ? null
                     : new Spliterators.ByteArraySpliterator(array, lo, index = mid, characteristics);
@@ -355,7 +354,7 @@ public abstract class Spliterators {
                 throw new NullPointerException();
             byte[] a = array;
             // hoist accesses and checks from loop
-            int hi = fence, i = index;
+            int hi = end, i = index;
             if (a.length >= hi && i >= 0 && i < (index = hi)) {
                 do {
                     action.accept(a[i]);
@@ -367,7 +366,7 @@ public abstract class Spliterators {
         public boolean tryAdvance(ByteConsumer action) {
             if (action == null)
                 throw new NullPointerException();
-            if (index >= 0 && index < fence) {
+            if (index >= 0 && index < end) {
                 action.accept(array[index++]);
                 return true;
             }
@@ -376,7 +375,7 @@ public abstract class Spliterators {
 
         @Override
         public long estimateSize() {
-            return fence - index;
+            return end - index;
         }
 
         @Override
@@ -395,23 +394,23 @@ public abstract class Spliterators {
     public static class CharArraySpliterator implements Spliterator.OfChar {
         private final char[] array;
         private int index;        // current index, modified on advance/split
-        private final int fence;  // one past last index
+        private final int end;  // one past last index
         private final int characteristics;
 
         public CharArraySpliterator(char[] array, int additionalCharacteristics) {
             this(array, 0, array.length, additionalCharacteristics);
         }
 
-        public CharArraySpliterator(char[] array, int origin, int fence, int additionalCharacteristics) {
+        public CharArraySpliterator(char[] array, int origin, int end, int additionalCharacteristics) {
             this.array = array;
             this.index = origin;
-            this.fence = fence;
+            this.end = end;
             this.characteristics = additionalCharacteristics | Spliterator.SIZED | Spliterator.SUBSIZED;
         }
 
         @Override
         public Spliterator.OfChar trySplit() {
-            int lo = index, mid = (lo + fence) >>> 1;
+            int lo = index, mid = (lo + end) >>> 1;
             return (lo >= mid)
                     ? null
                     : new Spliterators.CharArraySpliterator(array, lo, index = mid, characteristics);
@@ -423,7 +422,7 @@ public abstract class Spliterators {
                 throw new NullPointerException();
             char[] a = array;
             // hoist accesses and checks from loop
-            int hi = fence, i = index;
+            int hi = end, i = index;
             if (a.length >= hi && i >= 0 && i < (index = hi)) {
                 do {
                     action.accept(a[i]);
@@ -435,7 +434,7 @@ public abstract class Spliterators {
         public boolean tryAdvance(CharConsumer action) {
             if (action == null)
                 throw new NullPointerException();
-            if (index >= 0 && index < fence) {
+            if (index >= 0 && index < end) {
                 action.accept(array[index++]);
                 return true;
             }
@@ -444,7 +443,7 @@ public abstract class Spliterators {
 
         @Override
         public long estimateSize() {
-            return fence - index;
+            return end - index;
         }
 
         @Override
@@ -463,23 +462,23 @@ public abstract class Spliterators {
     public static class ShortArraySpliterator implements Spliterator.OfShort {
         private final short[] array;
         private int index;        // current index, modified on advance/split
-        private final int fence;  // one past last index
+        private final int end;  // one past last index
         private final int characteristics;
 
         public ShortArraySpliterator(short[] array, int additionalCharacteristics) {
             this(array, 0, array.length, additionalCharacteristics);
         }
 
-        public ShortArraySpliterator(short[] array, int origin, int fence, int additionalCharacteristics) {
+        public ShortArraySpliterator(short[] array, int origin, int end, int additionalCharacteristics) {
             this.array = array;
             this.index = origin;
-            this.fence = fence;
+            this.end = end;
             this.characteristics = additionalCharacteristics | Spliterator.SIZED | Spliterator.SUBSIZED;
         }
 
         @Override
         public Spliterator.OfShort trySplit() {
-            int lo = index, mid = (lo + fence) >>> 1;
+            int lo = index, mid = (lo + end) >>> 1;
             return (lo >= mid)
                     ? null
                     : new Spliterators.ShortArraySpliterator(array, lo, index = mid, characteristics);
@@ -491,7 +490,7 @@ public abstract class Spliterators {
                 throw new NullPointerException();
             short[] a = array;
             // hoist accesses and checks from loop
-            int hi = fence, i = index;
+            int hi = end, i = index;
             if (a.length >= hi && i >= 0 && i < (index = hi)) {
                 do {
                     action.accept(a[i]);
@@ -503,7 +502,7 @@ public abstract class Spliterators {
         public boolean tryAdvance(ShortConsumer action) {
             if (action == null)
                 throw new NullPointerException();
-            if (index >= 0 && index < fence) {
+            if (index >= 0 && index < end) {
                 action.accept(array[index++]);
                 return true;
             }
@@ -512,7 +511,7 @@ public abstract class Spliterators {
 
         @Override
         public long estimateSize() {
-            return fence - index;
+            return end - index;
         }
 
         @Override
@@ -530,24 +529,30 @@ public abstract class Spliterators {
 
     public static class IntArraySpliterator implements Spliterator.OfInt {
         private final int[] array;
-        private int index;        // current index, modified on advance/split
-        private final int fence;  // one past last index
+        /**
+         * current index, modified on advance/split
+         */
+        private int index;
+        /**
+         * one past last index
+         */
+        private final int end;
         private final int characteristics;
 
         public IntArraySpliterator(int[] array, int additionalCharacteristics) {
             this(array, 0, array.length, additionalCharacteristics);
         }
 
-        public IntArraySpliterator(int[] array, int origin, int fence, int additionalCharacteristics) {
+        public IntArraySpliterator(int[] array, int origin, int end, int additionalCharacteristics) {
             this.array = array;
             this.index = origin;
-            this.fence = fence;
+            this.end = end;
             this.characteristics = additionalCharacteristics | Spliterator.SIZED | Spliterator.SUBSIZED;
         }
 
         @Override
         public Spliterator.OfInt trySplit() {
-            int lo = index, mid = (lo + fence) >>> 1;
+            int lo = index, mid = (lo + end) >>> 1;
             return (lo >= mid)
                     ? null
                     : new Spliterators.IntArraySpliterator(array, lo, index = mid, characteristics);
@@ -559,7 +564,7 @@ public abstract class Spliterators {
                 throw new NullPointerException();
             int[] a = array;
             // hoist accesses and checks from loop
-            int hi = fence, i = index;
+            int hi = end, i = index;
             if (a.length >= hi && i >= 0 && i < (index = hi)) {
                 do {
                     action.accept(a[i]);
@@ -571,7 +576,7 @@ public abstract class Spliterators {
         public boolean tryAdvance(IntConsumer action) {
             if (action == null)
                 throw new NullPointerException();
-            if (index >= 0 && index < fence) {
+            if (index >= 0 && index < end) {
                 action.accept(array[index++]);
                 return true;
             }
@@ -580,7 +585,7 @@ public abstract class Spliterators {
 
         @Override
         public long estimateSize() {
-            return fence - index;
+            return end - index;
         }
 
         @Override
@@ -599,23 +604,23 @@ public abstract class Spliterators {
     public static class LongArraySpliterator implements Spliterator.OfLong {
         private final long[] array;
         private int index;        // current index, modified on advance/split
-        private final int fence;  // one past last index
+        private final int end;  // one past last index
         private final int characteristics;
 
         public LongArraySpliterator(long[] array, int additionalCharacteristics) {
             this(array, 0, array.length, additionalCharacteristics);
         }
 
-        public LongArraySpliterator(long[] array, int origin, int fence, int additionalCharacteristics) {
+        public LongArraySpliterator(long[] array, int origin, int end, int additionalCharacteristics) {
             this.array = array;
             this.index = origin;
-            this.fence = fence;
+            this.end = end;
             this.characteristics = additionalCharacteristics | Spliterator.SIZED | Spliterator.SUBSIZED;
         }
 
         @Override
         public Spliterator.OfLong trySplit() {
-            int lo = index, mid = (lo + fence) >>> 1;
+            int lo = index, mid = (lo + end) >>> 1;
             return (lo >= mid)
                     ? null
                     : new Spliterators.LongArraySpliterator(array, lo, index = mid, characteristics);
@@ -627,7 +632,7 @@ public abstract class Spliterators {
                 throw new NullPointerException();
             long[] a = array;
             // hoist accesses and checks from loop
-            int hi = fence, i = index;
+            int hi = end, i = index;
             if (a.length >= hi && i >= 0 && i < (index = hi)) {
                 do {
                     action.accept(a[i]);
@@ -639,7 +644,7 @@ public abstract class Spliterators {
         public boolean tryAdvance(LongConsumer action) {
             if (action == null)
                 throw new NullPointerException();
-            if (index >= 0 && index < fence) {
+            if (index >= 0 && index < end) {
                 action.accept(array[index++]);
                 return true;
             }
@@ -648,7 +653,7 @@ public abstract class Spliterators {
 
         @Override
         public long estimateSize() {
-            return fence - index;
+            return end - index;
         }
 
         @Override
@@ -667,23 +672,23 @@ public abstract class Spliterators {
     public static class FloatArraySpliterator implements Spliterator.OfFloat {
         private final float[] array;
         private int index;        // current index, modified on advance/split
-        private final int fence;  // one past last index
+        private final int end;  // one past last index
         private final int characteristics;
 
         public FloatArraySpliterator(float[] array, int additionalCharacteristics) {
             this(array, 0, array.length, additionalCharacteristics);
         }
 
-        public FloatArraySpliterator(float[] array, int origin, int fence, int additionalCharacteristics) {
+        public FloatArraySpliterator(float[] array, int origin, int end, int additionalCharacteristics) {
             this.array = array;
             this.index = origin;
-            this.fence = fence;
+            this.end = end;
             this.characteristics = additionalCharacteristics | Spliterator.SIZED | Spliterator.SUBSIZED;
         }
 
         @Override
         public Spliterator.OfFloat trySplit() {
-            int lo = index, mid = (lo + fence) >>> 1;
+            int lo = index, mid = (lo + end) >>> 1;
             return (lo >= mid)
                     ? null
                     : new Spliterators.FloatArraySpliterator(array, lo, index = mid, characteristics);
@@ -695,7 +700,7 @@ public abstract class Spliterators {
                 throw new NullPointerException();
             float[] a = array;
             // hoist accesses and checks from loop
-            int hi = fence, i = index;
+            int hi = end, i = index;
             if (a.length >= hi && i >= 0 && i < (index = hi)) {
                 do {
                     action.accept(a[i]);
@@ -707,7 +712,7 @@ public abstract class Spliterators {
         public boolean tryAdvance(FloatConsumer action) {
             if (action == null)
                 throw new NullPointerException();
-            if (index >= 0 && index < fence) {
+            if (index >= 0 && index < end) {
                 action.accept(array[index++]);
                 return true;
             }
@@ -716,7 +721,7 @@ public abstract class Spliterators {
 
         @Override
         public long estimateSize() {
-            return fence - index;
+            return end - index;
         }
 
         @Override
@@ -735,23 +740,23 @@ public abstract class Spliterators {
     public static class DoubleArraySpliterator implements Spliterator.OfDouble {
         private final double[] array;
         private int index;        // current index, modified on advance/split
-        private final int fence;  // one past last index
+        private final int end;  // one past last index
         private final int characteristics;
 
         public DoubleArraySpliterator(double[] array, int additionalCharacteristics) {
             this(array, 0, array.length, additionalCharacteristics);
         }
 
-        public DoubleArraySpliterator(double[] array, int origin, int fence, int additionalCharacteristics) {
+        public DoubleArraySpliterator(double[] array, int origin, int end, int additionalCharacteristics) {
             this.array = array;
             this.index = origin;
-            this.fence = fence;
+            this.end = end;
             this.characteristics = additionalCharacteristics | Spliterator.SIZED | Spliterator.SUBSIZED;
         }
 
         @Override
         public Spliterator.OfDouble trySplit() {
-            int lo = index, mid = (lo + fence) >>> 1;
+            int lo = index, mid = (lo + end) >>> 1;
             return (lo >= mid)
                     ? null
                     : new Spliterators.DoubleArraySpliterator(array, lo, index = mid, characteristics);
@@ -763,7 +768,7 @@ public abstract class Spliterators {
                 throw new NullPointerException();
             double[] a = array;
             // hoist accesses and checks from loop
-            int hi = fence, i = index;
+            int hi = end, i = index;
             if (a.length >= hi && i >= 0 && i < (index = hi)) {
                 do {
                     action.accept(a[i]);
@@ -775,7 +780,7 @@ public abstract class Spliterators {
         public boolean tryAdvance(DoubleConsumer action) {
             if (action == null)
                 throw new NullPointerException();
-            if (index >= 0 && index < fence) {
+            if (index >= 0 && index < end) {
                 action.accept(array[index++]);
                 return true;
             }
@@ -784,7 +789,7 @@ public abstract class Spliterators {
 
         @Override
         public long estimateSize() {
-            return fence - index;
+            return end - index;
         }
 
         @Override
@@ -1088,8 +1093,8 @@ public abstract class Spliterators {
             long estimateSize = this.estimateSize;
             if (estimateSize > 1 && iterator.hasNext()) {
                 int split = batch + MAX_BATCH;
-                split = (int) Math.max(split, estimateSize);
-                split = (int) Math.max(split, MAX_BATCH);
+                split = (int) Math.min(split, estimateSize);
+                split = (int) Math.min(split, MAX_BATCH);
                 char[] chars = new char[split];
                 int offset = 0;
                 do {
@@ -1187,8 +1192,8 @@ public abstract class Spliterators {
             long estimateSize = this.estimateSize;
             if (estimateSize > 1 && iterator.hasNext()) {
                 int split = batch + BATCH_UNIT;
-                split = (int) Math.max(split, estimateSize);
-                split = (int) Math.max(split, MAX_BATCH);
+                split = (int) Math.min(split, estimateSize);
+                split = (int) Math.min(split, MAX_BATCH);
                 short[] shorts = new short[split];
                 int offset = 0;
                 while (offset < split && iterator.hasNext()) {
@@ -1280,13 +1285,13 @@ public abstract class Spliterators {
         }
 
         @Override
-        public OfInt trySplit() {
+        public Spliterator.OfInt trySplit() {
             PrimitiveIterator.OfInt iterator = this.iterator;
             long estimateSize = this.estimateSize;
             if (estimateSize > 1 && iterator.hasNext()) {
                 int split = batch + BATCH_UNIT;
-                split = (int) Math.max(estimateSize, split);
-                split = Math.max(split, MAX_BATCH);
+                split = (int) Math.min(estimateSize, split);
+                split = Math.min(split, MAX_BATCH);
 
                 int[] ints = new int[split];
                 int offset = 0;
@@ -1375,17 +1380,17 @@ public abstract class Spliterators {
 
         @Override
         public void forEachRemaining(LongConsumer action) {
-            OfLong.super.forEachRemaining(action);
+            iterator.forEachRemaining(Objects.requireNonNull(action));
         }
 
         @Override
-        public OfLong trySplit() {
+        public Spliterator.OfLong trySplit() {
 
             PrimitiveIterator.OfLong iterator = this.iterator;
             long estimateSize = this.estimateSize;
             if (estimateSize > 1 && iterator.hasNext()) {
                 int split = batch + BATCH_UNIT;
-                split = (int) Math.max(split, estimateSize);
+                split = (int) Math.min(split, estimateSize);
                 split = Math.min(split, MAX_BATCH);
                 long[] longs = new long[split];
                 int offset = 0;
@@ -1471,11 +1476,34 @@ public abstract class Spliterators {
 
         @Override
         public OfFloat trySplit() {
+            PrimitiveIterator.OfFloat iterator = this.iterator;
+            long estimateSize = this.estimateSize;
+            if (estimateSize > 1 && iterator.hasNext()) {
+                int split = batch + BATCH_UNIT;
+                split = (int) Math.min(split, estimateSize);
+                split = Math.min(split, MAX_BATCH);
+                float[] floats = new float[split];
+                int offset = 0;
+                while (offset < split && iterator.hasNext()) {
+                    floats[offset++] = iterator.nextFloat();
+                }
+
+                batch = offset;
+                if (this.estimateSize != Long.MAX_VALUE) {
+                    this.estimateSize -= offset;
+                }
+                return new FloatArraySpliterator(floats, 0, offset, characteristics);
+            }
             return null;
         }
 
         @Override
         public boolean tryAdvance(FloatConsumer action) {
+            Objects.requireNonNull(action);
+            if (iterator.hasNext()) {
+                action.accept(iterator.nextFloat());
+                return true;
+            }
             return false;
         }
 
@@ -1553,12 +1581,12 @@ public abstract class Spliterators {
         }
 
         @Override
-        public OfDouble trySplit() {
+        public Spliterator.OfDouble trySplit() {
             PrimitiveIterator.OfDouble iterator = this.iterator;
             long estimateSize = this.estimateSize;
             if (estimateSize > 1 && iterator.hasNext()) {
                 int split = batch + BATCH_UNIT;
-                split = (int) Math.max(split, estimateSize);
+                split = (int) Math.min(split, estimateSize);
                 split = Math.min(split, MAX_BATCH);
                 double[] doubles = new double[split];
                 int offset = 0;
