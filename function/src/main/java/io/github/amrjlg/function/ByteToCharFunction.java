@@ -20,6 +20,7 @@ package io.github.amrjlg.function;
 /**
  * @author amrjlg
  **/
-public interface ByteSupplier {
-    byte getAsByte();
+public interface ByteToCharFunction {
+
+    char applyAsChar();
 }
