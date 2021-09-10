@@ -17,8 +17,104 @@
 
 package io.github.amrjlg.stream;
 
+import io.github.amrjlg.function.ByteBinaryOperator;
+import io.github.amrjlg.function.ByteConsumer;
+import io.github.amrjlg.function.ByteFunction;
+import io.github.amrjlg.function.BytePredicate;
+import io.github.amrjlg.function.ByteToCharFunction;
+import io.github.amrjlg.function.ByteToDoubleFunction;
+import io.github.amrjlg.function.ByteToFloatFunction;
+import io.github.amrjlg.function.ByteToIntFunction;
+import io.github.amrjlg.function.ByteToLongFunction;
+import io.github.amrjlg.function.ByteUnaryOperator;
+import io.github.amrjlg.function.ObjByteConsumer;
+import io.github.amrjlg.util.ByteSummaryStatistics;
+import io.github.amrjlg.util.OptionalByte;
+
+import java.util.function.BiConsumer;
+import java.util.function.Supplier;
+
 /**
  * @author amrjlg
  **/
-public interface ByteStream extends BaseStream<Byte,ByteStream>{
+public interface ByteStream extends BaseStream<Byte, ByteStream> {
+    ByteStream map(ByteUnaryOperator mapper);
+
+    <U> Stream<U> mapToObj(ByteFunction<? extends U> mapper);
+
+    CharStream mapToByte(ByteToCharFunction mapper);
+
+    IntStream mapToInt(ByteToIntFunction mapper);
+
+    LongStream mapToLong(ByteToLongFunction mapper);
+
+    FloatStream mapToFloat(ByteToFloatFunction mapper);
+
+    DoubleStream mapToDouble(ByteToDoubleFunction mapper);
+
+    ByteStream flatMap(ByteFunction<? extends ByteStream> mapper);
+
+    ByteStream filter(BytePredicate predicate);
+
+    ByteStream distinct();
+
+    ByteStream sorted();
+
+    ByteStream peek(ByteConsumer action);
+
+    ByteStream limit(long maxSize);
+
+    ByteStream skip(long n);
+
+    void forEach(ByteConsumer action);
+
+    void forEachOrdered(ByteConsumer action);
+
+    short[] toArray();
+
+    short reduce(short identity, ByteBinaryOperator op);
+
+    OptionalByte reduce(ByteBinaryOperator op);
+
+    <R> R collect(Supplier<R> supplier, ObjByteConsumer<R> accumulator, BiConsumer<R, R> combiner);
+
+    short sum();
+
+    OptionalByte min();
+
+    OptionalByte max();
+
+    long count();
+
+    OptionalByte average();
+
+    ByteSummaryStatistics summaryStatistics();
+
+    boolean anyMatch(BytePredicate predicate);
+
+    boolean allMatch(BytePredicate predicate);
+
+    boolean noneMatch(BytePredicate predicate);
+
+    OptionalByte findFirst();
+
+    OptionalByte findAny();
+
+    Stream<Byte> boxed();
+
+    ByteStream sequential();
+
+    ByteStream parallel();
+
+    PrimitiveIterator.OfByte iterator();
+
+    Spliterator.OfByte spliterator();
+
+    boolean isParallel();
+
+    ByteStream unordered();
+
+    ByteStream onClose(Runnable closeHandler);
+
+    void close();
 }
