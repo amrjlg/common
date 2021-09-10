@@ -21,6 +21,8 @@ import io.github.amrjlg.function.IntToByteFunction;
 import io.github.amrjlg.function.IntToCharFunction;
 import io.github.amrjlg.function.IntToFloatFunction;
 import io.github.amrjlg.function.IntToShortFunction;
+import io.github.amrjlg.stream.iterator.PrimitiveIterator;
+import io.github.amrjlg.stream.iterator.Spliterator;
 
 import java.util.IntSummaryStatistics;
 import java.util.OptionalDouble;

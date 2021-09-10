@@ -17,6 +17,8 @@
 
 package io.github.amrjlg.stream;
 
+import io.github.amrjlg.stream.iterator.Spliterator;
+
 import java.util.Iterator;
 
 /**

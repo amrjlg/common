@@ -83,7 +83,7 @@ public interface Sink<T> extends Consumer<T> {
     }
 
 
-    interface SKinOfShor extends Sink<Short>, ShortConsumer {
+    interface SKinOfShort extends Sink<Short>, ShortConsumer {
         @Override
         void accept(short s);
 

@@ -15,7 +15,7 @@
  *
  */
 
-package io.github.amrjlg.stream;
+package io.github.amrjlg.stream.iterator;
 
 import io.github.amrjlg.function.ByteConsumer;
 import io.github.amrjlg.function.CharConsumer;
