@@ -28,6 +28,8 @@ import io.github.amrjlg.function.ByteToIntFunction;
 import io.github.amrjlg.function.ByteToLongFunction;
 import io.github.amrjlg.function.ByteUnaryOperator;
 import io.github.amrjlg.function.ObjByteConsumer;
+import io.github.amrjlg.stream.iterator.PrimitiveIterator;
+import io.github.amrjlg.stream.iterator.Spliterator;
 import io.github.amrjlg.util.ByteSummaryStatistics;
 import io.github.amrjlg.util.OptionalByte;
 

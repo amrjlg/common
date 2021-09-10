@@ -21,6 +21,8 @@ import io.github.amrjlg.function.DoubleToByteFunction;
 import io.github.amrjlg.function.DoubleToCharFunction;
 import io.github.amrjlg.function.DoubleToFloatFunction;
 import io.github.amrjlg.function.DoubleToShortFunction;
+import io.github.amrjlg.stream.iterator.PrimitiveIterator;
+import io.github.amrjlg.stream.iterator.Spliterator;
 
 import java.util.DoubleSummaryStatistics;
 import java.util.OptionalDouble;

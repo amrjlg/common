@@ -25,10 +25,11 @@ import io.github.amrjlg.function.FloatFunction;
 import io.github.amrjlg.function.FloatPredicate;
 import io.github.amrjlg.function.FloatToByteFunction;
 import io.github.amrjlg.function.FloatToCharFunction;
-import io.github.amrjlg.function.FloatToFloatFunction;
 import io.github.amrjlg.function.FloatToIntFunction;
 import io.github.amrjlg.function.FloatToLongFunction;
 import io.github.amrjlg.function.FloatUnaryOperator;
+import io.github.amrjlg.stream.iterator.PrimitiveIterator;
+import io.github.amrjlg.stream.iterator.Spliterator;
 import io.github.amrjlg.util.OptionalFloat;
 import io.github.amrjlg.util.FloatSummaryStatistics;
 

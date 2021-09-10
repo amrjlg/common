@@ -21,6 +21,7 @@ import io.github.amrjlg.function.ToByteFunction;
 import io.github.amrjlg.function.ToCharFunction;
 import io.github.amrjlg.function.ToFloatFunction;
 import io.github.amrjlg.function.ToShortFunction;
+import io.github.amrjlg.stream.iterator.Spliterator;
 
 import java.util.Comparator;
 import java.util.Iterator;
