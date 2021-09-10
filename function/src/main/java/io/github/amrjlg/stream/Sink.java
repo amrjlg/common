@@ -32,7 +32,7 @@ import java.util.function.LongConsumer;
 /**
  * @author amrjlg
  **/
-public interface Skin<T> extends Consumer<T> {
+public interface Sink<T> extends Consumer<T> {
 
     default void begin(long size) {
     }
@@ -72,7 +72,7 @@ public interface Skin<T> extends Consumer<T> {
         throw new NotImplementedException();
     }
 
-    interface SKinOfByte extends Skin<Byte>, ByteConsumer {
+    interface SKinOfByte extends Sink<Byte>, ByteConsumer {
         @Override
         void accept(byte b);
 
@@ -83,7 +83,7 @@ public interface Skin<T> extends Consumer<T> {
     }
 
 
-    interface SKinOfShor extends Skin<Short>, ShortConsumer {
+    interface SKinOfShor extends Sink<Short>, ShortConsumer {
         @Override
         void accept(short s);
 
@@ -93,7 +93,7 @@ public interface Skin<T> extends Consumer<T> {
         }
     }
 
-    interface SKinOfChar extends Skin<Character>, CharConsumer {
+    interface SKinOfChar extends Sink<Character>, CharConsumer {
         @Override
         void accept(char c);
 
@@ -104,7 +104,7 @@ public interface Skin<T> extends Consumer<T> {
     }
 
 
-    interface SKinOfInt extends Skin<Integer>, IntConsumer {
+    interface SKinOfInt extends Sink<Integer>, IntConsumer {
         @Override
         void accept(int i);
 
@@ -114,7 +114,7 @@ public interface Skin<T> extends Consumer<T> {
         }
     }
 
-    interface SKinOfLong extends Skin<Long>, LongConsumer {
+    interface SKinOfLong extends Sink<Long>, LongConsumer {
 
         @Override
         void accept(long l);
@@ -126,7 +126,7 @@ public interface Skin<T> extends Consumer<T> {
 
     }
 
-    interface SKinOfFloat extends Skin<Float>, FloatConsumer {
+    interface SKinOfFloat extends Sink<Float>, FloatConsumer {
         @Override
         void accept(float f);
 
@@ -136,7 +136,7 @@ public interface Skin<T> extends Consumer<T> {
         }
     }
 
-    interface SKinOfDouble extends Skin<Double>, DoubleConsumer {
+    interface SKinOfDouble extends Sink<Double>, DoubleConsumer {
         @Override
         void accept(double d);
 
