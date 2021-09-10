@@ -25,6 +25,7 @@ import io.github.amrjlg.function.ShortConsumer;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 
 import java.util.function.Consumer;
@@ -163,6 +164,39 @@ public abstract class Spliterators {
         }
     }
 
+    public static <T> Iterator<T> iterator(Spliterator<T> spliterator) {
+        Objects.requireNonNull(spliterator);
+        class Adapter implements Iterator<T>, Consumer<T> {
+            boolean ready = false;
+            T value;
+
+            @Override
+            public boolean hasNext() {
+                if (!ready) {
+                    spliterator.tryAdvance(this);
+                }
+                return ready;
+            }
+
+            @Override
+            public T next() {
+                if (!ready && !hasNext()) {
+                    throw new NoSuchElementException();
+                }
+                ready = false;
+                return value;
+            }
+
+            @Override
+            public void accept(T t) {
+                ready = true;
+                value = t;
+            }
+        }
+
+        return new Adapter();
+    }
+
     /**
      * base empty spliterator
      *
@@ -280,26 +314,26 @@ public abstract class Spliterators {
         }
 
         @Override
-        public void forEachRemaining(Consumer<? super T> action) {
+        public void forEachRemaining(Consumer<? super T> consumer) {
             T[] a;
             int i, hi; // hoist accesses and checks from loop
-            if (action == null)
+            if (consumer == null)
                 throw new NullPointerException();
             if ((a = array).length >= (hi = end) &&
                     (i = index) >= 0 && i < (index = hi)) {
                 do {
-                    action.accept(a[i]);
+                    consumer.accept(a[i]);
                 } while (++i < hi);
             }
         }
 
         @Override
-        public boolean tryAdvance(Consumer<? super T> action) {
-            if (action == null)
+        public boolean tryAdvance(Consumer<? super T> consumer) {
+            if (consumer == null)
                 throw new NullPointerException();
             if (index >= 0 && index < end) {
                 T e = array[index++];
-                action.accept(e);
+                consumer.accept(e);
                 return true;
             }
             return false;
@@ -872,25 +906,25 @@ public abstract class Spliterators {
         }
 
         @Override
-        public void forEachRemaining(Consumer<? super T> action) {
-            if (action == null) throw new NullPointerException();
+        public void forEachRemaining(Consumer<? super T> consumer) {
+            if (consumer == null) throw new NullPointerException();
             Iterator<? extends T> i;
             if ((i = it) == null) {
                 i = it = collection.iterator();
                 est = (long) collection.size();
             }
-            i.forEachRemaining(action);
+            i.forEachRemaining(consumer);
         }
 
         @Override
-        public boolean tryAdvance(Consumer<? super T> action) {
-            if (action == null) throw new NullPointerException();
+        public boolean tryAdvance(Consumer<? super T> consumer) {
+            if (consumer == null) throw new NullPointerException();
             if (it == null) {
                 it = collection.iterator();
                 est = (long) collection.size();
             }
             if (it.hasNext()) {
-                action.accept(it.next());
+                consumer.accept(it.next());
                 return true;
             }
             return false;

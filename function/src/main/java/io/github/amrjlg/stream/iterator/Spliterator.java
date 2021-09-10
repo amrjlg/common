@@ -34,10 +34,10 @@ import java.util.function.LongConsumer;
  **/
 public interface Spliterator<T> extends java.util.Spliterator<T> {
 
-    boolean tryAdvance(Consumer<? super T> action);
+    boolean tryAdvance(Consumer<? super T> consumer);
 
-    default void forEachRemaining(Consumer<? super T> action) {
-        do { } while (tryAdvance(action));
+    default void forEachRemaining(Consumer<? super T> consumer) {
+        do { } while (tryAdvance(consumer));
     }
 
     Spliterator<T> trySplit();
@@ -146,20 +146,20 @@ public interface Spliterator<T> extends java.util.Spliterator<T> {
         boolean tryAdvance(IntConsumer action);
 
         @Override
-        default boolean tryAdvance(Consumer<? super Integer> action) {
-            if (action instanceof IntConsumer) {
-                return tryAdvance((IntConsumer) action);
+        default boolean tryAdvance(Consumer<? super Integer> consumer) {
+            if (consumer instanceof IntConsumer) {
+                return tryAdvance((IntConsumer) consumer);
             } else {
-                return tryAdvance((IntConsumer) action::accept);
+                return tryAdvance((IntConsumer) consumer::accept);
             }
         }
 
         @Override
-        default void forEachRemaining(Consumer<? super Integer> action) {
-            if (action instanceof IntConsumer) {
-                forEachRemaining((IntConsumer) action);
+        default void forEachRemaining(Consumer<? super Integer> consumer) {
+            if (consumer instanceof IntConsumer) {
+                forEachRemaining((IntConsumer) consumer);
             } else {
-                forEachRemaining((IntConsumer) action::accept);
+                forEachRemaining((IntConsumer) consumer::accept);
             }
         }
     }
