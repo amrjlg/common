@@ -57,6 +57,29 @@ public class Nodes {
         return null;
     }
 
+    public static Node.Builder.OfShort shortBuilder(long size) {
+        return null;
+    }
+
+    public static Node.Builder.OfChar charBuilder(long size) {
+        return null;
+    }
+
+    public static Node.Builder.OfInt intBuilder(long size) {
+        return null;
+    }
+
+    public static Node.Builder.OfLong longBuilder(long size) {
+        return null;
+    }
+
+    public static Node.Builder.OfFloat floatBuilder(long size) {
+        return null;
+    }
+
+    public static Node.Builder.OfDouble doubleBuilder(long size) {
+        return null;
+    }
 
     private static abstract class EmptyNode<Type, TypeArray, TypeConsumer> implements Node<Type> {
 

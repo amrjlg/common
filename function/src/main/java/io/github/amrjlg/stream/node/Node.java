@@ -19,12 +19,19 @@ package io.github.amrjlg.stream.node;
 
 
 import io.github.amrjlg.function.ByteConsumer;
+import io.github.amrjlg.function.CharConsumer;
+import io.github.amrjlg.function.FloatConsumer;
+import io.github.amrjlg.function.ShortConsumer;
 import io.github.amrjlg.stream.Sink;
 import io.github.amrjlg.stream.iterator.Spliterator;
 import io.github.amrjlg.stream.StreamShape;
 
 import java.util.function.Consumer;
+import java.util.function.DoubleConsumer;
+import java.util.function.IntConsumer;
 import java.util.function.IntFunction;
+import java.util.function.LongConsumer;
+import java.util.function.LongFunction;
 
 
 /**
@@ -81,32 +88,32 @@ public interface Node<T> {
 
         interface OfChar extends Builder<Character>, SKinOfChar {
             @Override
-            Node<Character> build();
+            Node.OfChar build();
         }
 
         interface OfShort extends Builder<Short>, SKinOfShort {
             @Override
-            Node<Short> build();
+            Node.OfShort build();
         }
 
         interface OfInt extends Builder<Integer>, SKinOfInt {
             @Override
-            Node<Integer> build();
+            Node.OfInt build();
         }
 
         interface OfLong extends Builder<Long>, SKinOfLong {
             @Override
-            Node<Long> build();
+            Node.OfLong build();
         }
 
         interface OfFloat extends Builder<Float>, SKinOfFloat {
             @Override
-            Node<Float> build();
+            Node.OfFloat build();
         }
 
         interface OfDouble extends Builder<Double>, SKinOfDouble {
             @Override
-            Node<Double> build();
+            Node.OfDouble build();
         }
 
     }
@@ -194,6 +201,302 @@ public interface Node<T> {
         @Override
         default StreamShape getShape() {
             return StreamShape.BYTE_VALUE;
+        }
+    }
+
+
+    interface OfShort extends OfPrimitive<Short, ShortConsumer, short[], Spliterator.OfShort, OfShort> {
+        @Override
+        default void forEach(Consumer<? super Short> consumer) {
+            if (consumer instanceof ShortConsumer) {
+                forEach((ShortConsumer) consumer);
+            } else {
+                spliterator().forEachRemaining(consumer);
+            }
+        }
+
+        @Override
+        default void copyInto(Short[] boxed, int offset) {
+            short[] array = asPrimitiveArray();
+            for (int i = 0; i < array.length; i++) {
+                boxed[offset + i] = array[i];
+            }
+        }
+
+        @Override
+        default OfShort truncate(long from, long to, IntFunction<Short[]> generator) {
+            if (from == 0 && to == count()) {
+                return this;
+            }
+
+            long size = to - from;
+
+            Spliterator.OfShort spliterator = spliterator();
+            Node.Builder.OfShort builder = Nodes.shortBuilder(size);
+            builder.begin(size);
+            for (int i = 0; i < from && spliterator.tryAdvance((ShortConsumer) e -> {
+            }); i++) {
+            }
+            for (int i = 0; i < size && spliterator.tryAdvance((ShortConsumer) builder); i++) {
+            }
+            builder.end();
+            return builder.build();
+        }
+
+        @Override
+        default short[] newArray(int count) {
+            return new short[count];
+        }
+
+        @Override
+        default StreamShape getShape() {
+            return StreamShape.SHORT_VALUE;
+        }
+    }
+
+
+    interface OfChar extends OfPrimitive<Character, CharConsumer, char[], Spliterator.OfChar, OfChar> {
+        @Override
+        default void forEach(Consumer<? super Character> consumer) {
+            if (consumer instanceof CharConsumer) {
+                forEach((CharConsumer) consumer);
+            } else {
+                spliterator().forEachRemaining(consumer);
+            }
+        }
+
+        @Override
+        default void copyInto(Character[] boxed, int offset) {
+            char[] array = asPrimitiveArray();
+            for (int i = 0; i < array.length; i++) {
+                boxed[offset + i] = array[i];
+            }
+        }
+
+        @Override
+        default OfChar truncate(long from, long to, IntFunction<Character[]> generator) {
+            if (from == 0 && to == count()) {
+                return this;
+            }
+
+            long size = to - from;
+
+            Spliterator.OfChar spliterator = spliterator();
+            Node.Builder.OfChar builder = Nodes.charBuilder(size);
+            builder.begin(size);
+            for (int i = 0; i < from && spliterator.tryAdvance((CharConsumer) e -> {
+            }); i++) {
+            }
+            for (int i = 0; i < size && spliterator.tryAdvance((CharConsumer) builder); i++) {
+            }
+            builder.end();
+            return builder.build();
+        }
+
+        @Override
+        default char[] newArray(int count) {
+            return new char[count];
+        }
+
+        @Override
+        default StreamShape getShape() {
+            return StreamShape.CHAR_VALUE;
+        }
+    }
+
+    interface OfInt extends OfPrimitive<Integer, IntConsumer, int[], Spliterator.OfInt, OfInt> {
+        @Override
+        default void forEach(Consumer<? super Integer> consumer) {
+            if (consumer instanceof IntConsumer) {
+                forEach((IntConsumer) consumer);
+            } else {
+                spliterator().forEachRemaining(consumer);
+            }
+        }
+
+        @Override
+        default void copyInto(Integer[] boxed, int offset) {
+            int[] array = asPrimitiveArray();
+            for (int i = 0; i < array.length; i++) {
+                boxed[offset + i] = array[i];
+            }
+        }
+
+        @Override
+        default OfInt truncate(long from, long to, IntFunction<Integer[]> generator) {
+            if (from == 0 && to == count()) {
+                return this;
+            }
+
+            long size = to - from;
+
+            Spliterator.OfInt spliterator = spliterator();
+            Node.Builder.OfInt builder = Nodes.intBuilder(size);
+            builder.begin(size);
+            for (int i = 0; i < from && spliterator.tryAdvance((IntConsumer) e -> {
+            }); i++) {
+            }
+            for (int i = 0; i < size && spliterator.tryAdvance((IntConsumer) builder); i++) {
+            }
+            builder.end();
+            return builder.build();
+        }
+
+        @Override
+        default int[] newArray(int count) {
+            return new int[count];
+        }
+
+        @Override
+        default StreamShape getShape() {
+            return StreamShape.INT_VALUE;
+        }
+    }
+
+    interface OfLong extends OfPrimitive<Long, LongConsumer, long[], Spliterator.OfLong, OfLong> {
+        @Override
+        default void forEach(Consumer<? super Long> consumer) {
+            if (consumer instanceof LongConsumer) {
+                forEach((LongConsumer) consumer);
+            } else {
+                spliterator().forEachRemaining(consumer);
+            }
+        }
+
+        @Override
+        default void copyInto(Long[] boxed, int offset) {
+            long[] array = asPrimitiveArray();
+            for (int i = 0; i < array.length; i++) {
+                boxed[offset + i] = array[i];
+            }
+        }
+
+        @Override
+        default OfLong truncate(long from, long to, IntFunction<Long[]> generator) {
+            if (from == 0 && to == count()) {
+                return this;
+            }
+
+            long size = to - from;
+
+            Spliterator.OfLong spliterator = spliterator();
+            Node.Builder.OfLong builder = Nodes.longBuilder(size);
+            builder.begin(size);
+            for (int i = 0; i < from && spliterator.tryAdvance((LongConsumer) e -> {
+            }); i++) {
+            }
+            for (int i = 0; i < size && spliterator.tryAdvance((LongConsumer) builder); i++) {
+            }
+            builder.end();
+            return builder.build();
+        }
+
+        @Override
+        default long[] newArray(int count) {
+            return new long[count];
+        }
+
+        @Override
+        default StreamShape getShape() {
+            return StreamShape.LONG_VALUE;
+        }
+    }
+
+    interface OfFloat extends OfPrimitive<Float, FloatConsumer, float[], Spliterator.OfFloat, OfFloat> {
+        @Override
+        default void forEach(Consumer<? super Float> consumer) {
+            if (consumer instanceof FloatConsumer) {
+                forEach((FloatConsumer) consumer);
+            } else {
+                spliterator().forEachRemaining(consumer);
+            }
+        }
+
+        @Override
+        default void copyInto(Float[] boxed, int offset) {
+            float[] array = asPrimitiveArray();
+            for (int i = 0; i < array.length; i++) {
+                boxed[offset + i] = array[i];
+            }
+        }
+
+        @Override
+        default OfFloat truncate(long from, long to, IntFunction<Float[]> generator) {
+            if (from == 0 && to == count()) {
+                return this;
+            }
+
+            long size = to - from;
+
+            Spliterator.OfFloat spliterator = spliterator();
+            Node.Builder.OfFloat builder = Nodes.floatBuilder(size);
+            builder.begin(size);
+            for (int i = 0; i < from && spliterator.tryAdvance((FloatConsumer) e -> {
+            }); i++) {
+            }
+            for (int i = 0; i < size && spliterator.tryAdvance((FloatConsumer) builder); i++) {
+            }
+            builder.end();
+            return builder.build();
+        }
+
+        @Override
+        default float[] newArray(int count) {
+            return new float[count];
+        }
+
+        @Override
+        default StreamShape getShape() {
+            return StreamShape.FLOAT_VALUE;
+        }
+    }
+
+    interface OfDouble extends OfPrimitive<Double, DoubleConsumer, double[], Spliterator.OfDouble, OfDouble> {
+        @Override
+        default void forEach(Consumer<? super Double> consumer) {
+            if (consumer instanceof DoubleConsumer) {
+                forEach((DoubleConsumer) consumer);
+            } else {
+                spliterator().forEachRemaining(consumer);
+            }
+        }
+
+        @Override
+        default void copyInto(Double[] boxed, int offset) {
+            double[] array = asPrimitiveArray();
+            for (int i = 0; i < array.length; i++) {
+                boxed[offset + i] = array[i];
+            }
+        }
+
+        @Override
+        default OfDouble truncate(long from, long to, IntFunction<Double[]> generator) {
+            if (from == 0 && to == count()) {
+                return this;
+            }
+
+            long size = to - from;
+
+            Spliterator.OfDouble spliterator = spliterator();
+            Node.Builder.OfDouble builder = Nodes.doubleBuilder(size);
+            builder.begin(size);
+            for (int i = 0; i < from && spliterator.tryAdvance((DoubleConsumer) e -> {
+            }); i++) {
+            }
+            for (int i = 0; i < size && spliterator.tryAdvance((DoubleConsumer) builder); i++) {
+            }
+            builder.end();
+            return builder.build();
+        }
+
+        @Override
+        default double[] newArray(int count) {
+            return new double[count];
+        }
+
+        @Override
+        default StreamShape getShape() {
+            return StreamShape.DOUBLE_VALUE;
         }
     }
 
