@@ -42,6 +42,8 @@ public enum StreamShape {
      * that are {@code long} values.
      */
     LONG_VALUE,
+
+    FLOAT_VALUE,
     /**
      * The shape specialization corresponding to {@code DoubleStream} and
      * elements that are {@code double} values.
