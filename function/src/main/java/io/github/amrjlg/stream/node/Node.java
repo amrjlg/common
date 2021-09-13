@@ -23,15 +23,14 @@ import io.github.amrjlg.function.CharConsumer;
 import io.github.amrjlg.function.FloatConsumer;
 import io.github.amrjlg.function.ShortConsumer;
 import io.github.amrjlg.stream.Sink;
-import io.github.amrjlg.stream.iterator.Spliterator;
 import io.github.amrjlg.stream.StreamShape;
+import io.github.amrjlg.stream.iterator.Spliterator;
 
 import java.util.function.Consumer;
 import java.util.function.DoubleConsumer;
 import java.util.function.IntConsumer;
 import java.util.function.IntFunction;
 import java.util.function.LongConsumer;
-import java.util.function.LongFunction;
 
 
 /**
@@ -55,7 +54,7 @@ public interface Node<T> {
             return this;
         Spliterator<T> spliterator = spliterator();
         long size = to - from;
-        Node.Builder<T> builder = Nodes.builder(size, generator);
+        NodeBuilder<T> builder = Nodes.builder(size, generator);
         builder.begin(size);
         for (int i = 0; i < from && spliterator.tryAdvance(e -> {
         }); i++) {
@@ -74,8 +73,8 @@ public interface Node<T> {
         return StreamShape.REFERENCE;
     }
 
-
     long count();
+
 
     interface Builder<T> extends Sink<T> {
 
@@ -137,14 +136,14 @@ public interface Node<T> {
         TypeNode truncate(long from, long to, IntFunction<Type[]> generator);
 
         @Override
-       default Type[] asArray(IntFunction<Type[]> generator){
+        default Type[] asArray(IntFunction<Type[]> generator) {
             long size = count();
-            if (size >= Nodes.MAX_ARRAY_SIZE){
+            if (size >= Nodes.MAX_ARRAY_SIZE) {
                 throw new IllegalArgumentException(Nodes.BAD_SIZE);
             }
 
             Type[] boxed = generator.apply((int) count());
-            copyInto(boxed,0);
+            copyInto(boxed, 0);
             return boxed;
         }
 
@@ -182,7 +181,7 @@ public interface Node<T> {
             long size = to - from;
 
             Spliterator.OfByte spliterator = spliterator();
-            Node.Builder.OfByte builder = Nodes.byteBuilder(size);
+            NodeBuilder.OfByte builder = Nodes.byteBuilder(size);
             builder.begin(size);
             for (int i = 0; i < from && spliterator.tryAdvance((ByteConsumer) e -> {
             }); i++) {
@@ -232,7 +231,7 @@ public interface Node<T> {
             long size = to - from;
 
             Spliterator.OfShort spliterator = spliterator();
-            Node.Builder.OfShort builder = Nodes.shortBuilder(size);
+            NodeBuilder.OfShort builder = Nodes.shortBuilder(size);
             builder.begin(size);
             for (int i = 0; i < from && spliterator.tryAdvance((ShortConsumer) e -> {
             }); i++) {
@@ -282,7 +281,7 @@ public interface Node<T> {
             long size = to - from;
 
             Spliterator.OfChar spliterator = spliterator();
-            Node.Builder.OfChar builder = Nodes.charBuilder(size);
+            NodeBuilder.OfChar builder = Nodes.charBuilder(size);
             builder.begin(size);
             for (int i = 0; i < from && spliterator.tryAdvance((CharConsumer) e -> {
             }); i++) {
@@ -331,7 +330,7 @@ public interface Node<T> {
             long size = to - from;
 
             Spliterator.OfInt spliterator = spliterator();
-            Node.Builder.OfInt builder = Nodes.intBuilder(size);
+            NodeBuilder.OfInt builder = Nodes.intBuilder(size);
             builder.begin(size);
             for (int i = 0; i < from && spliterator.tryAdvance((IntConsumer) e -> {
             }); i++) {
@@ -380,7 +379,7 @@ public interface Node<T> {
             long size = to - from;
 
             Spliterator.OfLong spliterator = spliterator();
-            Node.Builder.OfLong builder = Nodes.longBuilder(size);
+            NodeBuilder.OfLong builder = Nodes.longBuilder(size);
             builder.begin(size);
             for (int i = 0; i < from && spliterator.tryAdvance((LongConsumer) e -> {
             }); i++) {
@@ -429,7 +428,7 @@ public interface Node<T> {
             long size = to - from;
 
             Spliterator.OfFloat spliterator = spliterator();
-            Node.Builder.OfFloat builder = Nodes.floatBuilder(size);
+            NodeBuilder.OfFloat builder = Nodes.floatBuilder(size);
             builder.begin(size);
             for (int i = 0; i < from && spliterator.tryAdvance((FloatConsumer) e -> {
             }); i++) {
@@ -478,7 +477,7 @@ public interface Node<T> {
             long size = to - from;
 
             Spliterator.OfDouble spliterator = spliterator();
-            Node.Builder.OfDouble builder = Nodes.doubleBuilder(size);
+            NodeBuilder.OfDouble builder = Nodes.doubleBuilder(size);
             builder.begin(size);
             for (int i = 0; i < from && spliterator.tryAdvance((DoubleConsumer) e -> {
             }); i++) {
@@ -499,5 +498,6 @@ public interface Node<T> {
             return StreamShape.DOUBLE_VALUE;
         }
     }
+
 
 }
