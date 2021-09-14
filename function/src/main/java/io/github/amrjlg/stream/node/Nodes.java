@@ -964,7 +964,7 @@ public class Nodes {
 
     }
 
-    private static final class ByteFixedNodeBuilder extends ByteArrayNodeBuilder implements Node.Builder.OfByte {
+    private static final class ByteFixedNodeBuilder extends ByteArrayNodeBuilder implements NodeBuilder.OfByte {
 
         public ByteFixedNodeBuilder(long size) {
             super(size);
@@ -1047,7 +1047,7 @@ public class Nodes {
 
     }
 
-    private static final class ShortFixedNodeBuilder extends ShortArrayNodeBuilder implements Node.Builder.OfShort {
+    private static final class ShortFixedNodeBuilder extends ShortArrayNodeBuilder implements NodeBuilder.OfShort {
 
         public ShortFixedNodeBuilder(long size) {
             super(size);
@@ -1130,7 +1130,7 @@ public class Nodes {
 
     }
 
-    private static final class CharFixedNodeBuilder extends CharArrayNodeBuilder implements Node.Builder.OfChar {
+    private static final class CharFixedNodeBuilder extends CharArrayNodeBuilder implements NodeBuilder.OfChar {
 
         public CharFixedNodeBuilder(long size) {
             super(size);
@@ -1213,7 +1213,7 @@ public class Nodes {
 
     }
 
-    private static final class IntFixedNodeBuilder extends IntArrayNodeBuilder implements Node.Builder.OfInt {
+    private static final class IntFixedNodeBuilder extends IntArrayNodeBuilder implements NodeBuilder.OfInt {
 
         public IntFixedNodeBuilder(long size) {
             super(size);
@@ -1296,7 +1296,7 @@ public class Nodes {
 
     }
 
-    private static final class LongFixedNodeBuilder extends LongArrayNodeBuilder implements Node.Builder.OfLong {
+    private static final class LongFixedNodeBuilder extends LongArrayNodeBuilder implements NodeBuilder.OfLong {
 
         public LongFixedNodeBuilder(long size) {
             super(size);
@@ -1379,7 +1379,7 @@ public class Nodes {
 
     }
 
-    private static final class FloatFixedNodeBuilder extends FloatArrayNodeBuilder implements Node.Builder.OfFloat {
+    private static final class FloatFixedNodeBuilder extends FloatArrayNodeBuilder implements NodeBuilder.OfFloat {
 
         public FloatFixedNodeBuilder(long size) {
             super(size);
@@ -1463,7 +1463,7 @@ public class Nodes {
     }
 
 
-    private static final class DoubleFixedNodeBuilder extends DoubleArrayNodeBuilder implements Node.Builder.OfDouble {
+    private static final class DoubleFixedNodeBuilder extends DoubleArrayNodeBuilder implements NodeBuilder.OfDouble {
 
         public DoubleFixedNodeBuilder(long size) {
             super(size);

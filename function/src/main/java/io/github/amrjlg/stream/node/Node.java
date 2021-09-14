@@ -22,7 +22,6 @@ import io.github.amrjlg.function.ByteConsumer;
 import io.github.amrjlg.function.CharConsumer;
 import io.github.amrjlg.function.FloatConsumer;
 import io.github.amrjlg.function.ShortConsumer;
-import io.github.amrjlg.stream.Sink;
 import io.github.amrjlg.stream.StreamShape;
 import io.github.amrjlg.stream.iterator.Spliterator;
 
@@ -74,48 +73,6 @@ public interface Node<T> {
     }
 
     long count();
-
-
-    interface Builder<T> extends Sink<T> {
-
-        Node<T> build();
-
-        interface OfByte extends Builder<Byte>, SKinOfByte {
-            @Override
-            Node.OfByte build();
-        }
-
-        interface OfChar extends Builder<Character>, SKinOfChar {
-            @Override
-            Node.OfChar build();
-        }
-
-        interface OfShort extends Builder<Short>, SKinOfShort {
-            @Override
-            Node.OfShort build();
-        }
-
-        interface OfInt extends Builder<Integer>, SKinOfInt {
-            @Override
-            Node.OfInt build();
-        }
-
-        interface OfLong extends Builder<Long>, SKinOfLong {
-            @Override
-            Node.OfLong build();
-        }
-
-        interface OfFloat extends Builder<Float>, SKinOfFloat {
-            @Override
-            Node.OfFloat build();
-        }
-
-        interface OfDouble extends Builder<Double>, SKinOfDouble {
-            @Override
-            Node.OfDouble build();
-        }
-
-    }
 
     interface OfPrimitive<Type, TypeConsumer, TypeArray,
             TypeSpliterator extends Spliterator.OfPrimitive<Type, TypeConsumer, TypeSpliterator>,
