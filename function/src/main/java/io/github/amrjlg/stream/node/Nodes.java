@@ -53,8 +53,8 @@ public class Nodes {
     // IllegalArgumentException messages
     public static final String BAD_SIZE = "Stream size exceeds max array size";
 
-    public static void maxArraySize(long size){
-        if (size>=MAX_ARRAY_SIZE){
+    public static void maxArraySize(long size) {
+        if (size >= MAX_ARRAY_SIZE) {
             throw new IllegalArgumentException(BAD_SIZE);
         }
     }
@@ -73,28 +73,28 @@ public class Nodes {
         Node<T> node;
         switch (shape) {
             case REFERENCE:
-                node= new ConcatNode<>(left, right);
+                node = new ConcatNode<>(left, right);
                 break;
             case BYTE_VALUE:
-                node= (Node<T>) new ConcatNode.OfByte((Node.OfByte) left, (Node.OfByte) right);
+                node = (Node<T>) new ConcatNode.OfByte((Node.OfByte) left, (Node.OfByte) right);
                 break;
             case CHAR_VALUE:
-                node= (Node<T>) new ConcatNode.OfChar((Node.OfChar) left, (Node.OfChar) right);
+                node = (Node<T>) new ConcatNode.OfChar((Node.OfChar) left, (Node.OfChar) right);
                 break;
             case SHORT_VALUE:
-                node= (Node<T>) new ConcatNode.OfShort((Node.OfShort) left, (Node.OfShort) right);
+                node = (Node<T>) new ConcatNode.OfShort((Node.OfShort) left, (Node.OfShort) right);
                 break;
             case INT_VALUE:
-                node= (Node<T>) new ConcatNode.OfInt((Node.OfInt) left, (Node.OfInt) right);
+                node = (Node<T>) new ConcatNode.OfInt((Node.OfInt) left, (Node.OfInt) right);
                 break;
             case LONG_VALUE:
-                node= (Node<T>) new ConcatNode.OfLong((Node.OfLong) left, (Node.OfLong) right);
+                node = (Node<T>) new ConcatNode.OfLong((Node.OfLong) left, (Node.OfLong) right);
                 break;
             case FLOAT_VALUE:
-                node= (Node<T>) new ConcatNode.OfFloat((Node.OfFloat) left, (Node.OfFloat) right);
+                node = (Node<T>) new ConcatNode.OfFloat((Node.OfFloat) left, (Node.OfFloat) right);
                 break;
             case DOUBLE_VALUE:
-                node= (Node<T>) new ConcatNode.OfDouble((Node.OfDouble) left, (Node.OfDouble) right);
+                node = (Node<T>) new ConcatNode.OfDouble((Node.OfDouble) left, (Node.OfDouble) right);
                 break;
             default:
                 throw new IllegalStateException("Unknown shape " + shape);
