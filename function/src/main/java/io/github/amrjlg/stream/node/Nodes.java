@@ -69,7 +69,7 @@ public class Nodes {
     private static final Node.OfDouble EMPTY_DOUBLE_NODE = new Nodes.EmptyNode.OfDouble();
 
     @SuppressWarnings("unchecked")
-    public static <T> Node<T> conc(StreamShape shape, Node<T> left, Node<T> right) {
+    public static <T> Node<T> concat(StreamShape shape, Node<T> left, Node<T> right) {
         Node<T> node;
         switch (shape) {
             case REFERENCE:
@@ -403,7 +403,7 @@ public class Nodes {
             } else if (to <= leftCount) {
                 return left.truncate(from, to, generator);
             } else {
-                return Nodes.conc(getShape(), left.truncate(from, leftCount, generator), right.truncate(0, to - leftCount, generator));
+                return Nodes.concat(getShape(), left.truncate(from, leftCount, generator), right.truncate(0, to - leftCount, generator));
             }
 
 
