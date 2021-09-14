@@ -137,7 +137,15 @@ public class Nodes {
     }
 
     public static NodeBuilder.OfInt intBuilder(long size) {
-        return null;
+        if (size>=0 && size < MAX_ARRAY_SIZE){
+            return new IntFixedNodeBuilder(size);
+        }else {
+         return intBuilder();
+        }
+    }
+
+    private static NodeBuilder.OfInt intBuilder() {
+        return new IntSpinedNodeBuilder();
     }
 
     public static NodeBuilder.OfLong longBuilder(long size) {
