@@ -197,6 +197,272 @@ public abstract class Spliterators {
         return new Adapter();
     }
 
+    public static PrimitiveIterator.OfByte iterator(Spliterator.OfByte spliterator) {
+        Objects.requireNonNull(spliterator);
+
+        class Adapter implements PrimitiveIterator.OfByte, ByteConsumer {
+            boolean ready = false;
+            byte value;
+            private final Spliterator.OfByte spliterator;
+
+            public Adapter(Spliterator.OfByte spliterator) {
+                this.spliterator = spliterator;
+            }
+
+            @Override
+            public void accept(byte value) {
+                ready = true;
+                this.value = value;
+            }
+
+            @Override
+            public byte nextByte() {
+                if (!ready && !hasNext()) {
+                    throw new NoSuchElementException();
+                }
+                ready = false;
+                return value;
+            }
+
+            @Override
+            public boolean hasNext() {
+                if (!ready) {
+                    spliterator.tryAdvance(this);
+                }
+                return ready;
+            }
+        }
+        return new Adapter(spliterator);
+    }
+
+    public static PrimitiveIterator.OfShort iterator(Spliterator.OfShort spliterator) {
+        Objects.requireNonNull(spliterator);
+
+        class Adapter implements PrimitiveIterator.OfShort, ShortConsumer {
+            boolean ready = false;
+            short value;
+            private final Spliterator.OfShort spliterator;
+
+            public Adapter(Spliterator.OfShort spliterator) {
+                this.spliterator = spliterator;
+            }
+
+            @Override
+            public void accept(short value) {
+                ready = true;
+                this.value = value;
+            }
+
+            @Override
+            public short nextShort() {
+                if (!ready && !hasNext()) {
+                    throw new NoSuchElementException();
+                }
+                ready = false;
+                return value;
+            }
+
+            @Override
+            public boolean hasNext() {
+                if (!ready) {
+                    spliterator.tryAdvance(this);
+                }
+                return ready;
+            }
+        }
+        return new Adapter(spliterator);
+    }
+
+    public static PrimitiveIterator.OfChar iterator(Spliterator.OfChar spliterator) {
+        Objects.requireNonNull(spliterator);
+
+        class Adapter implements PrimitiveIterator.OfChar, CharConsumer {
+            boolean ready = false;
+            char value;
+            private final Spliterator.OfChar spliterator;
+
+            public Adapter(Spliterator.OfChar spliterator) {
+                this.spliterator = spliterator;
+            }
+
+            @Override
+            public void accept(char value) {
+                ready = true;
+                this.value = value;
+            }
+
+            @Override
+            public char nextChar() {
+                if (!ready && !hasNext()) {
+                    throw new NoSuchElementException();
+                }
+                ready = false;
+                return value;
+            }
+
+            @Override
+            public boolean hasNext() {
+                if (!ready) {
+                    spliterator.tryAdvance(this);
+                }
+                return ready;
+            }
+        }
+        return new Adapter(spliterator);
+    }
+
+    public static PrimitiveIterator.OfInt iterator(Spliterator.OfInt spliterator) {
+        Objects.requireNonNull(spliterator);
+
+        class Adapter implements PrimitiveIterator.OfInt, IntConsumer {
+            boolean ready = false;
+            int value;
+            private final Spliterator.OfInt spliterator;
+
+            public Adapter(Spliterator.OfInt spliterator) {
+                this.spliterator = spliterator;
+            }
+
+            @Override
+            public void accept(int value) {
+                ready = true;
+                this.value = value;
+            }
+
+            @Override
+            public int nextInt() {
+                if (!ready && !hasNext()) {
+                    throw new NoSuchElementException();
+                }
+                ready = false;
+                return value;
+            }
+
+            @Override
+            public boolean hasNext() {
+                if (!ready) {
+                    spliterator.tryAdvance(this);
+                }
+                return ready;
+            }
+        }
+        return new Adapter(spliterator);
+    }
+
+    public static PrimitiveIterator.OfLong iterator(Spliterator.OfLong spliterator) {
+        Objects.requireNonNull(spliterator);
+
+        class Adapter implements PrimitiveIterator.OfLong, LongConsumer {
+            boolean ready = false;
+            long value;
+            private final Spliterator.OfLong spliterator;
+
+            public Adapter(Spliterator.OfLong spliterator) {
+                this.spliterator = spliterator;
+            }
+
+            @Override
+            public void accept(long value) {
+                ready = true;
+                this.value = value;
+            }
+
+            @Override
+            public long nextLong() {
+                if (!ready && !hasNext()) {
+                    throw new NoSuchElementException();
+                }
+                ready = false;
+                return value;
+            }
+
+            @Override
+            public boolean hasNext() {
+                if (!ready) {
+                    spliterator.tryAdvance(this);
+                }
+                return ready;
+            }
+        }
+        return new Adapter(spliterator);
+    }
+
+    public static PrimitiveIterator.OfFloat iterator(Spliterator.OfFloat spliterator) {
+        Objects.requireNonNull(spliterator);
+
+        class Adapter implements PrimitiveIterator.OfFloat, FloatConsumer {
+            boolean ready = false;
+            float value;
+            private final Spliterator.OfFloat spliterator;
+
+            public Adapter(Spliterator.OfFloat spliterator) {
+                this.spliterator = spliterator;
+            }
+
+            @Override
+            public void accept(float value) {
+                ready = true;
+                this.value = value;
+            }
+
+            @Override
+            public float nextFloat() {
+                if (!ready && !hasNext()) {
+                    throw new NoSuchElementException();
+                }
+                ready = false;
+                return value;
+            }
+
+            @Override
+            public boolean hasNext() {
+                if (!ready) {
+                    spliterator.tryAdvance(this);
+                }
+                return ready;
+            }
+        }
+        return new Adapter(spliterator);
+    }
+
+    public static PrimitiveIterator.OfDouble iterator(Spliterator.OfDouble spliterator) {
+        Objects.requireNonNull(spliterator);
+
+        class Adapter implements PrimitiveIterator.OfDouble, DoubleConsumer {
+            boolean ready = false;
+            double value;
+            private final Spliterator.OfDouble spliterator;
+
+            public Adapter(Spliterator.OfDouble spliterator) {
+                this.spliterator = spliterator;
+            }
+
+            @Override
+            public void accept(double value) {
+                ready = true;
+                this.value = value;
+            }
+
+            @Override
+            public double nextDouble() {
+                if (!ready && !hasNext()) {
+                    throw new NoSuchElementException();
+                }
+                ready = false;
+                return value;
+            }
+
+            @Override
+            public boolean hasNext() {
+                if (!ready) {
+                    spliterator.tryAdvance(this);
+                }
+                return ready;
+            }
+        }
+        return new Adapter(spliterator);
+    }
+
     /**
      * base empty spliterator
      *
@@ -1231,7 +1497,7 @@ public abstract class Spliterators {
                 short[] shorts = new short[split];
                 int offset = 0;
                 while (offset < split && iterator.hasNext()) {
-                    shorts[offset++] = iterator.nextShot();
+                    shorts[offset++] = iterator.nextShort();
                 }
                 batch = offset;
                 if (this.estimateSize != Long.MAX_VALUE) {
@@ -1247,7 +1513,7 @@ public abstract class Spliterators {
         public boolean tryAdvance(ShortConsumer action) {
             Objects.requireNonNull(action);
             if (iterator.hasNext()) {
-                action.accept(iterator.nextShot());
+                action.accept(iterator.nextShort());
                 return true;
             }
             return false;
