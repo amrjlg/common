@@ -18,6 +18,7 @@
 package io.github.amrjlg.stream.node;
 
 import io.github.amrjlg.stream.StreamShape;
+import io.github.amrjlg.stream.task.ToArrayTask;
 
 import java.util.Collection;
 import java.util.Objects;
@@ -104,8 +105,138 @@ public class Nodes {
         return new ReferenceArrayNode<>(array);
     }
 
+    public static <T> Node.OfByte node(byte[] array) {
+        return new ByteArrayNode(array);
+    }
+
+    public static <T> Node.OfChar node(char[] array) {
+        return new CharArrayNode(array);
+    }
+
+    public static <T> Node.OfShort node(short[] array) {
+        return new ShortArrayNode(array);
+    }
+
+    public static <T> Node.OfInt node(int[] array) {
+        return new IntArrayNode(array);
+    }
+
+    public static <T> Node.OfLong node(long[] array) {
+        return new LongArrayNode(array);
+    }
+
+    public static <T> Node.OfFloat node(float[] array) {
+        return new FloatArrayNode(array);
+    }
+
+    public static <T> Node.OfDouble node(double[] array) {
+        return new DoubleArrayNode(array);
+    }
+
     public static <T> Node<T> node(Collection<T> collection) {
         return new CollectionNode<>(collection);
+    }
+
+    public static <T> Node<T> flatten(Node<T> node, IntFunction<T[]> generator) {
+        if (node.getChildCount() > 0) {
+            long count = node.count();
+            maxArraySize(count);
+            T[] array = generator.apply((int) count);
+            new ToArrayTask.OfRef<>(node, array, 0).invoke();
+            return node(array);
+        } else {
+            return node;
+        }
+    }
+
+    public static Node.OfByte flattenByte(Node.OfByte node) {
+        if (node.getChildCount() > 0) {
+            long size = node.count();
+            if (size >= MAX_ARRAY_SIZE)
+                throw new IllegalArgumentException(BAD_SIZE);
+            byte[] array = new byte[(int) size];
+            new ToArrayTask.OfByte(node, array, 0).invoke();
+            return node(array);
+        } else {
+            return node;
+        }
+    }
+
+    public static Node.OfChar flattenChar(Node.OfChar node) {
+        if (node.getChildCount() > 0) {
+            long size = node.count();
+            if (size >= MAX_ARRAY_SIZE)
+                throw new IllegalArgumentException(BAD_SIZE);
+            char[] array = new char[(int) size];
+            new ToArrayTask.OfChar(node, array, 0).invoke();
+            return node(array);
+        } else {
+            return node;
+        }
+    }
+    public static Node.OfShort flattenShort(Node.OfShort node) {
+        if (node.getChildCount() > 0) {
+            long size = node.count();
+            if (size >= MAX_ARRAY_SIZE)
+                throw new IllegalArgumentException(BAD_SIZE);
+            short[] array = new short[(int) size];
+            new ToArrayTask.OfShort(node, array, 0).invoke();
+            return node(array);
+        } else {
+            return node;
+        }
+    }
+
+    public static Node.OfInt flattenByte(Node.OfInt node) {
+        if (node.getChildCount() > 0) {
+            long size = node.count();
+            if (size >= MAX_ARRAY_SIZE)
+                throw new IllegalArgumentException(BAD_SIZE);
+            int[] array = new int[(int) size];
+            new ToArrayTask.OfInt(node, array, 0).invoke();
+            return node(array);
+        } else {
+            return node;
+        }
+    }
+
+    public static Node.OfLong flattenByte(Node.OfLong node) {
+        if (node.getChildCount() > 0) {
+            long size = node.count();
+            if (size >= MAX_ARRAY_SIZE)
+                throw new IllegalArgumentException(BAD_SIZE);
+            long[] array = new long[(int) size];
+            new ToArrayTask.OfLong(node, array, 0).invoke();
+            return node(array);
+        } else {
+            return node;
+        }
+    }
+
+    public static Node.OfFloat flattenFloat(Node.OfFloat node) {
+        if (node.getChildCount() > 0) {
+            long size = node.count();
+            if (size >= MAX_ARRAY_SIZE)
+                throw new IllegalArgumentException(BAD_SIZE);
+            float[] array = new float[(int) size];
+            new ToArrayTask.OfFloat(node, array, 0).invoke();
+            return node(array);
+        } else {
+            return node;
+        }
+    }
+
+    public static Node.OfDouble flattenByte(Node.OfDouble node) {
+        if (node.getChildCount() > 0) {
+            long size = node.count();
+            if (size >= MAX_ARRAY_SIZE)
+                throw new IllegalArgumentException(BAD_SIZE);
+            double[] array = new double[(int) size];
+            new ToArrayTask.OfDouble(node, array, 0).invoke();
+            return node(array);
+        } else {
+            return node;
+        }
     }
 
 
