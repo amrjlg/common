@@ -34,23 +34,23 @@ public abstract class InternalNodeSpliterator<T, S extends Spliterator<T>,
         N extends Node<T>> implements Spliterator<T> {
     // Node we are pointing to
     // null if full traversal has occurred
-    N currentNode;
+    protected N currentNode;
 
     // next child of curNode to consume
-    int curChildIndex;
+    protected int curChildIndex;
 
     // The spliterator of the curNode if that node is last and has no children.
     // This spliterator will be delegated to for splitting and traversing.
     // null if curNode has children
-    S lastNodeSpliterator;
+    protected S lastNodeSpliterator;
 
     // spliterator used while traversing with tryAdvance
     // null if no partial traversal has occurred
-    S tryAdvanceSpliterator;
+    protected S tryAdvanceSpliterator;
 
     // node stack used when traversing to search and find leaf nodes
     // null if no partial traversal has occurred
-    Deque<N> tryAdvanceStack;
+    protected Deque<N> tryAdvanceStack;
 
     InternalNodeSpliterator(N currentNode) {
         this.currentNode = currentNode;
@@ -69,7 +69,7 @@ public abstract class InternalNodeSpliterator<T, S extends Spliterator<T>,
 
     @SuppressWarnings("unchecked")
     protected final N findNextLeafNode(Deque<N> stack) {
-        N n = null;
+        N n;
         while ((n = stack.pollFirst()) != null) {
             if (n.getChildCount() == 0) {
                 if (n.count() > 0) {
@@ -105,12 +105,8 @@ public abstract class InternalNodeSpliterator<T, S extends Spliterator<T>,
             } else {
                 tryAdvanceSpliterator = lastNodeSpliterator;
             }
-
-
         }
-
         return true;
-
     }
 
     @Override
