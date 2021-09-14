@@ -22,6 +22,7 @@ import io.github.amrjlg.stream.node.Node;
 import io.github.amrjlg.stream.Sink;
 import io.github.amrjlg.stream.iterator.Spliterator;
 import io.github.amrjlg.stream.StreamShape;
+import io.github.amrjlg.stream.node.NodeBuilder;
 
 import java.util.function.IntFunction;
 
@@ -52,8 +53,8 @@ public interface PipelineHelper<Output> {
     <Input> Spliterator<Output> wrapSpliterator(Spliterator<Input> spliterator);
 
 
-     Node.Builder<Output> makeNodeBuilder(long exactSizeIfKnown,
-                                                 IntFunction<Output[]> generator);
+     NodeBuilder<Output> makeNodeBuilder(long exactSizeIfKnown,
+                                         IntFunction<Output[]> generator);
 
     <Input> Node<Output> evaluate(Spliterator<Input> spliterator,
                                   boolean flatten,

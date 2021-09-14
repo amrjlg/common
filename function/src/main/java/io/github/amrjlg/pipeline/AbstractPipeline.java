@@ -24,6 +24,7 @@ import io.github.amrjlg.stream.iterator.Spliterator;
 import io.github.amrjlg.stream.StreamOpFlag;
 import io.github.amrjlg.stream.StreamShape;
 import io.github.amrjlg.stream.TerminalOp;
+import io.github.amrjlg.stream.node.NodeBuilder;
 
 import java.util.Objects;
 import java.util.function.IntFunction;
@@ -252,7 +253,7 @@ public abstract class AbstractPipeline<Input, Output, Stream extends BaseStream<
         if (isParallel()){
             return evaluateToNode(this,spliterator,flatten,generator);
         }else {
-            Node.Builder<Output> nb = makeNodeBuilder(
+            NodeBuilder<Output> nb = makeNodeBuilder(
                     exactOutputSizeIfKnown(spliterator), generator);
             return wrapAndCopyInto(nb, spliterator).build();
         }
@@ -275,8 +276,8 @@ public abstract class AbstractPipeline<Input, Output, Stream extends BaseStream<
 
 
     @Override
-    public abstract Node.Builder<Output> makeNodeBuilder(long exactSizeIfKnown,
-                                                         IntFunction<Output[]> generator);
+    public abstract NodeBuilder<Output> makeNodeBuilder(long exactSizeIfKnown,
+                                                        IntFunction<Output[]> generator);
 
 
     // Op-specific abstract methods, implemented by the operation class
