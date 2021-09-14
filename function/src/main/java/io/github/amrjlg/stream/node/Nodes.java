@@ -19,6 +19,7 @@ package io.github.amrjlg.stream.node;
 
 import io.github.amrjlg.stream.StreamShape;
 
+import java.util.Collection;
 import java.util.Objects;
 import java.util.function.IntFunction;
 
@@ -103,6 +104,9 @@ public class Nodes {
         return new ReferenceArrayNode<>(array);
     }
 
+    public static <T> Node<T> node(Collection<T> collection) {
+        return new CollectionNode<>(collection);
+    }
 
 
     @SuppressWarnings("unchecked")
