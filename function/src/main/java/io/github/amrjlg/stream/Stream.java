@@ -37,7 +37,6 @@ import java.util.function.Supplier;
 import java.util.function.ToDoubleFunction;
 import java.util.function.ToIntFunction;
 import java.util.function.ToLongFunction;
-import java.util.stream.BaseStream;
 import java.util.stream.Collector;
 
 
@@ -66,9 +65,17 @@ public interface Stream<T> extends BaseStream<T, Stream<T>> /*extends java.util.
 
     <R> Stream<R> flatMap(Function<? super T, ? extends java.util.stream.Stream<? extends R>> mapper);
 
+    ByteStream flatMapToByte(Function<? super T, ? extends ByteStream> mapper);
+
+    ShortStream flatMapToShort(Function<? super T, ? extends ShortStream> mapper);
+
+    CharStream flatMapToChar(Function<? super T, ? extends CharStream> mapper);
+
     IntStream flatMapToInt(Function<? super T, ? extends IntStream> mapper);
 
     LongStream flatMapToLong(Function<? super T, ? extends LongStream> mapper);
+
+    FloatStream flatMapToFloat(Function<? super T, ? extends FloatStream> mapper);
 
     DoubleStream flatMapToDouble(Function<? super T, ? extends DoubleStream> mapper);
 
