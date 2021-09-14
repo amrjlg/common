@@ -19,6 +19,7 @@ package io.github.amrjlg.stream.node;
 
 import io.github.amrjlg.stream.StreamShape;
 
+import java.util.Objects;
 import java.util.function.IntFunction;
 
 
@@ -51,6 +52,7 @@ public class Nodes {
     private static final Node.OfChar EMPTY_CHAR_NODE = new EmptyNode.OfChar();
     private static final Node.OfInt EMPTY_INT_NODE = new EmptyNode.OfInt();
     private static final Node.OfLong EMPTY_LONG_NODE = new EmptyNode.OfLong();
+    private static final Node.OfFloat EMPTY_FLOAT_NODE = new EmptyNode.OfFloat();
     private static final Node.OfDouble EMPTY_DOUBLE_NODE = new EmptyNode.OfDouble();
 
 
@@ -61,6 +63,47 @@ public class Nodes {
     private static final long[] EMPTY_LONG_ARRAY = new long[0];
     private static final float[] EMPTY_FLOAT_ARRAY = new float[0];
     private static final double[] EMPTY_DOUBLE_ARRAY = new double[0];
+
+    @SuppressWarnings("unchecked")
+    public static <T> Node<T> empty(StreamShape shape) {
+        Objects.requireNonNull(shape);
+        Node<T> node;
+        switch (shape) {
+            case REFERENCE:
+                node = EMPTY_NODE;
+                break;
+            case BYTE_VALUE:
+                node = (Node<T>) EMPTY_BYTE_NODE;
+                break;
+            case CHAR_VALUE:
+                node = (Node<T>) EMPTY_CHAR_NODE;
+                break;
+            case SHORT_VALUE:
+                node = (Node<T>) EMPTY_SHORT_NODE;
+                break;
+            case INT_VALUE:
+                node = (Node<T>) EMPTY_INT_NODE;
+                break;
+            case LONG_VALUE:
+                node = (Node<T>) EMPTY_LONG_NODE;
+                break;
+            case FLOAT_VALUE:
+                node = (Node<T>) EMPTY_FLOAT_NODE;
+                break;
+            case DOUBLE_VALUE:
+                node = (Node<T>) EMPTY_DOUBLE_NODE;
+                break;
+            default:
+                throw new IllegalArgumentException();
+        }
+        return node;
+    }
+
+    public static <T> Node<T> node(T[] array) {
+        return new ReferenceArrayNode<>(array);
+    }
+
+
 
     @SuppressWarnings("unchecked")
     public static <T> Node<T> concat(StreamShape shape, Node<T> left, Node<T> right) {
