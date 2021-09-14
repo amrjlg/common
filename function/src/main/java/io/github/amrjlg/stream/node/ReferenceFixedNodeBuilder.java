@@ -22,9 +22,9 @@ import java.util.function.IntFunction;
 import static io.github.amrjlg.stream.node.Nodes.maxArraySize;
 import static io.github.amrjlg.stream.node.Nodes.sameCount;
 
-public final class FixedNodeBuilder<T> extends ArrayNode<T> implements NodeBuilder<T> {
+public final class ReferenceFixedNodeBuilder<T> extends ReferenceArrayNode<T> implements NodeBuilder<T> {
 
-        public FixedNodeBuilder(long size, IntFunction<T[]> generator) {
+        public ReferenceFixedNodeBuilder(long size, IntFunction<T[]> generator) {
             super(size, generator);
             maxArraySize(size);
         }

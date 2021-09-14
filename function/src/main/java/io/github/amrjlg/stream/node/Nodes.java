@@ -17,24 +17,9 @@
 
 package io.github.amrjlg.stream.node;
 
-import io.github.amrjlg.function.ByteConsumer;
-import io.github.amrjlg.function.CharConsumer;
-import io.github.amrjlg.function.FloatConsumer;
-import io.github.amrjlg.function.ShortConsumer;
 import io.github.amrjlg.stream.StreamShape;
-import io.github.amrjlg.stream.buffer.SpinedBuffer;
-import io.github.amrjlg.stream.iterator.Spliterator;
-import io.github.amrjlg.stream.iterator.Spliterators;
 
-import java.util.ArrayDeque;
-import java.util.Arrays;
-import java.util.Deque;
-import java.util.Objects;
-import java.util.function.Consumer;
-import java.util.function.DoubleConsumer;
-import java.util.function.IntConsumer;
 import java.util.function.IntFunction;
-import java.util.function.LongConsumer;
 
 
 /**
@@ -118,14 +103,25 @@ public class Nodes {
 
     public static <T> NodeBuilder<T> builder(long size, IntFunction<T[]> generator) {
         if (size >= 0 && size < MAX_ARRAY_SIZE) {
-            return new FixedNodeBuilder<>(size, generator);
+            return new ReferenceFixedNodeBuilder<>(size, generator);
         } else {
             return builder();
         }
     }
 
+    private static boolean arraySize(long size) {
+        return size >= 0 && size < MAX_ARRAY_SIZE;
+    }
+
     public static NodeBuilder.OfByte byteBuilder(long size) {
-        return null;
+        if (arraySize(size)) {
+            return new ByteFixedNodeBuilder(size);
+        }
+        return byteBuilder();
+    }
+
+    private static NodeBuilder.OfByte byteBuilder() {
+        return new ByteSpinedNodeBuilder();
     }
 
     public static NodeBuilder.OfShort shortBuilder(long size) {
@@ -137,10 +133,10 @@ public class Nodes {
     }
 
     public static NodeBuilder.OfInt intBuilder(long size) {
-        if (size>=0 && size < MAX_ARRAY_SIZE){
+        if (arraySize(size)) {
             return new IntFixedNodeBuilder(size);
-        }else {
-         return intBuilder();
+        } else {
+            return intBuilder();
         }
     }
 
