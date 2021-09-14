@@ -125,11 +125,25 @@ public class Nodes {
     }
 
     public static NodeBuilder.OfShort shortBuilder(long size) {
-        return null;
+        if (arraySize(size)) {
+            return new ShortFixedNodeBuilder(size);
+        }
+        return shortBuilder();
+    }
+
+    private static NodeBuilder.OfShort shortBuilder() {
+        return new ShortSpinedNodeBuilder();
     }
 
     public static NodeBuilder.OfChar charBuilder(long size) {
-        return null;
+        if (arraySize(size)) {
+            return new CharFixedNodeBuilder(size);
+        }
+        return charBuilder();
+    }
+
+    private static NodeBuilder.OfChar charBuilder() {
+        return new CharSpinedNodeBuilder();
     }
 
     public static NodeBuilder.OfInt intBuilder(long size) {
@@ -145,15 +159,36 @@ public class Nodes {
     }
 
     public static NodeBuilder.OfLong longBuilder(long size) {
-        return null;
+        if (arraySize(size)) {
+            return new LongFixedNodeBuilder(size);
+        }
+        return longBuilder();
+    }
+
+    private static NodeBuilder.OfLong longBuilder() {
+        return new LongSpinedNodeBuilder();
     }
 
     public static NodeBuilder.OfFloat floatBuilder(long size) {
-        return null;
+        if (arraySize(size)) {
+            return new FloatFixedNodeBuilder(size);
+        }
+        return floatBuilder();
+    }
+
+    private static NodeBuilder.OfFloat floatBuilder() {
+        return new FloatSpinedNodeBuilder();
     }
 
     public static NodeBuilder.OfDouble doubleBuilder(long size) {
-        return null;
+        if (arraySize(size)) {
+            return new DoubleFixedNodeBuilder(size);
+        }
+        return doubleBuilder();
+    }
+
+    private static NodeBuilder.OfDouble doubleBuilder() {
+        return new DoubleSpinedNodeBuilder();
     }
 
     public static void sameCount(int count, int length) {
