@@ -15,7 +15,7 @@
  *
  */
 
-package io.github.amrjlg.pipeline;
+package io.github.amrjlg.stream.pipeline;
 
 
 import io.github.amrjlg.stream.node.Node;

@@ -15,9 +15,10 @@
  *
  */
 
-package io.github.amrjlg.pipeline;
+package io.github.amrjlg.stream.pipeline;
 
 import io.github.amrjlg.stream.BaseStream;
+import io.github.amrjlg.stream.Streams;
 import io.github.amrjlg.stream.node.Node;
 import io.github.amrjlg.stream.Sink;
 import io.github.amrjlg.stream.iterator.Spliterator;
@@ -210,11 +211,11 @@ public abstract class AbstractPipeline<Input, Output, Stream extends BaseStream<
     @SuppressWarnings({"rawtypes"})
     public <P_IN> void copyIntoWithCancel(Sink<P_IN> wrappedSink, Spliterator<P_IN> spliterator) {
         AbstractPipeline pipeline = AbstractPipeline.this;
-        while (pipeline.depth>0){
+        while (pipeline.depth > 0) {
             pipeline = pipeline.previousStage;
         }
         wrappedSink.begin(spliterator.getExactSizeIfKnown());
-        pipeline.forEachWithCancel(spliterator,wrappedSink);
+        pipeline.forEachWithCancel(spliterator, wrappedSink);
         wrappedSink.end();
     }
 
@@ -223,15 +224,15 @@ public abstract class AbstractPipeline<Input, Output, Stream extends BaseStream<
         return combinedFlags;
     }
 
-    public final boolean isOrdered(){
+    public final boolean isOrdered() {
         return StreamOpFlag.ORDERED.isKnown(combinedFlags);
     }
 
     @Override
-    @SuppressWarnings({"unchecked","rawtypes"})
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public <P_IN> Sink<P_IN> wrapSink(Sink<Output> sink) {
         Objects.requireNonNull(sink);
-        for (AbstractPipeline pipeline = AbstractPipeline.this;pipeline.depth>0 ; pipeline = pipeline.previousStage) {
+        for (AbstractPipeline pipeline = AbstractPipeline.this; pipeline.depth > 0; pipeline = pipeline.previousStage) {
             sink = pipeline.opWrapSink(pipeline.previousStage.combinedFlags, sink);
         }
 
@@ -241,32 +242,33 @@ public abstract class AbstractPipeline<Input, Output, Stream extends BaseStream<
     @Override
     @SuppressWarnings({"unchecked"})
     public <P_IN> Spliterator<Output> wrapSpliterator(Spliterator<P_IN> spliterator) {
-        if (depth == 0){
+        if (depth == 0) {
             return (Spliterator<Output>) spliterator;
-        }else {
-            return wrap(this,()->spliterator,isParallel());
+        } else {
+            return wrap(this, () -> spliterator, isParallel());
         }
     }
 
     @Override
     public <P_IN> Node<Output> evaluate(Spliterator<P_IN> spliterator, boolean flatten, IntFunction<Output[]> generator) {
-        if (isParallel()){
-            return evaluateToNode(this,spliterator,flatten,generator);
-        }else {
+        if (isParallel()) {
+            return evaluateToNode(this, spliterator, flatten, generator);
+        } else {
             NodeBuilder<Output> nb = makeNodeBuilder(
                     exactOutputSizeIfKnown(spliterator), generator);
             return wrapAndCopyInto(nb, spliterator).build();
         }
 
     }
+
     abstract <P_IN> Node<Output> evaluateToNode(PipelineHelper<Output> helper,
-                                                                Spliterator<P_IN> spliterator,
-                                                                boolean flattenTree,
-                                                                IntFunction<Output[]> generator);
+                                                Spliterator<P_IN> spliterator,
+                                                boolean flattenTree,
+                                                IntFunction<Output[]> generator);
 
     abstract <P_IN> Spliterator<Output> wrap(PipelineHelper<Output> ph,
-                                                      Supplier<Spliterator<P_IN>> supplier,
-                                                      boolean isParallel);
+                                             Supplier<Spliterator<P_IN>> supplier,
+                                             boolean isParallel);
 
 
     abstract Spliterator<Output> lazySpliterator(Supplier<? extends Spliterator<Output>> supplier);
@@ -301,4 +303,113 @@ public abstract class AbstractPipeline<Input, Output, Stream extends BaseStream<
         throw new UnsupportedOperationException("Parallel evaluation is not supported");
     }
 
+    final Node<Output> evaluateToArrayNode(IntFunction<Output[]> generator) {
+        if (linkedOrConsumed)
+            throw new IllegalStateException(MSG_STREAM_LINKED);
+        linkedOrConsumed = true;
+
+        // If the last intermediate operation is stateful then
+        // evaluate directly to avoid an extra collection step
+        if (isParallel() && previousStage != null && opIsStateful()) {
+            // Set the depth of this, last, pipeline stage to zero to slice the
+            // pipeline such that this operation will not be included in the
+            // upstream slice and upstream operations will not be included
+            // in this slice
+            depth = 0;
+            return opEvaluateParallel(previousStage, previousStage.sourceSpliterator(0), generator);
+        } else {
+            return evaluate(sourceSpliterator(0), true, generator);
+        }
+    }
+
+    final Spliterator<Output> sourceStageSpliterator() {
+        if (this != sourceStage)
+            throw new IllegalStateException();
+
+        if (linkedOrConsumed)
+            throw new IllegalStateException(MSG_STREAM_LINKED);
+        linkedOrConsumed = true;
+
+        if (sourceStage.sourceSpliterator != null) {
+            @SuppressWarnings("unchecked")
+            Spliterator<Output> s = sourceStage.sourceSpliterator;
+            sourceStage.sourceSpliterator = null;
+            return s;
+        } else if (sourceStage.sourceSupplier != null) {
+            @SuppressWarnings("unchecked")
+            Spliterator<Output> s = (Spliterator<Output>) sourceStage.sourceSupplier.get();
+            sourceStage.sourceSupplier = null;
+            return s;
+        } else {
+            throw new IllegalStateException(MSG_CONSUMED);
+        }
+    }
+
+    @Override
+    public Stream sequential() {
+        sourceStage.parallel = false;
+        return (Stream) this;
+    }
+
+    @Override
+    public Stream parallel() {
+        sourceStage.parallel = true;
+        return (Stream) this;
+    }
+
+    @Override
+    public void close() {
+        linkedOrConsumed = true;
+        sourceSupplier = null;
+        sourceSpliterator = null;
+        if (sourceStage.sourceCloseAction != null) {
+            Runnable closeAction = sourceStage.sourceCloseAction;
+            sourceStage.sourceCloseAction = null;
+            closeAction.run();
+        }
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public Stream onClose(Runnable closeHandler) {
+        Objects.requireNonNull(closeHandler);
+
+        Runnable sourceCloseAction = sourceStage.sourceCloseAction;
+
+        sourceStage.sourceCloseAction = sourceCloseAction == null ? closeHandler : Streams.composeWithExceptions(sourceCloseAction, closeHandler);
+
+        return (Stream) this;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public Spliterator<Output> spliterator() {
+        if (linkedOrConsumed) {
+            throw new IllegalStateException(MSG_STREAM_LINKED);
+        }
+
+        linkedOrConsumed = true;
+        if (this == sourceStage) {
+            if (sourceStage.sourceSpliterator != null) {
+                Spliterator<Output> spliterator = (Spliterator<Output>) sourceStage.sourceSpliterator;
+                sourceStage.sourceSpliterator = null;
+                return spliterator;
+            } else if (sourceStage.sourceSupplier != null) {
+                Supplier<Spliterator<Output>> supplier = (Supplier<Spliterator<Output>>) sourceStage.sourceSupplier;
+                sourceStage.sourceSupplier = null;
+                return lazySpliterator(supplier);
+            }else {
+                throw new IllegalStateException(MSG_STREAM_LINKED);
+            }
+
+        } else {
+            return wrap(this,()->sourceSpliterator(0),isParallel());
+        }
+
+    }
+
+    @Override
+    public boolean isParallel() {
+        return sourceStage.parallel;
+    }
 }
