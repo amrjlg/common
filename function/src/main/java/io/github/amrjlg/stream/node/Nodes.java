@@ -53,6 +53,12 @@ public class Nodes {
     // IllegalArgumentException messages
     public static final String BAD_SIZE = "Stream size exceeds max array size";
 
+    public static void maxArraySize(long size){
+        if (size>=MAX_ARRAY_SIZE){
+            throw new IllegalArgumentException(BAD_SIZE);
+        }
+    }
+
     @SuppressWarnings("rawtypes")
     private static final Node EMPTY_NODE = new Nodes.EmptyNode.OfRef();
     private static final Node.OfByte EMPTY_BYTE_NODE = new Nodes.EmptyNode.OfByte();
@@ -282,9 +288,7 @@ public class Nodes {
         protected int currentSize;
 
         public ArrayNode(long size, IntFunction<T[]> generator) {
-            if (size >= MAX_ARRAY_SIZE) {
-                throw new IllegalArgumentException(BAD_SIZE);
-            }
+            maxArraySize(size);
             this.currentSize = 0;
             this.array = generator.apply((int) size);
         }
@@ -375,9 +379,7 @@ public class Nodes {
         @Override
         public T[] asArray(IntFunction<T[]> generator) {
             long size = count();
-            if (size >= MAX_ARRAY_SIZE) {
-                throw new IndexOutOfBoundsException(BAD_SIZE);
-            }
+            maxArraySize(size);
             T[] apply = generator.apply((int) size);
             copyInto(apply, 0);
             return apply;
@@ -433,9 +435,7 @@ public class Nodes {
             @Override
             public TypeArray asPrimitiveArray() {
                 long size = count();
-                if (size >= MAX_ARRAY_SIZE) {
-                    throw new IllegalArgumentException(BAD_SIZE);
-                }
+                maxArraySize(size);
 
                 TypeArray array = newArray((int) size);
                 copyInto(array, 0);
@@ -817,9 +817,7 @@ public class Nodes {
 
         public FixedNodeBuilder(long size, IntFunction<T[]> generator) {
             super(size, generator);
-            if (size >= MAX_ARRAY_SIZE) {
-                throw new IllegalArgumentException(BAD_SIZE);
-            }
+            maxArraySize(size);
         }
 
         @Override
@@ -928,9 +926,7 @@ public class Nodes {
         }
 
         public ByteArrayNodeBuilder(long size) {
-            if (size >= MAX_ARRAY_SIZE) {
-                throw new IllegalArgumentException(BAD_SIZE);
-            }
+            maxArraySize(size);
             this.array = new byte[(int) size];
             this.index = 0;
         }
@@ -1013,9 +1009,7 @@ public class Nodes {
         }
 
         public ShortArrayNodeBuilder(long size) {
-            if (size >= MAX_ARRAY_SIZE) {
-                throw new IllegalArgumentException(BAD_SIZE);
-            }
+            maxArraySize(size);
             this.array = new short[(int) size];
             this.index = 0;
         }
@@ -1098,9 +1092,7 @@ public class Nodes {
         }
 
         public CharArrayNodeBuilder(long size) {
-            if (size >= MAX_ARRAY_SIZE) {
-                throw new IllegalArgumentException(BAD_SIZE);
-            }
+            maxArraySize(size);
             this.array = new char[(int) size];
             this.index = 0;
         }
@@ -1183,9 +1175,7 @@ public class Nodes {
         }
 
         public IntArrayNodeBuilder(long size) {
-            if (size >= MAX_ARRAY_SIZE) {
-                throw new IllegalArgumentException(BAD_SIZE);
-            }
+            maxArraySize(size);
             this.array = new int[(int) size];
             this.index = 0;
         }
@@ -1268,9 +1258,7 @@ public class Nodes {
         }
 
         public LongArrayNodeBuilder(long size) {
-            if (size >= MAX_ARRAY_SIZE) {
-                throw new IllegalArgumentException(BAD_SIZE);
-            }
+            maxArraySize(size);
             this.array = new long[(int) size];
             this.index = 0;
         }
@@ -1353,9 +1341,7 @@ public class Nodes {
         }
 
         public FloatArrayNodeBuilder(long size) {
-            if (size >= MAX_ARRAY_SIZE) {
-                throw new IllegalArgumentException(BAD_SIZE);
-            }
+            maxArraySize(size);
             this.array = new float[(int) size];
             this.index = 0;
         }
@@ -1438,9 +1424,7 @@ public class Nodes {
         }
 
         public DoubleArrayNodeBuilder(long size) {
-            if (size >= MAX_ARRAY_SIZE) {
-                throw new IllegalArgumentException(BAD_SIZE);
-            }
+            maxArraySize(size);
             this.array = new double[(int) size];
             this.index = 0;
         }
