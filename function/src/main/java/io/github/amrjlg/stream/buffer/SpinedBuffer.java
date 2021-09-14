@@ -680,7 +680,7 @@ public class SpinedBuffer<Element> extends AbstractSpinedBuffer
                 }
 
                 @Override
-                OfByte newSpliterator(int firstSpineIndex, int lastSpineIndex, int firstSpineElementIndex, int lastSpineElementFence) {
+                Spliterator.OfByte newSpliterator(int firstSpineIndex, int lastSpineIndex, int firstSpineElementIndex, int lastSpineElementFence) {
                     return new Adapter(firstSpineIndex, lastSpineIndex, firstSpineElementIndex, lastSpineElementFence);
                 }
 
@@ -690,7 +690,7 @@ public class SpinedBuffer<Element> extends AbstractSpinedBuffer
                 }
 
                 @Override
-                OfByte arraySpliterator(byte[] array, int offset, int len) {
+                Spliterator.OfByte arraySpliterator(byte[] array, int offset, int len) {
                     return Spliterators.spliterator(array, offset, len + offset, java.util.Spliterator.ORDERED | java.util.Spliterator.IMMUTABLE);
                 }
             }
@@ -766,7 +766,7 @@ public class SpinedBuffer<Element> extends AbstractSpinedBuffer
                 }
 
                 @Override
-                OfShort newSpliterator(int firstSpineIndex, int lastSpineIndex, int firstSpineElementIndex, int lastSpineElementFence) {
+                Spliterator.OfShort newSpliterator(int firstSpineIndex, int lastSpineIndex, int firstSpineElementIndex, int lastSpineElementFence) {
                     return new Adapter(firstSpineIndex, lastSpineIndex, firstSpineElementIndex, lastSpineElementFence);
                 }
 
@@ -776,7 +776,7 @@ public class SpinedBuffer<Element> extends AbstractSpinedBuffer
                 }
 
                 @Override
-                OfShort arraySpliterator(short[] array, int offset, int len) {
+                Spliterator.OfShort arraySpliterator(short[] array, int offset, int len) {
                     return Spliterators.spliterator(array, offset, len + offset, java.util.Spliterator.ORDERED | java.util.Spliterator.IMMUTABLE);
                 }
             }
@@ -852,7 +852,7 @@ public class SpinedBuffer<Element> extends AbstractSpinedBuffer
                 }
 
                 @Override
-                OfChar newSpliterator(int firstSpineIndex, int lastSpineIndex, int firstSpineElementIndex, int lastSpineElementFence) {
+                Spliterator.OfChar newSpliterator(int firstSpineIndex, int lastSpineIndex, int firstSpineElementIndex, int lastSpineElementFence) {
                     return new Adapter(firstSpineIndex, lastSpineIndex, firstSpineElementIndex, lastSpineElementFence);
                 }
 
@@ -862,7 +862,7 @@ public class SpinedBuffer<Element> extends AbstractSpinedBuffer
                 }
 
                 @Override
-                OfChar arraySpliterator(char[] array, int offset, int len) {
+                Spliterator.OfChar arraySpliterator(char[] array, int offset, int len) {
                     return Spliterators.spliterator(array, offset, len + offset, java.util.Spliterator.ORDERED | java.util.Spliterator.IMMUTABLE);
                 }
             }
@@ -938,7 +938,7 @@ public class SpinedBuffer<Element> extends AbstractSpinedBuffer
                 }
 
                 @Override
-                OfInt newSpliterator(int firstSpineIndex, int lastSpineIndex, int firstSpineElementIndex, int lastSpineElementFence) {
+                Spliterator.OfInt newSpliterator(int firstSpineIndex, int lastSpineIndex, int firstSpineElementIndex, int lastSpineElementFence) {
                     return new Adapter(firstSpineIndex, lastSpineIndex, firstSpineElementIndex, lastSpineElementFence);
                 }
 
@@ -948,7 +948,7 @@ public class SpinedBuffer<Element> extends AbstractSpinedBuffer
                 }
 
                 @Override
-                OfInt arraySpliterator(int[] array, int offset, int len) {
+                Spliterator.OfInt arraySpliterator(int[] array, int offset, int len) {
                     return Spliterators.spliterator(array, offset, len + offset, java.util.Spliterator.ORDERED | java.util.Spliterator.IMMUTABLE);
                 }
             }
@@ -1024,7 +1024,7 @@ public class SpinedBuffer<Element> extends AbstractSpinedBuffer
                 }
 
                 @Override
-                OfLong newSpliterator(int firstSpineIndex, int lastSpineIndex, int firstSpineElementIndex, int lastSpineElementFence) {
+                Spliterator.OfLong newSpliterator(int firstSpineIndex, int lastSpineIndex, int firstSpineElementIndex, int lastSpineElementFence) {
                     return new Adapter(firstSpineIndex, lastSpineIndex, firstSpineElementIndex, lastSpineElementFence);
                 }
 
@@ -1034,7 +1034,7 @@ public class SpinedBuffer<Element> extends AbstractSpinedBuffer
                 }
 
                 @Override
-                OfLong arraySpliterator(long[] array, int offset, int len) {
+                Spliterator.OfLong arraySpliterator(long[] array, int offset, int len) {
                     return Spliterators.spliterator(array, offset, len + offset, java.util.Spliterator.ORDERED | java.util.Spliterator.IMMUTABLE);
                 }
             }
@@ -1110,7 +1110,7 @@ public class SpinedBuffer<Element> extends AbstractSpinedBuffer
                 }
 
                 @Override
-                OfFloat newSpliterator(int firstSpineIndex, int lastSpineIndex, int firstSpineElementIndex, int lastSpineElementFence) {
+                Spliterator.OfFloat newSpliterator(int firstSpineIndex, int lastSpineIndex, int firstSpineElementIndex, int lastSpineElementFence) {
                     return new Adapter(firstSpineIndex, lastSpineIndex, firstSpineElementIndex, lastSpineElementFence);
                 }
 
@@ -1120,7 +1120,7 @@ public class SpinedBuffer<Element> extends AbstractSpinedBuffer
                 }
 
                 @Override
-                OfFloat arraySpliterator(float[] array, int offset, int len) {
+                Spliterator.OfFloat arraySpliterator(float[] array, int offset, int len) {
                     return Spliterators.spliterator(array, offset, len + offset, java.util.Spliterator.ORDERED | java.util.Spliterator.IMMUTABLE);
                 }
             }
@@ -1196,7 +1196,7 @@ public class SpinedBuffer<Element> extends AbstractSpinedBuffer
                 }
 
                 @Override
-                OfDouble newSpliterator(int firstSpineIndex, int lastSpineIndex, int firstSpineElementIndex, int lastSpineElementFence) {
+                Spliterator.OfDouble newSpliterator(int firstSpineIndex, int lastSpineIndex, int firstSpineElementIndex, int lastSpineElementFence) {
                     return new Adapter(firstSpineIndex, lastSpineIndex, firstSpineElementIndex, lastSpineElementFence);
                 }
 
@@ -1206,7 +1206,7 @@ public class SpinedBuffer<Element> extends AbstractSpinedBuffer
                 }
 
                 @Override
-                OfDouble arraySpliterator(double[] array, int offset, int len) {
+                Spliterator.OfDouble arraySpliterator(double[] array, int offset, int len) {
                     return Spliterators.spliterator(array, offset, len + offset, java.util.Spliterator.ORDERED | java.util.Spliterator.IMMUTABLE);
                 }
             }
