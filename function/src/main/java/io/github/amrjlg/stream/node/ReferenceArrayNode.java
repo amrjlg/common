@@ -25,18 +25,18 @@ import java.util.function.IntFunction;
 
 import static io.github.amrjlg.stream.node.Nodes.maxArraySize;
 
-public class ArrayNode<T> implements Node<T> {
+public class ReferenceArrayNode<T> implements Node<T> {
 
         protected final T[] array;
         protected int currentSize;
 
-        public ArrayNode(long size, IntFunction<T[]> generator) {
+        public ReferenceArrayNode(long size, IntFunction<T[]> generator) {
             maxArraySize(size);
             this.currentSize = 0;
             this.array = generator.apply((int) size);
         }
 
-        public ArrayNode(T[] array) {
+        public ReferenceArrayNode(T[] array) {
             this.array = array;
             this.currentSize = array.length;
         }
