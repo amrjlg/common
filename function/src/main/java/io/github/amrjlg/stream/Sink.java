@@ -23,7 +23,6 @@ import io.github.amrjlg.function.CharConsumer;
 import io.github.amrjlg.function.FloatConsumer;
 import io.github.amrjlg.function.ShortConsumer;
 
-
 import java.util.function.Consumer;
 import java.util.function.DoubleConsumer;
 import java.util.function.IntConsumer;
@@ -146,4 +145,195 @@ public interface Sink<T> extends Consumer<T> {
         }
     }
 
+
+    abstract class ChainedReference<T, R> implements Sink<T> {
+        protected final Sink<? super R> downstream;
+
+        public ChainedReference(Sink<? super R> downstream) {
+            this.downstream = downstream;
+        }
+
+        @Override
+        public void begin(long size) {
+            downstream.begin(size);
+        }
+
+        @Override
+        public void end() {
+            downstream.end();
+        }
+
+        @Override
+        public boolean cancellationRequested() {
+            return downstream.cancellationRequested();
+        }
+    }
+
+    abstract class ChainedByte<R> implements SKinOfByte{
+
+        protected final Sink<? super R> downstream;
+
+        public ChainedByte(Sink<? super R> downstream) {
+            this.downstream = downstream;
+        }
+
+        @Override
+        public void begin(long size) {
+            downstream.begin(size);
+        }
+
+        @Override
+        public void end() {
+            downstream.end();
+        }
+
+        @Override
+        public boolean cancellationRequested() {
+            return downstream.cancellationRequested();
+        }
+    }
+
+    abstract class ChainedShort<R> implements SKinOfShort{
+
+        protected final Sink<? super R> downstream;
+
+        public ChainedShort(Sink<? super R> downstream) {
+            this.downstream = downstream;
+        }
+
+        @Override
+        public void begin(long size) {
+            downstream.begin(size);
+        }
+
+        @Override
+        public void end() {
+            downstream.end();
+        }
+
+        @Override
+        public boolean cancellationRequested() {
+            return downstream.cancellationRequested();
+        }
+    }
+
+    abstract class ChainedChar<R> implements SKinOfChar{
+
+        protected final Sink<? super R> downstream;
+
+        public ChainedChar(Sink<? super R> downstream) {
+            this.downstream = downstream;
+        }
+
+        @Override
+        public void begin(long size) {
+            downstream.begin(size);
+        }
+
+        @Override
+        public void end() {
+            downstream.end();
+        }
+
+        @Override
+        public boolean cancellationRequested() {
+            return downstream.cancellationRequested();
+        }
+    }
+
+    abstract class ChainedInt<R> implements SKinOfInt{
+
+        protected final Sink<? super R> downstream;
+
+        public ChainedInt(Sink<? super R> downstream) {
+            this.downstream = downstream;
+        }
+
+        @Override
+        public void begin(long size) {
+            downstream.begin(size);
+        }
+
+        @Override
+        public void end() {
+            downstream.end();
+        }
+
+        @Override
+        public boolean cancellationRequested() {
+            return downstream.cancellationRequested();
+        }
+    }
+
+    abstract class ChainedLong<R> implements SKinOfLong{
+
+        protected final Sink<? super R> downstream;
+
+        public ChainedLong(Sink<? super R> downstream) {
+            this.downstream = downstream;
+        }
+
+        @Override
+        public void begin(long size) {
+            downstream.begin(size);
+        }
+
+        @Override
+        public void end() {
+            downstream.end();
+        }
+
+        @Override
+        public boolean cancellationRequested() {
+            return downstream.cancellationRequested();
+        }
+    }
+
+    abstract class ChainedFloat<R> implements SKinOfFloat{
+
+        protected final Sink<? super R> downstream;
+
+        public ChainedFloat(Sink<? super R> downstream) {
+            this.downstream = downstream;
+        }
+
+        @Override
+        public void begin(long size) {
+            downstream.begin(size);
+        }
+
+        @Override
+        public void end() {
+            downstream.end();
+        }
+
+        @Override
+        public boolean cancellationRequested() {
+            return downstream.cancellationRequested();
+        }
+    }
+
+    abstract class ChainedDouble<R> implements SKinOfDouble{
+
+        protected final Sink<? super R> downstream;
+
+        public ChainedDouble(Sink<? super R> downstream) {
+            this.downstream = downstream;
+        }
+
+        @Override
+        public void begin(long size) {
+            downstream.begin(size);
+        }
+
+        @Override
+        public void end() {
+            downstream.end();
+        }
+
+        @Override
+        public boolean cancellationRequested() {
+            return downstream.cancellationRequested();
+        }
+    }
 }
