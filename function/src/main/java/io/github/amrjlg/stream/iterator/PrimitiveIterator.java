@@ -86,18 +86,18 @@ public interface PrimitiveIterator<Primitive, PrimitiveConsumer> extends java.ut
 
     interface OfShort extends PrimitiveIterator<Short, ShortConsumer> {
 
-        short nextShot();
+        short nextShort();
 
         @Override
         default void forEachRemaining(ShortConsumer action) {
             while (hasNext()) {
-                action.accept(nextShot());
+                action.accept(nextShort());
             }
         }
 
         @Override
         default Short next() {
-            return nextShot();
+            return nextShort();
         }
 
         @Override
