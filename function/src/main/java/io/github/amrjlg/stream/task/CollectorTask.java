@@ -87,49 +87,49 @@ public class CollectorTask<Input, Output, TypeNode extends Node<Output>, TypeBui
 
     public static final class OfByte<Input>
             extends CollectorTask<Input, Byte, Node.OfByte, NodeBuilder.OfByte> {
-        OfByte(PipelineHelper<Byte> helper, Spliterator<Input> spliterator) {
+        public OfByte(PipelineHelper<Byte> helper, Spliterator<Input> spliterator) {
             super(helper, spliterator, Nodes::byteBuilder, ConcatNode.OfByte::new);
         }
     }
 
     public static final class OfShort<Input>
             extends CollectorTask<Input, Short, Node.OfShort, NodeBuilder.OfShort> {
-        OfShort(PipelineHelper<Short> helper, Spliterator<Input> spliterator) {
+        public OfShort(PipelineHelper<Short> helper, Spliterator<Input> spliterator) {
             super(helper, spliterator, Nodes::shortBuilder, ConcatNode.OfShort::new);
         }
     }
 
     public static final class OfChar<Input>
             extends CollectorTask<Input, Character, Node.OfChar, NodeBuilder.OfChar> {
-        OfChar(PipelineHelper<Character> helper, Spliterator<Input> spliterator) {
+        public OfChar(PipelineHelper<Character> helper, Spliterator<Input> spliterator) {
             super(helper, spliterator, Nodes::charBuilder, ConcatNode.OfChar::new);
         }
     }
 
     public static final class OfInt<Input>
             extends CollectorTask<Input, Integer, Node.OfInt, NodeBuilder.OfInt> {
-        OfInt(PipelineHelper<Integer> helper, Spliterator<Input> spliterator) {
+        public OfInt(PipelineHelper<Integer> helper, Spliterator<Input> spliterator) {
             super(helper, spliterator, Nodes::intBuilder, ConcatNode.OfInt::new);
         }
     }
 
     public static final class OfLong<Input>
             extends CollectorTask<Input, Long, Node.OfLong, NodeBuilder.OfLong> {
-        OfLong(PipelineHelper<Long> helper, Spliterator<Input> spliterator) {
+        public OfLong(PipelineHelper<Long> helper, Spliterator<Input> spliterator) {
             super(helper, spliterator, Nodes::longBuilder, ConcatNode.OfLong::new);
         }
     }
 
     public static final class OfFloat<Input>
             extends CollectorTask<Input, Float, Node.OfFloat, NodeBuilder.OfFloat> {
-        OfFloat(PipelineHelper<Float> helper, Spliterator<Input> spliterator) {
+        public OfFloat(PipelineHelper<Float> helper, Spliterator<Input> spliterator) {
             super(helper, spliterator, Nodes::floatBuilder, ConcatNode.OfFloat::new);
         }
     }
 
     public static final class OfDouble<Input>
             extends CollectorTask<Input, Double, Node.OfDouble, NodeBuilder.OfDouble> {
-        OfDouble(PipelineHelper<Double> helper, Spliterator<Input> spliterator) {
+        public OfDouble(PipelineHelper<Double> helper, Spliterator<Input> spliterator) {
             super(helper, spliterator, Nodes::doubleBuilder, ConcatNode.OfDouble::new);
         }
     }
