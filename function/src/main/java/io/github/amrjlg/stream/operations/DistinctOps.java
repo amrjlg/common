@@ -47,7 +47,7 @@ public class DistinctOps {
         return new ReferencePipeline.StatefulOp<T, T>(pipeline, StreamShape.REFERENCE, StreamOpFlag.IS_DISTINCT | StreamOpFlag.NOT_SIZED) {
 
             @Override
-            protected Sink<T> opWrapSink(int flags, Sink<T> sink) {
+            public Sink<T> opWrapSink(int flags, Sink<T> sink) {
                 Objects.requireNonNull(sink);
                 if (StreamOpFlag.DISTINCT.isKnown(flags)) {
                     return sink;
