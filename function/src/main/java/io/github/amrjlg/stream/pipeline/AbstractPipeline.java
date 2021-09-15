@@ -289,15 +289,15 @@ public abstract class AbstractPipeline<Input, Output, Stream extends BaseStream<
 
     abstract StreamShape getOutputShape();
 
-    abstract Sink<Input> opWrapSink(int flags, Sink<Output> sink);
+    protected abstract Sink<Input> opWrapSink(int flags, Sink<Output> sink);
 
 
-    <P_IN> Spliterator<Output> opEvaluateParallelLazy(PipelineHelper<Output> helper,
+    protected  <P_IN> Spliterator<Output> opEvaluateParallelLazy(PipelineHelper<Output> helper,
                                                       Spliterator<P_IN> spliterator) {
         return opEvaluateParallel(helper, spliterator, i -> (Output[]) new Object[i]).spliterator();
     }
 
-    <P_IN> Node<Output> opEvaluateParallel(PipelineHelper<Output> helper,
+    protected <P_IN> Node<Output> opEvaluateParallel(PipelineHelper<Output> helper,
                                            Spliterator<P_IN> spliterator,
                                            IntFunction<Output[]> generator) {
         throw new UnsupportedOperationException("Parallel evaluation is not supported");
