@@ -18,6 +18,10 @@
 package io.github.amrjlg.stream.node;
 
 import io.github.amrjlg.stream.StreamShape;
+import io.github.amrjlg.stream.iterator.Spliterator;
+import io.github.amrjlg.stream.pipeline.PipelineHelper;
+import io.github.amrjlg.stream.task.CollectorTask;
+import io.github.amrjlg.stream.task.SizedCollectorTask;
 import io.github.amrjlg.stream.task.ToArrayTask;
 
 import java.util.Collection;
@@ -137,6 +141,130 @@ public class Nodes {
         return new CollectionNode<>(collection);
     }
 
+    public static <T, R> Node<R> collect(PipelineHelper<R> helper, Spliterator<T> spliterator, boolean flatten, IntFunction<R[]> generator) {
+
+        long size = helper.exactOutputSizeIfKnown(spliterator);
+        if (size >= 0 && spliterator.hasCharacteristics(Spliterator.SUBSIZED)) {
+            maxArraySize(size);
+            R[] array = generator.apply((int) size);
+            new SizedCollectorTask.OfRef<>(spliterator, helper, array).invoke();
+
+            return node(array);
+        }
+
+        Node<R> node = new CollectorTask.OfRef<>(helper, generator, spliterator).invoke();
+        if (flatten) {
+            return flatten(node, generator);
+        }
+        return node;
+    }
+
+    public static <Input> Node.OfByte collectByte(PipelineHelper<Byte> helper, Spliterator<Input> spliterator, boolean flatten) {
+        long size = helper.exactOutputSizeIfKnown(spliterator);
+        if (size >= 0 && spliterator.hasCharacteristics(Spliterator.SUBSIZED)) {
+            maxArraySize(size);
+            byte[] array = new byte[(int) size];
+            new SizedCollectorTask.OfByte<>(spliterator, helper, array).invoke();
+            return node(array);
+        }
+        Node.OfByte node = new CollectorTask.OfByte<>(helper, spliterator).invoke();
+        if (flatten) {
+            return flattenByte(node);
+        }
+        return node;
+    }
+
+    public static <Input> Node.OfShort collectShort(PipelineHelper<Short> helper, Spliterator<Input> spliterator, boolean flatten) {
+        long size = helper.exactOutputSizeIfKnown(spliterator);
+        if (size >= 0 && spliterator.hasCharacteristics(Spliterator.SUBSIZED)) {
+            maxArraySize(size);
+            short[] array = new short[(int) size];
+            new SizedCollectorTask.OfShort<>(spliterator, helper, array).invoke();
+            return node(array);
+        }
+        Node.OfShort node = new CollectorTask.OfShort<>(helper, spliterator).invoke();
+        if (flatten) {
+            return flattenShort(node);
+        }
+        return node;
+    }
+
+    public static <Input> Node.OfChar collectChar(PipelineHelper<Character> helper, Spliterator<Input> spliterator, boolean flatten) {
+        long size = helper.exactOutputSizeIfKnown(spliterator);
+        if (size >= 0 && spliterator.hasCharacteristics(Spliterator.SUBSIZED)) {
+            maxArraySize(size);
+            char[] array = new char[(int) size];
+            new SizedCollectorTask.OfChar<>(spliterator, helper, array).invoke();
+            return node(array);
+        }
+        Node.OfChar node = new CollectorTask.OfChar<>(helper, spliterator).invoke();
+        if (flatten) {
+            return flattenChar(node);
+        }
+        return node;
+    }
+
+    public static <Input> Node.OfInt collectInt(PipelineHelper<Integer> helper, Spliterator<Input> spliterator, boolean flatten) {
+        long size = helper.exactOutputSizeIfKnown(spliterator);
+        if (size >= 0 && spliterator.hasCharacteristics(Spliterator.SUBSIZED)) {
+            maxArraySize(size);
+            int[] array = new int[(int) size];
+            new SizedCollectorTask.OfInt<>(spliterator, helper, array).invoke();
+            return node(array);
+        }
+        Node.OfInt node = new CollectorTask.OfInt<>(helper, spliterator).invoke();
+        if (flatten) {
+            return flattenInt(node);
+        }
+        return node;
+    }
+
+    public static <Input> Node.OfLong collectLong(PipelineHelper<Long> helper, Spliterator<Input> spliterator, boolean flatten) {
+        long size = helper.exactOutputSizeIfKnown(spliterator);
+        if (size >= 0 && spliterator.hasCharacteristics(Spliterator.SUBSIZED)) {
+            maxArraySize(size);
+            long[] array = new long[(int) size];
+            new SizedCollectorTask.OfLong<>(spliterator, helper, array).invoke();
+            return node(array);
+        }
+        Node.OfLong node = new CollectorTask.OfLong<>(helper, spliterator).invoke();
+        if (flatten) {
+            return flattenLong(node);
+        }
+        return node;
+    }
+
+    public static <Input> Node.OfFloat collectFloat(PipelineHelper<Float> helper, Spliterator<Input> spliterator, boolean flatten) {
+        long size = helper.exactOutputSizeIfKnown(spliterator);
+        if (size >= 0 && spliterator.hasCharacteristics(Spliterator.SUBSIZED)) {
+            maxArraySize(size);
+            float[] array = new float[(int) size];
+            new SizedCollectorTask.OfFloat<>(spliterator, helper, array).invoke();
+            return node(array);
+        }
+        Node.OfFloat node = new CollectorTask.OfFloat<>(helper, spliterator).invoke();
+        if (flatten) {
+            return flattenFloat(node);
+        }
+        return node;
+    }
+
+    public static <Input> Node.OfDouble collectDouble(PipelineHelper<Double> helper, Spliterator<Input> spliterator, boolean flatten) {
+        long size = helper.exactOutputSizeIfKnown(spliterator);
+        if (size >= 0 && spliterator.hasCharacteristics(Spliterator.SUBSIZED)) {
+            maxArraySize(size);
+            double[] array = new double[(int) size];
+            new SizedCollectorTask.OfDouble<>(spliterator, helper, array).invoke();
+            return node(array);
+        }
+        Node.OfDouble node = new CollectorTask.OfDouble<>(helper, spliterator).invoke();
+        if (flatten) {
+            return flattenDouble(node);
+        }
+        return node;
+    }
+
+
     public static <T> Node<T> flatten(Node<T> node, IntFunction<T[]> generator) {
         if (node.getChildCount() > 0) {
             long count = node.count();
@@ -174,6 +302,7 @@ public class Nodes {
             return node;
         }
     }
+
     public static Node.OfShort flattenShort(Node.OfShort node) {
         if (node.getChildCount() > 0) {
             long size = node.count();
@@ -187,7 +316,7 @@ public class Nodes {
         }
     }
 
-    public static Node.OfInt flattenByte(Node.OfInt node) {
+    public static Node.OfInt flattenInt(Node.OfInt node) {
         if (node.getChildCount() > 0) {
             long size = node.count();
             if (size >= MAX_ARRAY_SIZE)
@@ -200,7 +329,7 @@ public class Nodes {
         }
     }
 
-    public static Node.OfLong flattenByte(Node.OfLong node) {
+    public static Node.OfLong flattenLong(Node.OfLong node) {
         if (node.getChildCount() > 0) {
             long size = node.count();
             if (size >= MAX_ARRAY_SIZE)
@@ -226,7 +355,7 @@ public class Nodes {
         }
     }
 
-    public static Node.OfDouble flattenByte(Node.OfDouble node) {
+    public static Node.OfDouble flattenDouble(Node.OfDouble node) {
         if (node.getChildCount() > 0) {
             long size = node.count();
             if (size >= MAX_ARRAY_SIZE)
