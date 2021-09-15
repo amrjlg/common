@@ -289,7 +289,7 @@ public abstract class AbstractPipeline<Input, Output, Stream extends BaseStream<
 
     abstract StreamShape getOutputShape();
 
-    protected abstract Sink<Input> opWrapSink(int flags, Sink<Output> sink);
+    public abstract Sink<Input> opWrapSink(int flags, Sink<Output> sink);
 
 
     protected  <P_IN> Spliterator<Output> opEvaluateParallelLazy(PipelineHelper<Output> helper,
