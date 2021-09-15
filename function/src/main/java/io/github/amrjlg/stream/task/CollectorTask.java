@@ -32,7 +32,7 @@ import java.util.function.LongFunction;
 /**
  * @author amrjlg
  **/
-public abstract class CollectorTask<Input, Output, TypeNode extends Node<Output>, TypeBuilder extends NodeBuilder<Output>>
+public class CollectorTask<Input, Output, TypeNode extends Node<Output>, TypeBuilder extends NodeBuilder<Output>>
         extends AbstractTask<Input, Output, TypeNode, CollectorTask<Input, Output, TypeNode, TypeBuilder>> {
 
     protected final PipelineHelper<Output> helper;
