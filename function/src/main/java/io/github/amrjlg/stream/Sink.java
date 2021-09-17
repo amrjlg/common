@@ -103,7 +103,7 @@ public interface Sink<T> extends Consumer<T> {
     }
 
 
-    interface SKinOfInt extends Sink<Integer>, IntConsumer {
+    interface OfInt extends Sink<Integer>, IntConsumer {
         @Override
         void accept(int i);
 
@@ -241,7 +241,7 @@ public interface Sink<T> extends Consumer<T> {
         }
     }
 
-    abstract class ChainedInt<R> implements SKinOfInt{
+    abstract class ChainedInt<R> implements OfInt {
 
         protected final Sink<? super R> downstream;
 

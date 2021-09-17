@@ -124,7 +124,7 @@ public abstract class MatchSink<T> implements Sink<T> {
         }
     }
 
-    public static final class IntMatchSink extends MatchSink<Integer> implements Sink.SKinOfInt {
+    public static final class IntMatchSink extends MatchSink<Integer> implements OfInt {
 
         private final IntPredicate predicate;
 

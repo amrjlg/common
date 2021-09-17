@@ -102,7 +102,7 @@ public abstract class FindTerminalSink<Input, Output> implements TerminalSink<In
     }
 
     public static final class OfInt extends FindTerminalSink<Integer, OptionalInt>
-            implements Sink.SKinOfInt {
+            implements Sink.OfInt {
 
         @Override
         public void accept(int value) {
