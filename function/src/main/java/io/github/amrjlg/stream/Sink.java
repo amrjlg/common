@@ -113,7 +113,7 @@ public interface Sink<T> extends Consumer<T> {
         }
     }
 
-    interface SKinOfLong extends Sink<Long>, LongConsumer {
+    interface OfLong extends Sink<Long>, LongConsumer {
 
         @Override
         void accept(long l);
@@ -265,7 +265,7 @@ public interface Sink<T> extends Consumer<T> {
         }
     }
 
-    abstract class ChainedLong<R> implements SKinOfLong{
+    abstract class ChainedLong<R> implements OfLong {
 
         protected final Sink<? super R> downstream;
 

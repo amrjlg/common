@@ -142,7 +142,7 @@ public abstract class MatchSink<T> implements Sink<T> {
         }
     }
 
-    public static final class LongMatchSink extends MatchSink<Long> implements Sink.SKinOfLong {
+    public static final class LongMatchSink extends MatchSink<Long> implements OfLong {
 
         private final LongPredicate predicate;
 
