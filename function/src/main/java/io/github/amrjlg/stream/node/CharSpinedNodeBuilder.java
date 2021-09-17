@@ -17,10 +17,9 @@
 
 package io.github.amrjlg.stream.node;
 
-import io.github.amrjlg.function.ByteConsumer;
 import io.github.amrjlg.function.CharConsumer;
 import io.github.amrjlg.stream.buffer.SpinedBuffer;
-import io.github.amrjlg.stream.iterator.Spliterator;
+import io.github.amrjlg.stream.spliterator.Spliterator;
 
 
 /**

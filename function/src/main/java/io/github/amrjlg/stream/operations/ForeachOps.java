@@ -20,7 +20,7 @@ package io.github.amrjlg.stream.operations;
 import io.github.amrjlg.stream.StreamOpFlag;
 import io.github.amrjlg.stream.TerminalOp;
 import io.github.amrjlg.stream.TerminalSink;
-import io.github.amrjlg.stream.iterator.Spliterator;
+import io.github.amrjlg.stream.spliterator.Spliterator;
 import io.github.amrjlg.stream.pipeline.PipelineHelper;
 import io.github.amrjlg.stream.task.ForEachOrderedTask;
 

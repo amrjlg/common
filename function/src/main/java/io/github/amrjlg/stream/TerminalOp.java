@@ -18,7 +18,7 @@
 package io.github.amrjlg.stream;
 
 import io.github.amrjlg.stream.pipeline.PipelineHelper;
-import io.github.amrjlg.stream.iterator.Spliterator;
+import io.github.amrjlg.stream.spliterator.Spliterator;
 
 /**
  * @param <Input>

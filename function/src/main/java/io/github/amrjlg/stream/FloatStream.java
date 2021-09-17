@@ -28,8 +28,8 @@ import io.github.amrjlg.function.FloatToCharFunction;
 import io.github.amrjlg.function.FloatToIntFunction;
 import io.github.amrjlg.function.FloatToLongFunction;
 import io.github.amrjlg.function.FloatUnaryOperator;
-import io.github.amrjlg.stream.iterator.PrimitiveIterator;
-import io.github.amrjlg.stream.iterator.Spliterator;
+import io.github.amrjlg.stream.spliterator.PrimitiveIterator;
+import io.github.amrjlg.stream.spliterator.Spliterator;
 import io.github.amrjlg.util.OptionalFloat;
 import io.github.amrjlg.util.FloatSummaryStatistics;
 

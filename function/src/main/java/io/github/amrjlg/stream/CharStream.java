@@ -28,8 +28,8 @@ import io.github.amrjlg.function.CharToIntFunction;
 import io.github.amrjlg.function.CharToLongFunction;
 import io.github.amrjlg.function.CharUnaryOperator;
 import io.github.amrjlg.function.ObjCharConsumer;
-import io.github.amrjlg.stream.iterator.PrimitiveIterator;
-import io.github.amrjlg.stream.iterator.Spliterator;
+import io.github.amrjlg.stream.spliterator.PrimitiveIterator;
+import io.github.amrjlg.stream.spliterator.Spliterator;
 import io.github.amrjlg.util.CharSummaryStatistics;
 import io.github.amrjlg.util.OptionalChar;
 

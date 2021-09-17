@@ -21,8 +21,8 @@ import io.github.amrjlg.function.ByteConsumer;
 import io.github.amrjlg.function.CharConsumer;
 import io.github.amrjlg.function.FloatConsumer;
 import io.github.amrjlg.function.ShortConsumer;
-import io.github.amrjlg.stream.iterator.Spliterator;
-import io.github.amrjlg.stream.iterator.Spliterators;
+import io.github.amrjlg.stream.spliterator.Spliterator;
+import io.github.amrjlg.stream.spliterator.Spliterators;
 
 import java.util.function.Consumer;
 import java.util.function.DoubleConsumer;

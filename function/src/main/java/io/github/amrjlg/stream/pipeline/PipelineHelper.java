@@ -20,7 +20,7 @@ package io.github.amrjlg.stream.pipeline;
 
 import io.github.amrjlg.stream.node.Node;
 import io.github.amrjlg.stream.Sink;
-import io.github.amrjlg.stream.iterator.Spliterator;
+import io.github.amrjlg.stream.spliterator.Spliterator;
 import io.github.amrjlg.stream.StreamShape;
 import io.github.amrjlg.stream.node.NodeBuilder;
 

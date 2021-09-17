@@ -15,7 +15,7 @@
  *
  */
 
-package io.github.amrjlg.stream.iterator;
+package io.github.amrjlg.stream.spliterator;
 
 import java.util.Comparator;
 import java.util.concurrent.ConcurrentHashMap;

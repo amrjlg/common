@@ -21,8 +21,8 @@ import io.github.amrjlg.function.LongToByteFunction;
 import io.github.amrjlg.function.LongToCharFunction;
 import io.github.amrjlg.function.LongToFloatFunction;
 import io.github.amrjlg.function.LongToShortFunction;
-import io.github.amrjlg.stream.iterator.PrimitiveIterator;
-import io.github.amrjlg.stream.iterator.Spliterator;
+import io.github.amrjlg.stream.spliterator.PrimitiveIterator;
+import io.github.amrjlg.stream.spliterator.Spliterator;
 
 import java.util.LongSummaryStatistics;
 import java.util.OptionalDouble;
