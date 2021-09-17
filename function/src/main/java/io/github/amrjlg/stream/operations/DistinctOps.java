@@ -39,6 +39,7 @@ import java.util.function.IntFunction;
 
 /**
  * @author amrjlg
+ * @see java.util.stream.DistinctOps
  **/
 public class DistinctOps {
     public static <T> ReferencePipeline<T, T> makeRef(AbstractPipeline<?, T, ?> pipeline) {

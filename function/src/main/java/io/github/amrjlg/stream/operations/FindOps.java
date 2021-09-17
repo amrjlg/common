@@ -32,6 +32,7 @@ import java.util.OptionalLong;
 
 /**
  * @author amrjlg
+ * @see java.util.stream.FindOps
  **/
 public class FindOps {
 

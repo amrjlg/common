@@ -34,6 +34,7 @@ import java.util.stream.Collector;
 
 /**
  * @author amrjlg
+ * @see java.util.stream.ReduceOps
  **/
 public class ReduceOps {
 

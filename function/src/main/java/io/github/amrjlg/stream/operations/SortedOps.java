@@ -38,6 +38,7 @@ import java.util.function.IntFunction;
 
 /**
  * @author amrjlg
+ * @see java.util.stream.SortedOps
  **/
 public class SortedOps {
 
