@@ -76,7 +76,7 @@ public abstract class SizedCollectorTask<Input, Output, TypeSink extends Sink<Ou
             task = makeChild(rightSpl, task.offset + estimateSize, task.length - estimateSize);
         }
         assert task.offset + task.length < Nodes.MAX_ARRAY_SIZE;
-
+        @SuppressWarnings("unchecked")
         TypeSink sink = (TypeSink) task;
         task.helper.wrapAndCopyInto(sink, rightSpl);
         task.propagateCompletion();
@@ -131,16 +131,16 @@ public abstract class SizedCollectorTask<Input, Output, TypeSink extends Sink<Ou
             this.array = array;
         }
 
-        public OfByte(SizedCollectorTask.OfByte parent, Spliterator<Input> spliterator,
+        public OfByte(SizedCollectorTask.OfByte<Input> parent, Spliterator<Input> spliterator,
                       long offset, long length) {
             super(parent, spliterator, offset, length, parent.array.length);
             this.array = parent.array;
         }
 
         @Override
-        SizedCollectorTask.OfByte makeChild(Spliterator<Input> spliterator,
-                                            long offset, long size) {
-            return new SizedCollectorTask.OfByte(this, spliterator, offset, size);
+        SizedCollectorTask.OfByte<Input> makeChild(Spliterator<Input> spliterator,
+                                                   long offset, long size) {
+            return new SizedCollectorTask.OfByte<>(this, spliterator, offset, size);
         }
 
         @Override
@@ -161,16 +161,16 @@ public abstract class SizedCollectorTask<Input, Output, TypeSink extends Sink<Ou
             this.array = array;
         }
 
-        public OfShort(SizedCollectorTask.OfShort parent, Spliterator<Input> spliterator,
+        public OfShort(SizedCollectorTask.OfShort<Input> parent, Spliterator<Input> spliterator,
                        long offset, long length) {
             super(parent, spliterator, offset, length, parent.array.length);
             this.array = parent.array;
         }
 
         @Override
-        SizedCollectorTask.OfShort makeChild(Spliterator<Input> spliterator,
-                                             long offset, long size) {
-            return new SizedCollectorTask.OfShort(this, spliterator, offset, size);
+        SizedCollectorTask.OfShort<Input> makeChild(Spliterator<Input> spliterator,
+                                                    long offset, long size) {
+            return new SizedCollectorTask.OfShort<>(this, spliterator, offset, size);
         }
 
         @Override
@@ -191,16 +191,16 @@ public abstract class SizedCollectorTask<Input, Output, TypeSink extends Sink<Ou
             this.array = array;
         }
 
-        public OfChar(SizedCollectorTask.OfChar parent, Spliterator<Input> spliterator,
+        public OfChar(SizedCollectorTask.OfChar<Input> parent, Spliterator<Input> spliterator,
                       long offset, long length) {
             super(parent, spliterator, offset, length, parent.array.length);
             this.array = parent.array;
         }
 
         @Override
-        SizedCollectorTask.OfChar makeChild(Spliterator<Input> spliterator,
-                                            long offset, long size) {
-            return new SizedCollectorTask.OfChar(this, spliterator, offset, size);
+        SizedCollectorTask.OfChar<Input> makeChild(Spliterator<Input> spliterator,
+                                                   long offset, long size) {
+            return new SizedCollectorTask.OfChar<>(this, spliterator, offset, size);
         }
 
         @Override
@@ -221,16 +221,16 @@ public abstract class SizedCollectorTask<Input, Output, TypeSink extends Sink<Ou
             this.array = array;
         }
 
-        public OfInt(SizedCollectorTask.OfInt parent, Spliterator<Input> spliterator,
+        public OfInt(SizedCollectorTask.OfInt<Input> parent, Spliterator<Input> spliterator,
                      long offset, long length) {
             super(parent, spliterator, offset, length, parent.array.length);
             this.array = parent.array;
         }
 
         @Override
-        SizedCollectorTask.OfInt makeChild(Spliterator<Input> spliterator,
-                                           long offset, long size) {
-            return new SizedCollectorTask.OfInt(this, spliterator, offset, size);
+        SizedCollectorTask.OfInt<Input> makeChild(Spliterator<Input> spliterator,
+                                                  long offset, long size) {
+            return new SizedCollectorTask.OfInt<>(this, spliterator, offset, size);
         }
 
         @Override
@@ -251,16 +251,16 @@ public abstract class SizedCollectorTask<Input, Output, TypeSink extends Sink<Ou
             this.array = array;
         }
 
-        public OfLong(SizedCollectorTask.OfLong parent, Spliterator<Input> spliterator,
+        public OfLong(SizedCollectorTask.OfLong<Input> parent, Spliterator<Input> spliterator,
                       long offset, long length) {
             super(parent, spliterator, offset, length, parent.array.length);
             this.array = parent.array;
         }
 
         @Override
-        SizedCollectorTask.OfLong makeChild(Spliterator<Input> spliterator,
-                                            long offset, long size) {
-            return new SizedCollectorTask.OfLong(this, spliterator, offset, size);
+        SizedCollectorTask.OfLong<Input> makeChild(Spliterator<Input> spliterator,
+                                                   long offset, long size) {
+            return new SizedCollectorTask.OfLong<>(this, spliterator, offset, size);
         }
 
         @Override
@@ -281,16 +281,16 @@ public abstract class SizedCollectorTask<Input, Output, TypeSink extends Sink<Ou
             this.array = array;
         }
 
-        public OfFloat(SizedCollectorTask.OfFloat parent, Spliterator<Input> spliterator,
+        public OfFloat(SizedCollectorTask.OfFloat<Input> parent, Spliterator<Input> spliterator,
                        long offset, long length) {
             super(parent, spliterator, offset, length, parent.array.length);
             this.array = parent.array;
         }
 
         @Override
-        SizedCollectorTask.OfFloat makeChild(Spliterator<Input> spliterator,
-                                             long offset, long size) {
-            return new SizedCollectorTask.OfFloat(this, spliterator, offset, size);
+        SizedCollectorTask.OfFloat<Input> makeChild(Spliterator<Input> spliterator,
+                                                    long offset, long size) {
+            return new SizedCollectorTask.OfFloat<>(this, spliterator, offset, size);
         }
 
         @Override
