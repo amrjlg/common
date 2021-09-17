@@ -135,7 +135,7 @@ public interface Sink<T> extends Consumer<T> {
         }
     }
 
-    interface SKinOfDouble extends Sink<Double>, DoubleConsumer {
+    interface OfDouble extends Sink<Double>, DoubleConsumer {
         @Override
         void accept(double d);
 
@@ -313,7 +313,7 @@ public interface Sink<T> extends Consumer<T> {
         }
     }
 
-    abstract class ChainedDouble<R> implements SKinOfDouble{
+    abstract class ChainedDouble<R> implements OfDouble {
 
         protected final Sink<? super R> downstream;
 

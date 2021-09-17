@@ -178,7 +178,7 @@ public abstract class MatchSink<T> implements Sink<T> {
         }
     }
 
-    public static final class DoubleMatchSink extends MatchSink<Double> implements Sink.SKinOfDouble {
+    public static final class DoubleMatchSink extends MatchSink<Double> implements OfDouble {
 
         private final DoublePredicate predicate;
 

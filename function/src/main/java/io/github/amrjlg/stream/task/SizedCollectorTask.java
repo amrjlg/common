@@ -302,8 +302,8 @@ public abstract class SizedCollectorTask<Input, Output, TypeSink extends Sink<Ou
         }
     }
 
-    public static final class OfDouble<Input> extends SizedCollectorTask<Input, Double, SKinOfDouble, OfDouble<Input>>
-            implements SKinOfDouble {
+    public static final class OfDouble<Input> extends SizedCollectorTask<Input, Double, Sink.OfDouble, OfDouble<Input>>
+            implements Sink.OfDouble {
         private final double[] array;
 
         public OfDouble(Spliterator<Input> spliterator, PipelineHelper<Double> helper, double[] array) {
