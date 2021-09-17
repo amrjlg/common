@@ -130,7 +130,7 @@ public abstract class FindTerminalSink<Input, Output> implements TerminalSink<In
     }
 
     public static final class OfFloat extends FindTerminalSink<Float, OptionalFloat>
-            implements Sink.SKinOfFloat {
+            implements Sink.OfFloat {
 
         @Override
         public void accept(float value) {

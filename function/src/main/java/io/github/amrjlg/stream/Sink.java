@@ -125,7 +125,7 @@ public interface Sink<T> extends Consumer<T> {
 
     }
 
-    interface SKinOfFloat extends Sink<Float>, FloatConsumer {
+    interface OfFloat extends Sink<Float>, FloatConsumer {
         @Override
         void accept(float f);
 
@@ -289,7 +289,7 @@ public interface Sink<T> extends Consumer<T> {
         }
     }
 
-    abstract class ChainedFloat<R> implements SKinOfFloat{
+    abstract class ChainedFloat<R> implements OfFloat {
 
         protected final Sink<? super R> downstream;
 
