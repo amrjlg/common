@@ -92,7 +92,7 @@ public interface Sink<T> extends Consumer<T> {
         }
     }
 
-    interface SKinOfChar extends Sink<Character>, CharConsumer {
+    interface OfChar extends Sink<Character>, CharConsumer {
         @Override
         void accept(char c);
 
@@ -217,7 +217,7 @@ public interface Sink<T> extends Consumer<T> {
         }
     }
 
-    abstract class ChainedChar<R> implements SKinOfChar{
+    abstract class ChainedChar<R> implements OfChar {
 
         protected final Sink<? super R> downstream;
 

@@ -88,7 +88,7 @@ public abstract class FindTerminalSink<Input, Output> implements TerminalSink<In
     }
 
     public static final class OfChar extends FindTerminalSink<Character, OptionalChar>
-            implements Sink.SKinOfChar {
+            implements Sink.OfChar {
 
         @Override
         public void accept(char value) {

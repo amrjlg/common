@@ -106,7 +106,7 @@ public abstract class MatchSink<T> implements Sink<T> {
         }
     }
 
-    public static final class CharMatchSink extends MatchSink<Character> implements Sink.SKinOfChar {
+    public static final class CharMatchSink extends MatchSink<Character> implements OfChar {
 
         private final CharPredicate predicate;
 

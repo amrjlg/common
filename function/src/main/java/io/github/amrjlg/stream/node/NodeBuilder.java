@@ -28,7 +28,7 @@ public interface NodeBuilder<T> extends Sink<T> {
         Node.OfByte build();
     }
 
-    interface OfChar extends NodeBuilder<Character>, SKinOfChar {
+    interface OfChar extends NodeBuilder<Character>, Sink.OfChar {
         @Override
         Node.OfChar build();
     }
