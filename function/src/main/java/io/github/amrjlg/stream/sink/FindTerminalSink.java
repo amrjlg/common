@@ -116,7 +116,7 @@ public abstract class FindTerminalSink<Input, Output> implements TerminalSink<In
     }
 
     public static final class OfLong extends FindTerminalSink<Long, OptionalLong>
-            implements Sink.SKinOfLong {
+            implements Sink.OfLong {
 
         @Override
         public void accept(long value) {

@@ -43,7 +43,7 @@ public interface NodeBuilder<T> extends Sink<T> {
         Node.OfInt build();
     }
 
-    interface OfLong extends NodeBuilder<Long>, SKinOfLong {
+    interface OfLong extends NodeBuilder<Long>, Sink.OfLong {
         @Override
         Node.OfLong build();
     }
