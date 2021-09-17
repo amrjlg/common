@@ -18,8 +18,8 @@
 package io.github.amrjlg.stream.node;
 
 import io.github.amrjlg.function.ByteConsumer;
-import io.github.amrjlg.stream.iterator.Spliterator;
-import io.github.amrjlg.stream.iterator.Spliterators;
+import io.github.amrjlg.stream.spliterator.Spliterator;
+import io.github.amrjlg.stream.spliterator.Spliterators;
 
 import java.util.Arrays;
 
