@@ -26,6 +26,7 @@ import java.util.function.Predicate;
 
 /**
  * @author amrjlg
+ * @see java.util.stream.MatchOps
  **/
 public class MatchOps {
 
