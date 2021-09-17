@@ -70,7 +70,7 @@ public abstract class MatchSink<T> implements Sink<T> {
         }
     }
 
-    public static final class ByteMatchSink extends MatchSink<Byte> implements Sink.SKinOfByte {
+    public static final class ByteMatchSink extends MatchSink<Byte> implements OfByte {
 
         private final BytePredicate predicate;
 

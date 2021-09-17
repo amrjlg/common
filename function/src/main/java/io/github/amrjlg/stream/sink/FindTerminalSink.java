@@ -60,7 +60,7 @@ public abstract class FindTerminalSink<Input, Output> implements TerminalSink<In
     }
 
     public static final class OfByte extends FindTerminalSink<Byte, OptionalByte>
-            implements Sink.SKinOfByte {
+            implements Sink.OfByte {
 
         @Override
         public void accept(byte value) {
