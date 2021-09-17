@@ -82,7 +82,7 @@ public interface Sink<T> extends Consumer<T> {
     }
 
 
-    interface SKinOfShort extends Sink<Short>, ShortConsumer {
+    interface OfShort extends Sink<Short>, ShortConsumer {
         @Override
         void accept(short s);
 
@@ -193,7 +193,7 @@ public interface Sink<T> extends Consumer<T> {
         }
     }
 
-    abstract class ChainedShort<R> implements SKinOfShort{
+    abstract class ChainedShort<R> implements OfShort {
 
         protected final Sink<? super R> downstream;
 
