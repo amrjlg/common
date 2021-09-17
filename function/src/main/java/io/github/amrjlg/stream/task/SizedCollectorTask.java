@@ -182,8 +182,8 @@ public abstract class SizedCollectorTask<Input, Output, TypeSink extends Sink<Ou
         }
     }
 
-    public static final class OfChar<Input> extends SizedCollectorTask<Input, Character, SKinOfChar, OfChar<Input>>
-            implements SKinOfChar {
+    public static final class OfChar<Input> extends SizedCollectorTask<Input, Character, Sink.OfChar, OfChar<Input>>
+            implements Sink.OfChar {
         private final char[] array;
 
         public OfChar(Spliterator<Input> spliterator, PipelineHelper<Character> helper, char[] array) {
@@ -191,16 +191,16 @@ public abstract class SizedCollectorTask<Input, Output, TypeSink extends Sink<Ou
             this.array = array;
         }
 
-        public OfChar(SizedCollectorTask.OfChar<Input> parent, Spliterator<Input> spliterator,
+        public OfChar(SizedCollectorTask.OfChar parent, Spliterator<Input> spliterator,
                       long offset, long length) {
             super(parent, spliterator, offset, length, parent.array.length);
             this.array = parent.array;
         }
 
         @Override
-        SizedCollectorTask.OfChar<Input> makeChild(Spliterator<Input> spliterator,
-                                                   long offset, long size) {
-            return new SizedCollectorTask.OfChar<>(this, spliterator, offset, size);
+        SizedCollectorTask.OfChar makeChild(Spliterator<Input> spliterator,
+                                            long offset, long size) {
+            return new SizedCollectorTask.OfChar(this, spliterator, offset, size);
         }
 
         @Override
