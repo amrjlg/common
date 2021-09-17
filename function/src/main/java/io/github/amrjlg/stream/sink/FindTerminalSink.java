@@ -144,7 +144,7 @@ public abstract class FindTerminalSink<Input, Output> implements TerminalSink<In
     }
 
     public static final class OfDouble extends FindTerminalSink<Double, OptionalDouble>
-            implements Sink.SKinOfDouble {
+            implements Sink.OfDouble {
 
         @Override
         public void accept(double value) {

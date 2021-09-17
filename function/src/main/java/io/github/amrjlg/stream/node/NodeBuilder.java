@@ -53,7 +53,7 @@ public interface NodeBuilder<T> extends Sink<T> {
         Node.OfFloat build();
     }
 
-    interface OfDouble extends NodeBuilder<Double>, SKinOfDouble {
+    interface OfDouble extends NodeBuilder<Double>, Sink.OfDouble {
         @Override
         Node.OfDouble build();
     }
