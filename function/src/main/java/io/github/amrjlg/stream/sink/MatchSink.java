@@ -160,7 +160,7 @@ public abstract class MatchSink<T> implements Sink<T> {
         }
     }
 
-    public static final class FloatMatchSink extends MatchSink<Float> implements Sink.SKinOfFloat {
+    public static final class FloatMatchSink extends MatchSink<Float> implements OfFloat {
 
         private final FloatPredicate predicate;
 

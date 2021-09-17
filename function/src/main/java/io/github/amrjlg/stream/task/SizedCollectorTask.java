@@ -272,8 +272,8 @@ public abstract class SizedCollectorTask<Input, Output, TypeSink extends Sink<Ou
         }
     }
 
-    public static final class OfFloat<Input> extends SizedCollectorTask<Input, Float, SKinOfFloat, OfFloat<Input>>
-            implements SKinOfFloat {
+    public static final class OfFloat<Input> extends SizedCollectorTask<Input, Float, Sink.OfFloat, OfFloat<Input>>
+            implements Sink.OfFloat {
         private final float[] array;
 
         public OfFloat(Spliterator<Input> spliterator, PipelineHelper<Float> helper, float[] array) {
@@ -281,16 +281,16 @@ public abstract class SizedCollectorTask<Input, Output, TypeSink extends Sink<Ou
             this.array = array;
         }
 
-        public OfFloat(SizedCollectorTask.OfFloat<Input> parent, Spliterator<Input> spliterator,
+        public OfFloat(SizedCollectorTask.OfFloat parent, Spliterator<Input> spliterator,
                        long offset, long length) {
             super(parent, spliterator, offset, length, parent.array.length);
             this.array = parent.array;
         }
 
         @Override
-        SizedCollectorTask.OfFloat<Input> makeChild(Spliterator<Input> spliterator,
-                                                    long offset, long size) {
-            return new SizedCollectorTask.OfFloat<>(this, spliterator, offset, size);
+        SizedCollectorTask.OfFloat makeChild(Spliterator<Input> spliterator,
+                                             long offset, long size) {
+            return new SizedCollectorTask.OfFloat(this, spliterator, offset, size);
         }
 
         @Override

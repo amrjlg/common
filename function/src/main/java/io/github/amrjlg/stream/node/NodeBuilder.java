@@ -48,7 +48,7 @@ public interface NodeBuilder<T> extends Sink<T> {
         Node.OfLong build();
     }
 
-    interface OfFloat extends NodeBuilder<Float>, SKinOfFloat {
+    interface OfFloat extends NodeBuilder<Float>, Sink.OfFloat {
         @Override
         Node.OfFloat build();
     }
