@@ -33,7 +33,7 @@ public interface NodeBuilder<T> extends Sink<T> {
         Node.OfChar build();
     }
 
-    interface OfShort extends NodeBuilder<Short>, SKinOfShort {
+    interface OfShort extends NodeBuilder<Short>, Sink.OfShort {
         @Override
         Node.OfShort build();
     }

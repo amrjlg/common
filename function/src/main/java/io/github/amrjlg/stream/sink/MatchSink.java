@@ -88,7 +88,7 @@ public abstract class MatchSink<T> implements Sink<T> {
         }
     }
 
-    public static final class ShortMatchSink extends MatchSink<Short> implements Sink.SKinOfShort {
+    public static final class ShortMatchSink extends MatchSink<Short> implements OfShort {
 
         private final ShortPredicate predicate;
 

@@ -74,7 +74,7 @@ public abstract class FindTerminalSink<Input, Output> implements TerminalSink<In
     }
 
     public static final class OfShort extends FindTerminalSink<Short, OptionalShort>
-            implements Sink.SKinOfShort {
+            implements Sink.OfShort {
 
         @Override
         public void accept(short value) {
