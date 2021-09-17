@@ -23,7 +23,7 @@ public interface NodeBuilder<T> extends Sink<T> {
 
     Node<T> build();
 
-    interface OfByte extends NodeBuilder<Byte>, SKinOfByte {
+    interface OfByte extends NodeBuilder<Byte>, Sink.OfByte {
         @Override
         Node.OfByte build();
     }

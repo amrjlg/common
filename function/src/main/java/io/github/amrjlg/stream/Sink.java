@@ -71,7 +71,7 @@ public interface Sink<T> extends Consumer<T> {
         throw new NotImplementedException();
     }
 
-    interface SKinOfByte extends Sink<Byte>, ByteConsumer {
+    interface OfByte extends Sink<Byte>, ByteConsumer {
         @Override
         void accept(byte b);
 
@@ -169,7 +169,7 @@ public interface Sink<T> extends Consumer<T> {
         }
     }
 
-    abstract class ChainedByte<R> implements SKinOfByte{
+    abstract class ChainedByte<R> implements OfByte {
 
         protected final Sink<? super R> downstream;
 
