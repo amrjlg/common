@@ -17,16 +17,14 @@
 
 package io.github.amrjlg.stream.pipeline;
 
+import io.github.amrjlg.stream.ByteStream;
 import io.github.amrjlg.stream.Stream;
 import io.github.amrjlg.stream.StreamOpFlag;
-import io.github.amrjlg.stream.pipeline.ReferencePipeline;
 import io.github.amrjlg.stream.spliterator.Spliterator;
 import io.github.amrjlg.stream.spliterator.Spliterators;
 import org.junit.jupiter.api.Test;
 
 import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
 
 
 /**
@@ -44,13 +42,27 @@ public class StreamTest {
 
         Stream<String> stream = new ReferencePipeline.Head<>(spliterator, StreamOpFlag.fromCharacteristics(spliterator), false);
         Comparator<String> comparator = String::compareTo;
-        // TODO forEach
-        stream.map(String::toUpperCase).sorted(comparator.reversed()).forEach(System.out::println);
 
+        stream.parallel().forEach(System.out::println);
 
     }
 
     public static <T> T[] array(T... t) {
         return t;
     }
+
+
+    @Test
+    public void byteStream(){
+
+        Spliterator.OfByte spliterator = Spliterators.spliterator(new byte[]{0x5, 0x6, 2, 3, 4}, Spliterator.ORDERED | Spliterator.IMMUTABLE);
+
+        ByteStream stream = new BytePipeline.Head<>(spliterator, StreamOpFlag.fromCharacteristics(spliterator), false);
+        //todo  parallel
+        stream.sorted().parallel().forEach(System.out::println);
+
+
+    }
 }
+
+
