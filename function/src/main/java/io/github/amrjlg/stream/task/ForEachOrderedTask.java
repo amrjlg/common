@@ -18,12 +18,15 @@
 package io.github.amrjlg.stream.task;
 
 import io.github.amrjlg.stream.Sink;
+import io.github.amrjlg.stream.node.NodeBuilder;
 import io.github.amrjlg.stream.spliterator.Spliterator;
 import io.github.amrjlg.stream.node.Node;
 import io.github.amrjlg.stream.pipeline.PipelineHelper;
 
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountedCompleter;
+import java.util.function.IntFunction;
 
 /**
  * @author amrjlg
@@ -50,9 +53,9 @@ public class ForEachOrderedTask<S, T> extends CountedCompleter<Void> {
         this.leftPredecessor = null;
     }
 
-    public ForEachOrderedTask(ForEachOrderedTask<S, T> parent, PipelineHelper<T> helper, Spliterator<S> spliterator, ForEachOrderedTask<S, T> leftPredecessor) {
+    public ForEachOrderedTask(ForEachOrderedTask<S, T> parent, Spliterator<S> spliterator, ForEachOrderedTask<S, T> leftPredecessor) {
         super(parent);
-        this.helper = helper;
+        this.helper = parent.helper;
         this.spliterator = spliterator;
         this.targetSize = parent.targetSize;
         this.completionMap = parent.completionMap;
@@ -62,6 +65,65 @@ public class ForEachOrderedTask<S, T> extends CountedCompleter<Void> {
 
     @Override
     public void compute() {
+        ForEachOrderedTask<S, T> task = this;
 
+        Spliterator<S> right = task.spliterator, left;
+        long rightSize = task.targetSize;
+        boolean forkRight = false;
+        while (right.estimateSize() > rightSize && (left = right.trySplit()) != null) {
+            ForEachOrderedTask<S, T> leftChild = new ForEachOrderedTask<>(task, left, task.leftPredecessor);
+            ForEachOrderedTask<S, T> rightChild = new ForEachOrderedTask<>(task, right, leftChild);
+            task.addToPendingCount(1);
+            rightChild.addToPendingCount(1);
+            task.completionMap.put(leftChild, rightChild);
+
+
+            if (task.leftPredecessor != null) {
+                leftChild.addToPendingCount(1);
+                if (task.completionMap.replace(task.leftPredecessor, task, leftChild)) {
+                    task.addToPendingCount(-1);
+                } else {
+                    leftChild.addToPendingCount(-1);
+                }
+            }
+
+            ForEachOrderedTask<S, T> taskToFork;
+            if (forkRight) {
+                forkRight = false;
+                right = left;
+                task = leftChild;
+                taskToFork = rightChild;
+            } else {
+                forkRight = true;
+                task = rightChild;
+                taskToFork = leftChild;
+            }
+            taskToFork.fork();
+        }
+
+        if (task.getPendingCount() > 0) {
+
+            IntFunction<T[]> generator = size -> (T[]) new Object[size];
+            NodeBuilder<T> builder = task.helper.makeNodeBuilder(task.helper.exactOutputSizeIfKnown(right), generator);
+
+            task.node = task.helper.wrapAndCopyInto(builder, right).build();
+        }
+        task.tryComplete();
+
+    }
+
+    @Override
+    public void onCompletion(CountedCompleter<?> caller) {
+        if (node != null) {
+            node.forEach(action);
+            node = null;
+        } else if (spliterator != null) {
+            helper.wrapAndCopyInto(action, spliterator);
+            spliterator = null;
+        }
+        ForEachOrderedTask<S, T> remove = completionMap.remove(this);
+        if (Objects.nonNull(remove)) {
+            remove.tryComplete();
+        }
     }
 }
