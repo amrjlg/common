@@ -17,12 +17,19 @@
 
 package io.github.amrjlg.stream.operations;
 
+import io.github.amrjlg.function.ByteBinaryOperator;
+import io.github.amrjlg.function.ObjByteConsumer;
+import io.github.amrjlg.stream.Sink;
 import io.github.amrjlg.stream.StreamOpFlag;
 import io.github.amrjlg.stream.StreamShape;
 import io.github.amrjlg.stream.TerminalOp;
+import io.github.amrjlg.stream.common.Box;
+import io.github.amrjlg.stream.sink.AccumulatingSink;
 import io.github.amrjlg.stream.sink.ReducingCollectorSink;
 import io.github.amrjlg.stream.sink.ReducingOptionalSink;
 import io.github.amrjlg.stream.sink.ReducingSink;
+import io.github.amrjlg.util.OptionalByte;
+import javafx.scene.control.Skin;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -92,4 +99,103 @@ public class ReduceOps {
         };
     }
 
+    public static TerminalOp<Byte, Byte> makeByte(byte identity, ByteBinaryOperator op) {
+        class Adapter implements AccumulatingSink<Byte, Byte, Adapter>, Sink.OfByte {
+            byte state;
+
+            @Override
+            public void begin(long size) {
+                state = identity;
+            }
+
+            @Override
+            public void combine(Adapter other) {
+                accept(other.state);
+            }
+
+            @Override
+            public void accept(byte value) {
+                state = op.applyAsByte(state, value);
+            }
+
+            @Override
+            public Byte get() {
+                return state;
+            }
+        }
+        return new ReduceOp<Byte, Byte, Adapter>(StreamShape.BYTE_VALUE) {
+            @Override
+            public Adapter makeSink() {
+                return new Adapter();
+            }
+        };
+    }
+
+    public static TerminalOp<Byte, OptionalByte> makeByte(ByteBinaryOperator operator) {
+        class Adapter implements AccumulatingSink<Byte, OptionalByte, Adapter>, Sink.OfByte {
+            boolean empty;
+            byte state;
+
+            @Override
+            public void begin(long size) {
+                empty = true;
+                state = 0;
+            }
+
+            @Override
+            public void accept(byte value) {
+                if (empty) {
+                    state = value;
+                    empty = false;
+                } else {
+                    state = operator.applyAsByte(state, value);
+                }
+            }
+
+            @Override
+            public void combine(Adapter other) {
+                if (!other.empty) {
+                    accept(other.state);
+                }
+            }
+
+            @Override
+            public OptionalByte get() {
+                return empty ? OptionalByte.empty() : OptionalByte.of(state);
+            }
+        }
+        return new ReduceOp<Byte, OptionalByte, Adapter>(StreamShape.BYTE_VALUE) {
+            @Override
+            public Adapter makeSink() {
+                return new Adapter();
+            }
+        };
+
+    }
+
+    public static <R> TerminalOp<Byte, R> makeByte(Supplier<R> supplier, ObjByteConsumer<R> accumulator, BinaryOperator<R> operator) {
+        class Adapter extends Box<R> implements AccumulatingSink<Byte, R, Adapter>, Sink.OfByte {
+            @Override
+            public void begin(long size) {
+                state = supplier.get();
+            }
+
+            @Override
+            public void accept(byte b) {
+                accumulator.accept(state, b);
+            }
+
+            @Override
+            public void combine(Adapter other) {
+                state = operator.apply(state, other.state);
+            }
+        }
+
+        return new ReduceOp<Byte, R, Adapter>(StreamShape.BYTE_VALUE) {
+            @Override
+            public Adapter makeSink() {
+                return new Adapter();
+            }
+        };
+    }
 }
