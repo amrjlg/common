@@ -181,8 +181,18 @@ public abstract class ReferencePipeline<Input, Output>
 
     @Override
     public ByteStream mapToByte(ToByteFunction<? super Output> mapper) {
-        // TODO IMPL
-        throw new NotImplementedException();
+        return new BytePipeline.StateLessOp<Output>(this, StreamShape.REFERENCE, StreamOpFlag.NOT_SORTED | StreamOpFlag.NOT_DISTINCT) {
+
+            @Override
+            public Sink<Output> opWrapSink(int flags, Sink<Byte> sink) {
+                return new Sink.ChainedReference<Output, Byte>(sink) {
+                    @Override
+                    public void accept(Output output) {
+                        downstream.accept(mapper.applyAsByte(output));
+                    }
+                };
+            }
+        };
     }
 
     @Override
