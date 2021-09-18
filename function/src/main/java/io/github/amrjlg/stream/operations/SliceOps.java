@@ -17,10 +17,12 @@
 
 package io.github.amrjlg.stream.operations;
 
+import io.github.amrjlg.stream.ByteStream;
 import io.github.amrjlg.stream.Sink;
 import io.github.amrjlg.stream.Stream;
 import io.github.amrjlg.stream.StreamOpFlag;
 import io.github.amrjlg.stream.StreamShape;
+import io.github.amrjlg.stream.pipeline.BytePipeline;
 import io.github.amrjlg.stream.spliterator.SliceSpliterator;
 import io.github.amrjlg.stream.spliterator.Spliterator;
 import io.github.amrjlg.stream.spliterator.UnorderedSliceSpliterator;
@@ -180,4 +182,68 @@ public class SliceOps {
     }
 
 
+    public static ByteStream makeByte(AbstractPipeline<?, Byte, ?> upstream, long skip, long limit) {
+        AbstractPipeline.positive(skip);
+        return new BytePipeline.StatefulOp<Byte>(upstream, StreamShape.BYTE_VALUE, flags(limit)) {
+
+            Spliterator.OfByte unorderedSkipLimitSpliterator(Spliterator.OfByte spl, long skip, long limit, long size) {
+                if (skip <= size) {
+                    limit = limit >= 0 ? Math.min(limit, size - skip) : size - skip;
+                    skip = 0;
+                }
+                return new UnorderedSliceSpliterator.OfByte(spl, skip, limit);
+            }
+
+            @Override
+            protected <P_IN> Spliterator<Byte> opEvaluateParallelLazy(PipelineHelper<Byte> helper, Spliterator<P_IN> spliterator) {
+                long size = helper.exactOutputSizeIfKnown(spliterator);
+                if (size > 0 && spliterator.hasCharacteristics(Spliterator.SUBSIZED)) {
+                    return new SliceSpliterator.OfByte((Spliterator.OfByte) helper.wrapSpliterator(spliterator),
+                            skip, calcSliceFence(skip, limit));
+                } else if (!StreamOpFlag.SORTED.isKnown(helper.getStreamAndOpFlags())) {
+                    return unorderedSkipLimitSpliterator((Spliterator.OfByte) helper.wrapSpliterator(spliterator),
+                            skip, limit, size);
+                }
+
+                return new SliceTask<>(this, helper, spliterator, Byte[]::new, skip, limit)
+                        .invoke().spliterator();
+            }
+
+            @Override
+            protected <P_IN> Node<Byte> opEvaluateParallel(PipelineHelper<Byte> helper, Spliterator<P_IN> spliterator, IntFunction<Byte[]> generator) {
+                long size = helper.exactOutputSizeIfKnown(spliterator);
+                if (size > 0 && spliterator.hasCharacteristics(Spliterator.SUBSIZED)) {
+                    Spliterator<P_IN> spl = sliceSpliterator(helper.getSourceShape(), spliterator, skip, limit);
+                    return Nodes.collectByte(helper, spl, true);
+                } else if (!StreamOpFlag.SORTED.isKnown(helper.getStreamAndOpFlags())) {
+                    Spliterator.OfByte spl = unorderedSkipLimitSpliterator(
+                            (Spliterator.OfByte) helper.wrapSpliterator(spliterator),
+                            skip, limit, size);
+
+                    return Nodes.collectByte(this, spl, true);
+                }
+                return new SliceTask<>(this, helper, spliterator, generator, skip, limit).invoke();
+            }
+
+            @Override
+            public Sink<Byte> opWrapSink(int flags, Sink<Byte> sink) {
+                return new Sink.ChainedByte<Byte>(sink) {
+                    long n = skip;
+                    long m = limit >= 0 ? limit : Long.MAX_VALUE;
+
+                    @Override
+                    public void accept(byte value) {
+                        if (n == 0) {
+                            if (m > 0) {
+                                m--;
+                                downstream.accept(value);
+                            }
+                        } else {
+                            n--;
+                        }
+                    }
+                };
+            }
+        };
+    }
 }
