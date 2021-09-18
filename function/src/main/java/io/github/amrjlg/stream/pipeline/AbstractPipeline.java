@@ -18,14 +18,14 @@
 package io.github.amrjlg.stream.pipeline;
 
 import io.github.amrjlg.stream.BaseStream;
-import io.github.amrjlg.stream.Streams;
-import io.github.amrjlg.stream.node.Node;
 import io.github.amrjlg.stream.Sink;
-import io.github.amrjlg.stream.spliterator.Spliterator;
 import io.github.amrjlg.stream.StreamOpFlag;
 import io.github.amrjlg.stream.StreamShape;
+import io.github.amrjlg.stream.Streams;
 import io.github.amrjlg.stream.TerminalOp;
+import io.github.amrjlg.stream.node.Node;
 import io.github.amrjlg.stream.node.NodeBuilder;
+import io.github.amrjlg.stream.spliterator.Spliterator;
 
 import java.util.Objects;
 import java.util.function.IntFunction;
@@ -157,7 +157,7 @@ public abstract class AbstractPipeline<Input, Output, Stream extends BaseStream<
 
                     // Inject or clear SIZED on the source pipeline stage
                     // based on the stage's spliterator
-                    thisOpFlags = spliterator.hasCharacteristics(java.util.Spliterator.SIZED)
+                    thisOpFlags = spliterator.hasCharacteristics(Spliterator.SIZED)
                             ? (thisOpFlags & ~StreamOpFlag.NOT_SIZED) | StreamOpFlag.IS_SIZED
                             : (thisOpFlags & ~StreamOpFlag.IS_SIZED) | StreamOpFlag.NOT_SIZED;
                 }
@@ -292,14 +292,14 @@ public abstract class AbstractPipeline<Input, Output, Stream extends BaseStream<
     public abstract Sink<Input> opWrapSink(int flags, Sink<Output> sink);
 
 
-    protected  <P_IN> Spliterator<Output> opEvaluateParallelLazy(PipelineHelper<Output> helper,
-                                                      Spliterator<P_IN> spliterator) {
+    protected <P_IN> Spliterator<Output> opEvaluateParallelLazy(PipelineHelper<Output> helper,
+                                                                Spliterator<P_IN> spliterator) {
         return opEvaluateParallel(helper, spliterator, i -> (Output[]) new Object[i]).spliterator();
     }
 
     protected <P_IN> Node<Output> opEvaluateParallel(PipelineHelper<Output> helper,
-                                           Spliterator<P_IN> spliterator,
-                                           IntFunction<Output[]> generator) {
+                                                     Spliterator<P_IN> spliterator,
+                                                     IntFunction<Output[]> generator) {
         throw new UnsupportedOperationException("Parallel evaluation is not supported");
     }
 
@@ -398,12 +398,12 @@ public abstract class AbstractPipeline<Input, Output, Stream extends BaseStream<
                 Supplier<Spliterator<Output>> supplier = (Supplier<Spliterator<Output>>) sourceStage.sourceSupplier;
                 sourceStage.sourceSupplier = null;
                 return lazySpliterator(supplier);
-            }else {
+            } else {
                 throw new IllegalStateException(MSG_STREAM_LINKED);
             }
 
         } else {
-            return wrap(this,()->sourceSpliterator(0),isParallel());
+            return wrap(this, () -> sourceSpliterator(0), isParallel());
         }
 
     }
