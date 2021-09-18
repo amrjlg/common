@@ -33,6 +33,7 @@ import io.github.amrjlg.stream.spliterator.Spliterator;
 import io.github.amrjlg.util.ByteSummaryStatistics;
 import io.github.amrjlg.util.OptionalByte;
 
+import java.util.OptionalDouble;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
@@ -44,7 +45,7 @@ public interface ByteStream extends BaseStream<Byte, ByteStream> {
 
     <U> Stream<U> mapToObj(ByteFunction<? extends U> mapper);
 
-    CharStream mapToByte(ByteToCharFunction mapper);
+    CharStream mapToChar(ByteToCharFunction mapper);
 
     IntStream mapToInt(ByteToIntFunction mapper);
 
@@ -72,15 +73,15 @@ public interface ByteStream extends BaseStream<Byte, ByteStream> {
 
     void forEachOrdered(ByteConsumer action);
 
-    short[] toArray();
+    byte[] toArray();
 
-    short reduce(short identity, ByteBinaryOperator op);
+    byte reduce(byte identity, ByteBinaryOperator op);
 
     OptionalByte reduce(ByteBinaryOperator op);
 
     <R> R collect(Supplier<R> supplier, ObjByteConsumer<R> accumulator, BiConsumer<R, R> combiner);
 
-    short sum();
+    int sum();
 
     OptionalByte min();
 
@@ -88,7 +89,7 @@ public interface ByteStream extends BaseStream<Byte, ByteStream> {
 
     long count();
 
-    OptionalByte average();
+    OptionalDouble average();
 
     ByteSummaryStatistics summaryStatistics();
 
