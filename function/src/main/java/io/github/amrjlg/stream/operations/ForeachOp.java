@@ -28,6 +28,7 @@ import io.github.amrjlg.stream.TerminalSink;
 import io.github.amrjlg.stream.pipeline.PipelineHelper;
 import io.github.amrjlg.stream.spliterator.Spliterator;
 import io.github.amrjlg.stream.task.ForEachOrderedTask;
+import io.github.amrjlg.stream.task.ForEachTask;
 
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -57,7 +58,7 @@ public abstract class ForeachOp<T> implements TerminalOp<T, Void>, TerminalSink<
         if (ordered) {
             new ForEachOrderedTask<>(helper, spliterator, this).invoke();
         } else {
-            new ForEachOrderedTask<>(helper, spliterator, helper.wrapSink(this)).invoke();
+            new ForEachTask<>(helper, spliterator, helper.wrapSink(this)).invoke();
         }
         return null;
     }
