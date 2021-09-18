@@ -23,6 +23,7 @@ import io.github.amrjlg.function.FloatConsumer;
 import io.github.amrjlg.function.ShortConsumer;
 import io.github.amrjlg.stream.Sink;
 import io.github.amrjlg.stream.StreamOpFlag;
+import io.github.amrjlg.stream.StreamShape;
 import io.github.amrjlg.stream.TerminalOp;
 import io.github.amrjlg.stream.TerminalSink;
 import io.github.amrjlg.stream.pipeline.PipelineHelper;
@@ -94,6 +95,11 @@ public abstract class ForeachOp<T> implements TerminalOp<T, Void>, TerminalSink<
         public void accept(byte value) {
             consumer.accept(value);
         }
+
+        @Override
+        public StreamShape inputShape() {
+            return StreamShape.BYTE_VALUE;
+        }
     }
 
     public static final class OfShort extends ForeachOp<Short> implements Sink.OfShort{
@@ -122,6 +128,11 @@ public abstract class ForeachOp<T> implements TerminalOp<T, Void>, TerminalSink<
         public void accept(char value) {
             consumer.accept(value);
         }
+
+        @Override
+        public StreamShape inputShape() {
+            return StreamShape.CHAR_VALUE;
+        }
     }
 
     public static final class OfInt extends ForeachOp<Integer> implements Sink.OfInt{
@@ -135,6 +146,11 @@ public abstract class ForeachOp<T> implements TerminalOp<T, Void>, TerminalSink<
         @Override
         public void accept(int value) {
             consumer.accept(value);
+        }
+
+        @Override
+        public StreamShape inputShape() {
+            return StreamShape.INT_VALUE;
         }
     }
 
@@ -150,6 +166,11 @@ public abstract class ForeachOp<T> implements TerminalOp<T, Void>, TerminalSink<
         public void accept(long value) {
             consumer.accept(value);
         }
+
+        @Override
+        public StreamShape inputShape() {
+            return StreamShape.LONG_VALUE;
+        }
     }
 
     public static final class OfFloat extends ForeachOp<Float> implements Sink.OfFloat{
@@ -164,6 +185,11 @@ public abstract class ForeachOp<T> implements TerminalOp<T, Void>, TerminalSink<
         public void accept(float value) {
             consumer.accept(value);
         }
+
+        @Override
+        public StreamShape inputShape() {
+            return StreamShape.FLOAT_VALUE;
+        }
     }
 
     public static final class OfDouble extends ForeachOp<Double> implements Sink.OfDouble{
@@ -177,6 +203,11 @@ public abstract class ForeachOp<T> implements TerminalOp<T, Void>, TerminalSink<
         @Override
         public void accept(double value) {
             consumer.accept(value);
+        }
+
+        @Override
+        public StreamShape inputShape() {
+            return StreamShape.DOUBLE_VALUE;
         }
     }
 }
