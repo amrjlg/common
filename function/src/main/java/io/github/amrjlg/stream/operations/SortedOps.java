@@ -17,10 +17,14 @@
 
 package io.github.amrjlg.stream.operations;
 
+import io.github.amrjlg.stream.ByteStream;
 import io.github.amrjlg.stream.Sink;
 import io.github.amrjlg.stream.Stream;
 import io.github.amrjlg.stream.StreamOpFlag;
 import io.github.amrjlg.stream.StreamShape;
+import io.github.amrjlg.stream.pipeline.BytePipeline;
+import io.github.amrjlg.stream.sink.ByteSortingSink;
+import io.github.amrjlg.stream.sink.SizedByteSortingSink;
 import io.github.amrjlg.stream.spliterator.Spliterator;
 import io.github.amrjlg.stream.node.Node;
 import io.github.amrjlg.stream.node.Nodes;
@@ -48,6 +52,10 @@ public class SortedOps {
 
     public static <T> Stream<T> makeRef(AbstractPipeline<?, T, ?> upstream, Comparator<? super T> comparator) {
         return new OfRef<>(upstream, comparator);
+    }
+
+    public static ByteStream makeByte(AbstractPipeline<?, Byte, ?> upstream) {
+        return new OfByte(upstream);
     }
 
 
@@ -98,5 +106,33 @@ public class SortedOps {
         }
     }
 
+    public static final class OfByte extends BytePipeline.StatefulOp<Byte> {
+
+        public OfByte(AbstractPipeline<?, Byte, ?> upstream) {
+            super(upstream, StreamShape.BYTE_VALUE, StreamOpFlag.IS_ORDERED | StreamOpFlag.IS_SORTED);
+        }
+
+        @Override
+        public Sink<Byte> opWrapSink(int flags, Sink<Byte> sink) {
+            if (StreamOpFlag.SORTED.isKnown(flags)) {
+                return sink;
+            } else if (StreamOpFlag.SIZED.isKnown(flags)) {
+                return new SizedByteSortingSink(sink);
+            } else {
+                return new ByteSortingSink(sink);
+            }
+        }
+
+        @Override
+        protected <P_IN> Node<Byte> opEvaluateParallel(PipelineHelper<Byte> helper, Spliterator<P_IN> spliterator, IntFunction<Byte[]> generator) {
+            if (StreamOpFlag.SORTED.isKnown(helper.getStreamAndOpFlags())) {
+                return helper.evaluate(spliterator, false, generator);
+            }
+            Node.OfByte node = (Node.OfByte) helper.evaluate(spliterator, true, generator);
+            byte[] array = node.asPrimitiveArray();
+            Arrays.parallelSort(array);
+            return Nodes.node(array);
+        }
+    }
 
 }
