@@ -30,7 +30,7 @@ public class SizedByteSortingSink extends AbstractByteSortingSink {
     private int offset;
 
 
-    SizedByteSortingSink(Sink<? super Byte> downstream) {
+    public SizedByteSortingSink(Sink<? super Byte> downstream) {
         super(downstream);
     }
 
