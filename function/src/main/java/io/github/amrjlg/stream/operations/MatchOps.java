@@ -17,11 +17,18 @@
 
 package io.github.amrjlg.stream.operations;
 
+import io.github.amrjlg.function.BytePredicate;
+import io.github.amrjlg.function.CharPredicate;
+import io.github.amrjlg.function.FloatPredicate;
+import io.github.amrjlg.function.ShortPredicate;
 import io.github.amrjlg.stream.StreamShape;
 import io.github.amrjlg.stream.TerminalOp;
 import io.github.amrjlg.stream.sink.MatchSink;
 
 import java.util.Objects;
+import java.util.function.DoublePredicate;
+import java.util.function.IntPredicate;
+import java.util.function.LongPredicate;
 import java.util.function.Predicate;
 
 /**
@@ -36,4 +43,31 @@ public class MatchOps {
         return new MatchOperation<>(StreamShape.REFERENCE, matchKind, () -> new MatchSink.ReferenceMatchSink<>(matchKind, predicate));
     }
 
+    public static TerminalOp<Byte, Boolean> makeByte(BytePredicate predicate, MatchKind matchKind) {
+        return new MatchOperation<>(StreamShape.BYTE_VALUE, matchKind, () -> new MatchSink.ByteMatchSink(matchKind, predicate));
+    }
+
+    public static TerminalOp<Short, Boolean> makeShort(ShortPredicate predicate, MatchKind matchKind) {
+        return new MatchOperation<>(StreamShape.SHORT_VALUE, matchKind, () -> new MatchSink.ShortMatchSink(matchKind, predicate));
+    }
+
+    public static TerminalOp<Character, Boolean> makeChar(CharPredicate predicate, MatchKind matchKind) {
+        return new MatchOperation<>(StreamShape.CHAR_VALUE, matchKind, () -> new MatchSink.CharMatchSink(matchKind, predicate));
+    }
+
+    public static TerminalOp<Integer, Boolean> makeInt(IntPredicate predicate, MatchKind matchKind) {
+        return new MatchOperation<>(StreamShape.INT_VALUE, matchKind, () -> new MatchSink.IntMatchSink(matchKind, predicate));
+    }
+
+    public static TerminalOp<Long, Boolean> makeLong(LongPredicate predicate, MatchKind matchKind) {
+        return new MatchOperation<>(StreamShape.LONG_VALUE, matchKind, () -> new MatchSink.LongMatchSink(matchKind, predicate));
+    }
+
+    public static TerminalOp<Float, Boolean> makeFloat(FloatPredicate predicate, MatchKind matchKind) {
+        return new MatchOperation<>(StreamShape.FLOAT_VALUE, matchKind, () -> new MatchSink.FloatMatchSink(matchKind, predicate));
+    }
+
+    public static TerminalOp<Double, Boolean> makeDouble(DoublePredicate predicate, MatchKind matchKind) {
+        return new MatchOperation<>(StreamShape.DOUBLE_VALUE, matchKind, () -> new MatchSink.DoubleMatchSink(matchKind, predicate));
+    }
 }
