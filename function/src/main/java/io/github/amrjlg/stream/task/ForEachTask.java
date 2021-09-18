@@ -27,29 +27,31 @@ import java.util.concurrent.CountedCompleter;
 /**
  * @author amrjlg
  **/
-public class ForEachTask<S, T> extends CountedCompleter<Void> {
-
+public final class ForEachTask<S, T> extends CountedCompleter<Void> {
     private final PipelineHelper<T> helper;
     private final Sink<S> sink;
     private Spliterator<S> spliterator;
     private long targetSize;
 
-    public ForEachTask(PipelineHelper<T> helper, Spliterator<S> spliterator, Sink<S> sink) {
+    public ForEachTask(PipelineHelper<T> helper,
+                       Spliterator<S> spliterator,
+                       Sink<S> sink) {
         super(null);
-        this.helper = helper;
         this.sink = sink;
+        this.helper = helper;
         this.spliterator = spliterator;
-        this.targetSize = 0;
+        this.targetSize = 0L;
     }
 
-    public ForEachTask(ForEachTask<S, T> parent, Spliterator<S> spliterator) {
-        this.helper = parent.helper;
+    ForEachTask(ForEachTask<S, T> parent, Spliterator<S> spliterator) {
+        super(parent);
+        this.spliterator = spliterator;
         this.sink = parent.sink;
         this.targetSize = parent.targetSize;
-        this.spliterator = spliterator;
+        this.helper = parent.helper;
     }
 
-    @Override
+    // Similar to AbstractTask but doesn't need to track child tasks
     public void compute() {
         Spliterator<S> right = spliterator, left;
         long remain = right.estimateSize(), threshold = targetSize;
@@ -87,11 +89,5 @@ public class ForEachTask<S, T> extends CountedCompleter<Void> {
         }
         task.spliterator = null;
         task.propagateCompletion();
-    }
-
-    @Override
-    public void onCompletion(CountedCompleter<?> caller) {
-        System.out.println("-------------------");
-        super.onCompletion(caller);
     }
 }
