@@ -17,6 +17,7 @@
 
 package io.github.amrjlg.stream.pipeline;
 
+import io.github.amrjlg.exception.NotImplementedException;
 import io.github.amrjlg.function.ToByteFunction;
 import io.github.amrjlg.function.ToCharFunction;
 import io.github.amrjlg.function.ToFloatFunction;
@@ -103,7 +104,7 @@ public abstract class ReferencePipeline<Input, Output>
 
     @Override
     Spliterator<Output> lazySpliterator(Supplier<? extends Spliterator<Output>> supplier) {
-        return new DelegatingSpliterator(supplier);
+        return new DelegatingSpliterator<>(supplier);
     }
 
     @Override
@@ -180,77 +181,92 @@ public abstract class ReferencePipeline<Input, Output>
 
     @Override
     public ByteStream mapToByte(ToByteFunction<? super Output> mapper) {
-        return null;
+        // TODO IMPL
+        throw new NotImplementedException();
     }
 
     @Override
     public ShortStream mapToShort(ToShortFunction<? super Output> mapper) {
-        return null;
+        // TODO IMPL
+        throw new NotImplementedException();
     }
 
     @Override
     public CharStream mapToChar(ToCharFunction<? super Output> mapper) {
-        return null;
+        // TODO IMPL
+        throw new NotImplementedException();
     }
 
     @Override
     public FloatStream mapToFloat(ToFloatFunction<? super Output> mapper) {
-        return null;
+        // TODO IMPL
+        throw new NotImplementedException();
     }
 
     @Override
     public IntStream mapToInt(ToIntFunction<? super Output> mapper) {
-        return null;
+        // TODO IMPL
+        throw new NotImplementedException();
     }
 
     @Override
     public LongStream mapToLong(ToLongFunction<? super Output> mapper) {
-        return null;
+        // TODO IMPL
+        throw new NotImplementedException();
     }
 
     @Override
     public DoubleStream mapToDouble(ToDoubleFunction<? super Output> mapper) {
-        return null;
+        // TODO IMPL
+        throw new NotImplementedException();
     }
 
     @Override
     public <R> Stream<R> flatMap(Function<? super Output, ? extends java.util.stream.Stream<? extends R>> mapper) {
-        return null;
+        // TODO IMPL
+        throw new NotImplementedException();
     }
 
     @Override
     public ByteStream flatMapToByte(Function<? super Output, ? extends ByteStream> mapper) {
-        return null;
+        // TODO IMPL
+        throw new NotImplementedException();
     }
 
     @Override
     public ShortStream flatMapToShort(Function<? super Output, ? extends ShortStream> mapper) {
-        return null;
+        // TODO IMPL
+        throw new NotImplementedException();
     }
 
     @Override
     public CharStream flatMapToChar(Function<? super Output, ? extends CharStream> mapper) {
-        return null;
+        // TODO IMPL
+        throw new NotImplementedException();
     }
 
     @Override
     public IntStream flatMapToInt(Function<? super Output, ? extends IntStream> mapper) {
-        return null;
+        // TODO IMPL
+        throw new NotImplementedException();
     }
 
     @Override
     public LongStream flatMapToLong(Function<? super Output, ? extends LongStream> mapper) {
-        return null;
+        // TODO IMPL
+        throw new NotImplementedException();
     }
 
     @Override
     public FloatStream flatMapToFloat(Function<? super Output, ? extends FloatStream> mapper) {
-        return null;
+        // TODO IMPL
+        throw new NotImplementedException();
     }
 
     @Override
     public DoubleStream flatMapToDouble(Function<? super Output, ? extends DoubleStream> mapper) {
-        return null;
+        // TODO IMPL
+        throw new NotImplementedException();
     }
 
     @Override
