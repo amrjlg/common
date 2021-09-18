@@ -173,6 +173,11 @@ public abstract class AbstractPipeline<Input, Output, Stream extends BaseStream<
         return spliterator;
     }
 
+    public static void positive(long number) {
+        if (number < 0) {
+            throw new IllegalArgumentException(Long.toString(number));
+        }
+    }
 
     @Override
     public final StreamShape getSourceShape() {
