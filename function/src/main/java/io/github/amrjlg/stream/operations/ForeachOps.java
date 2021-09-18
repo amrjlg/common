@@ -17,15 +17,17 @@
 
 package io.github.amrjlg.stream.operations;
 
-import io.github.amrjlg.stream.StreamOpFlag;
+import io.github.amrjlg.function.ByteConsumer;
+import io.github.amrjlg.function.CharConsumer;
+import io.github.amrjlg.function.FloatConsumer;
+import io.github.amrjlg.function.ShortConsumer;
 import io.github.amrjlg.stream.TerminalOp;
-import io.github.amrjlg.stream.TerminalSink;
-import io.github.amrjlg.stream.spliterator.Spliterator;
-import io.github.amrjlg.stream.pipeline.PipelineHelper;
-import io.github.amrjlg.stream.task.ForEachOrderedTask;
 
 import java.util.Objects;
 import java.util.function.Consumer;
+import java.util.function.DoubleConsumer;
+import java.util.function.IntConsumer;
+import java.util.function.LongConsumer;
 
 /**
  * @author amrjlg
@@ -36,51 +38,39 @@ public class ForeachOps {
         return new ForeachOp.OfRef<>(consumer, ordered);
     }
 
-
-    abstract static class ForeachOp<T> implements TerminalOp<T, Void>, TerminalSink<T, Void> {
-        private final boolean ordered;
-
-        public ForeachOp(boolean ordered) {
-            this.ordered = ordered;
-        }
-
-        @Override
-        public int getOpFlags() {
-            return ordered ? 0 : StreamOpFlag.NOT_SORTED;
-        }
-
-        @Override
-        public <Out> Void evaluateSequential(PipelineHelper<T> helper, Spliterator<Out> spliterator) {
-            return helper.wrapAndCopyInto(this, spliterator).get();
-        }
-
-        @Override
-        public <Out> Void evaluateParallel(PipelineHelper<T> helper, Spliterator<Out> spliterator) {
-            if (ordered) {
-                new ForEachOrderedTask<>(helper, spliterator, this).invoke();
-            } else {
-                new ForEachOrderedTask<>(helper, spliterator, helper.wrapSink(this)).invoke();
-            }
-            return null;
-        }
-
-        @Override
-        public Void get() {
-            return null;
-        }
-
-        static final class OfRef<T> extends ForeachOp<T> {
-            final Consumer<? super T> consumer;
-
-            public OfRef(Consumer<? super T> consumer, boolean ordered) {
-                super(ordered);
-                this.consumer = consumer;
-            }
-
-            @Override
-            public void accept(T t) {
-
-            }
-        }
+    public static TerminalOp<Byte, Void> makeByte(ByteConsumer consumer, boolean ordered) {
+        Objects.requireNonNull(consumer);
+        return new ForeachOp.OfByte(consumer, ordered);
     }
+
+    public static TerminalOp<Short, Void> makeShort(ShortConsumer consumer, boolean ordered) {
+        Objects.requireNonNull(consumer);
+        return new ForeachOp.OfShort(consumer, ordered);
+    }
+
+    public static TerminalOp<Character, Void> makeChar(CharConsumer consumer, boolean ordered) {
+        Objects.requireNonNull(consumer);
+        return new ForeachOp.OfChar(consumer, ordered);
+    }
+
+    public static TerminalOp<Integer, Void> makeInt(IntConsumer consumer, boolean ordered) {
+        Objects.requireNonNull(consumer);
+        return new ForeachOp.OfInt(consumer, ordered);
+    }
+
+    public static TerminalOp<Long, Void> makeLong(LongConsumer consumer, boolean ordered) {
+        Objects.requireNonNull(consumer);
+        return new ForeachOp.OfLong(consumer, ordered);
+    }
+
+    public static TerminalOp<Float, Void> makeFloat(FloatConsumer consumer, boolean ordered) {
+        Objects.requireNonNull(consumer);
+        return new ForeachOp.OfFloat(consumer, ordered);
+    }
+
+    public static TerminalOp<Double, Void> makeDouble(DoubleConsumer consumer, boolean ordered) {
+        Objects.requireNonNull(consumer);
+        return new ForeachOp.OfDouble(consumer, ordered);
+    }
+
 }
