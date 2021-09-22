@@ -21,5 +21,5 @@ package io.github.amrjlg.function;
  * @author amrjlg
  **/
 public interface ShortToFloatFunction {
-    float applyAsInt(short value);
+    float applyAsFloat(short value);
 }

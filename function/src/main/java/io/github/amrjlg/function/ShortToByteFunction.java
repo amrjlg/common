@@ -21,5 +21,5 @@ package io.github.amrjlg.function;
  * @author amrjlg
  **/
 public interface ShortToByteFunction {
-    byte applyAsInt(short value);
+    byte applyAsByte(short value);
 }
