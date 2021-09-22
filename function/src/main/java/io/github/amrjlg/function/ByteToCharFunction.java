@@ -22,5 +22,5 @@ package io.github.amrjlg.function;
  **/
 public interface ByteToCharFunction {
 
-    char applyAsChar();
+    char applyAsChar(byte value);
 }
