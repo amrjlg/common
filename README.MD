@@ -42,3 +42,16 @@ id模块 id生成器
 - `io.github.amrjlg.utils.DateUtil`
 - `io.github.amrjlg.utils.HexUtil`
 - `io.github.amrjlg.utils.StringUtil`
+
+## function
+- `io.github.amrjlg.function`
+  - 添加基本类型函数式接口
+- `io.github.amrjlg.stream`
+  1. 参考java 8 stream api，以方便实现其他基本类型的stream
+  2. 将大多数内部类独立开来
+  3. 拆分子包
+     1. `node`
+     2. `spliterator`
+     3. `pipeline`
+     4. `task`
+     5. `sink`
