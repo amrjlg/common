@@ -47,6 +47,7 @@ public abstract class SliceSpliterator<T, Spl extends Spliterator<T>> {
         this.originEnd = originEnd;
         this.begin = begin;
         this.end = end;
+        this.spl = spl;
 
     }
 
@@ -106,7 +107,7 @@ public abstract class SliceSpliterator<T, Spl extends Spliterator<T>> {
 
         @Override
         protected Spliterator<T> makeSpliterator(Spliterator<T> spliterator, long originBegin, long originEnd, long begin, long end) {
-            return new OfRef(spliterator, originBegin, originEnd, begin, end);
+            return new OfRef<>(spliterator, originBegin, originEnd, begin, end);
         }
 
         @Override
