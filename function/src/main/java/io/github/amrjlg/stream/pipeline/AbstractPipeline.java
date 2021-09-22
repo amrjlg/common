@@ -41,6 +41,7 @@ public abstract class AbstractPipeline<Input, Output, Stream extends BaseStream<
     private static final String MSG_STREAM_LINKED = "stream has already been operated upon or closed";
     private static final String MSG_CONSUMED = "source already consumed or closed";
 
+    protected static final int NOT_SORTED_AND_NOT_DISTINCT = StreamOpFlag.NOT_SORTED | StreamOpFlag.NOT_DISTINCT;
 
     private final AbstractPipeline sourceStage;
 
