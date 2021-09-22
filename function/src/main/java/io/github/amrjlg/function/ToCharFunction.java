@@ -25,5 +25,5 @@ package io.github.amrjlg.function;
 @FunctionalInterface
 public interface ToCharFunction<T> {
 
-    char applyAsByte(T value);
+    char applyAsChar(T value);
 }
