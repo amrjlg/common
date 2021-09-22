@@ -18,6 +18,7 @@
 package io.github.amrjlg.stream.pipeline;
 
 import io.github.amrjlg.stream.ByteStream;
+import io.github.amrjlg.stream.CharStream;
 import io.github.amrjlg.stream.Stream;
 import io.github.amrjlg.stream.StreamOpFlag;
 import io.github.amrjlg.stream.spliterator.Spliterator;
@@ -75,6 +76,22 @@ public class StreamTest {
                 .skip(1)
                 .limit(2)
                 .average().ifPresent(System.out::println);
+    }
+
+    @Test
+    public void charStream() {
+        char[] array = new char[]{'c', 'a', 'f', 'b', 'd', 'e'};
+
+        Spliterator.OfChar spliterator = Spliterators.spliterator(array, Spliterator.ORDERED | Spliterator.IMMUTABLE);
+
+        CharStream stream = new CharPipeline.Head<>(spliterator, StreamOpFlag.fromCharacteristics(spliterator), false);
+
+
+        stream.sorted().filter(v -> v > 'c')
+                .skip(1)
+                .limit(1)
+                .forEach(System.out::println); // e;
+//                .average().ifPresent(System.out::println);  101.0
     }
 }
 
