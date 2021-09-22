@@ -18,13 +18,17 @@
 package io.github.amrjlg.stream.operations;
 
 import io.github.amrjlg.stream.ByteStream;
+import io.github.amrjlg.stream.CharStream;
 import io.github.amrjlg.stream.Sink;
 import io.github.amrjlg.stream.Stream;
 import io.github.amrjlg.stream.StreamOpFlag;
 import io.github.amrjlg.stream.StreamShape;
 import io.github.amrjlg.stream.pipeline.BytePipeline;
+import io.github.amrjlg.stream.pipeline.CharPipeline;
 import io.github.amrjlg.stream.sink.ByteSortingSink;
+import io.github.amrjlg.stream.sink.CharSortingSink;
 import io.github.amrjlg.stream.sink.SizedByteSortingSink;
+import io.github.amrjlg.stream.sink.SizedCharSortingSink;
 import io.github.amrjlg.stream.spliterator.Spliterator;
 import io.github.amrjlg.stream.node.Node;
 import io.github.amrjlg.stream.node.Nodes;
@@ -56,6 +60,10 @@ public class SortedOps {
 
     public static ByteStream makeByte(AbstractPipeline<?, Byte, ?> upstream) {
         return new OfByte(upstream);
+    }
+
+    public static <Input> CharStream makeChar(AbstractPipeline<Input, Character, CharStream> upstream) {
+        return new OfChar(upstream);
     }
 
 
@@ -130,6 +138,35 @@ public class SortedOps {
             }
             Node.OfByte node = (Node.OfByte) helper.evaluate(spliterator, true, generator);
             byte[] array = node.asPrimitiveArray();
+            Arrays.parallelSort(array);
+            return Nodes.node(array);
+        }
+    }
+
+    public static final class OfChar extends CharPipeline.StatefulOp<Character> {
+        public OfChar(AbstractPipeline<?, Character, ?> upstream) {
+            super(upstream, StreamShape.CHAR_VALUE, StreamOpFlag.IS_ORDERED | StreamOpFlag.IS_SORTED);
+        }
+
+        @Override
+        public Sink<Character> opWrapSink(int flags, Sink<Character> sink) {
+            if (StreamOpFlag.SORTED.isKnown(flags)) {
+                return sink;
+            } else if (StreamOpFlag.SIZED.isKnown(flags)) {
+                return new SizedCharSortingSink(sink);
+            } else {
+                return new CharSortingSink(sink);
+            }
+        }
+
+        @Override
+        protected <P_IN> Node<Character> opEvaluateParallel(PipelineHelper<Character> helper, Spliterator<P_IN> spliterator, IntFunction<Character[]> generator) {
+            if (StreamOpFlag.SORTED.isKnown(helper.getStreamAndOpFlags())) {
+                return helper.evaluate(spliterator, false, generator);
+            }
+
+            Node.OfChar node = (Node.OfChar) helper.evaluate(spliterator, true, generator);
+            char[] array = node.asPrimitiveArray();
             Arrays.parallelSort(array);
             return Nodes.node(array);
         }
