@@ -107,6 +107,133 @@ public class ArrayUtil {
         return ts;
     }
 
+    public static void swap(byte[] array, int left, int right) {
+        byte temp = array[left];
+        array[left] = array[right];
+        array[right] = temp;
+    }
+
+    public static void swap(char[] array, int left, int right) {
+        char temp = array[left];
+        array[left] = array[right];
+        array[right] = temp;
+    }
+
+    public static void swap(short[] array, int left, int right) {
+        short temp = array[left];
+        array[left] = array[right];
+        array[right] = temp;
+    }
+
+    public static void swap(int[] array, int left, int right) {
+        int temp = array[left];
+        array[left] = array[right];
+        array[right] = temp;
+    }
+
+    public static void swap(long[] array, int left, int right) {
+        long temp = array[left];
+        array[left] = array[right];
+        array[right] = temp;
+    }
+
+    public static void swap(float[] array, int left, int right) {
+        float temp = array[left];
+        array[left] = array[right];
+        array[right] = temp;
+    }
+
+    public static void swap(double[] array, int left, int right) {
+        double temp = array[left];
+        array[left] = array[right];
+        array[right] = temp;
+    }
+
+    public static <T> void swap(T[] array, int left, int right) {
+        T temp = array[left];
+        array[left] = array[right];
+        array[right] = temp;
+    }
+
+    public static void reserved(byte[] array) {
+        if (array.length == 1 || array.length == 0) {
+            return;
+        }
+        for (int i = 0; i < array.length / 2; i++) {
+            swap(array, i, array.length - i);
+        }
+
+    }
+
+    public static void reserved(char[] array) {
+        if (array.length == 1 || array.length == 0) {
+            return;
+        }
+        for (int i = 0; i < array.length / 2; i++) {
+            swap(array, i, array.length - i);
+        }
+
+    }
+
+    public static void reserved(short[] array) {
+        if (array.length == 1 || array.length == 0) {
+            return;
+        }
+        for (int i = 0; i < array.length / 2; i++) {
+            swap(array, i, array.length - i);
+        }
+
+    }
+
+    public static void reserved(int[] array) {
+        if (array.length == 1 || array.length == 0) {
+            return;
+        }
+        for (int i = 0; i < array.length / 2; i++) {
+            swap(array, i, array.length - i);
+        }
+
+    }
+
+    public static void reserved(long[] array) {
+        if (array.length == 1 || array.length == 0) {
+            return;
+        }
+        for (int i = 0; i < array.length / 2; i++) {
+            swap(array, i, array.length - i);
+        }
+
+    }
+
+    public static void reserved(float[] array) {
+        if (array.length == 1 || array.length == 0) {
+            return;
+        }
+        for (int i = 0; i < array.length / 2; i++) {
+            swap(array, i, array.length - i);
+        }
+
+    }
+
+    public static void reserved(double[] array) {
+        if (array.length == 1 || array.length == 0) {
+            return;
+        }
+        for (int i = 0; i < array.length / 2; i++) {
+            swap(array, i, array.length - i);
+        }
+
+    }
+
+    public static <T> void reserved(T[] array) {
+        if (array.length == 1 || array.length == 0) {
+            return;
+        }
+        for (int i = 0; i < array.length / 2; i++) {
+            swap(array, i, array.length - i);
+        }
+
+    }
 
     public static <T> void consumer(byte[] bytes, ByteConsumer consumer) {
         if (!empty(bytes)) {
