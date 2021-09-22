@@ -61,7 +61,7 @@ public interface IntStream extends BaseStream<Integer, IntStream> {
 
     DoubleStream mapToDouble(IntToDoubleFunction mapper);
 
-    IntStream flatMap(IntFunction<? extends java.util.stream.IntStream> mapper);
+    IntStream flatMap(IntFunction<? extends IntStream> mapper);
 
     IntStream filter(IntPredicate predicate);
 
