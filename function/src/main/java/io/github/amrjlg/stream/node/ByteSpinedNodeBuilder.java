@@ -53,9 +53,9 @@ public class ByteSpinedNodeBuilder
     }
 
     @Override
-    public void accept(byte i) {
+    public void accept(byte value) {
         assert building : "not building";
-        super.accept(i);
+        super.accept(value);
     }
 
 

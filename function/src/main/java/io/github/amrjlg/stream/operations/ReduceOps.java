@@ -181,8 +181,8 @@ public class ReduceOps {
             }
 
             @Override
-            public void accept(byte b) {
-                accumulator.accept(state, b);
+            public void accept(byte value) {
+                accumulator.accept(state, value);
             }
 
             @Override

@@ -38,10 +38,10 @@ public abstract class FindTerminalSink<Input, Output> implements TerminalSink<In
     protected Input value;
 
     @Override
-    public void accept(Input input) {
+    public void accept(Input value) {
         if (!find) {
             find = true;
-            this.value = input;
+            this.value = value;
         }
     }
 

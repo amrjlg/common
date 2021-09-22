@@ -171,8 +171,8 @@ public abstract class BytePipeline<Input>
             public Sink<Byte> opWrapSink(int flags, Sink<Character> sink) {
                 return new Sink.ChainedByte<Character>(sink) {
                     @Override
-                    public void accept(byte c) {
-                        downstream.accept(mapper.applyAsChar(c));
+                    public void accept(byte value) {
+                        downstream.accept(mapper.applyAsChar(value));
                     }
                 };
             }
