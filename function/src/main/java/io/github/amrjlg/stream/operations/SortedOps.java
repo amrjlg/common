@@ -19,16 +19,20 @@ package io.github.amrjlg.stream.operations;
 
 import io.github.amrjlg.stream.ByteStream;
 import io.github.amrjlg.stream.CharStream;
+import io.github.amrjlg.stream.ShortStream;
 import io.github.amrjlg.stream.Sink;
 import io.github.amrjlg.stream.Stream;
 import io.github.amrjlg.stream.StreamOpFlag;
 import io.github.amrjlg.stream.StreamShape;
 import io.github.amrjlg.stream.pipeline.BytePipeline;
 import io.github.amrjlg.stream.pipeline.CharPipeline;
+import io.github.amrjlg.stream.pipeline.ShortPipeline;
 import io.github.amrjlg.stream.sink.ByteSortingSink;
 import io.github.amrjlg.stream.sink.CharSortingSink;
+import io.github.amrjlg.stream.sink.ShortSortingSink;
 import io.github.amrjlg.stream.sink.SizedByteSortingSink;
 import io.github.amrjlg.stream.sink.SizedCharSortingSink;
+import io.github.amrjlg.stream.sink.SizedShortSortingSink;
 import io.github.amrjlg.stream.spliterator.Spliterator;
 import io.github.amrjlg.stream.node.Node;
 import io.github.amrjlg.stream.node.Nodes;
@@ -64,6 +68,10 @@ public class SortedOps {
 
     public static <Input> CharStream makeChar(AbstractPipeline<Input, Character, CharStream> upstream) {
         return new OfChar(upstream);
+    }
+
+    public static <Input> ShortStream makeShort(AbstractPipeline<Input, Short, ShortStream> upstream) {
+        return new OfShort(upstream);
     }
 
 
@@ -167,6 +175,37 @@ public class SortedOps {
 
             Node.OfChar node = (Node.OfChar) helper.evaluate(spliterator, true, generator);
             char[] array = node.asPrimitiveArray();
+            Arrays.parallelSort(array);
+            return Nodes.node(array);
+        }
+    }
+
+
+    public static class OfShort extends ShortPipeline.StatefulOp<Short> {
+        public <Input> OfShort(AbstractPipeline<Input, Short, ShortStream> upstream) {
+            super(upstream, StreamShape.SHORT_VALUE, StreamOpFlag.IS_ORDERED | StreamOpFlag.IS_SORTED);
+        }
+
+        @Override
+        public Sink<Short> opWrapSink(int flags, Sink<Short> sink) {
+            if (StreamOpFlag.SORTED.isKnown(flags)) {
+                return sink;
+            } else if (StreamOpFlag.SIZED.isKnown(flags)) {
+                return new SizedShortSortingSink(sink);
+            } else {
+                return new ShortSortingSink(sink);
+            }
+        }
+
+
+        @Override
+        protected <P_IN> Node<Short> opEvaluateParallel(PipelineHelper<Short> helper, Spliterator<P_IN> spliterator, IntFunction<Short[]> generator) {
+            if (StreamOpFlag.SORTED.isKnown(helper.getStreamAndOpFlags())) {
+                return helper.evaluate(spliterator, false, generator);
+            }
+            Node.OfShort node = (Node.OfShort) helper.evaluate(spliterator, true, generator);
+
+            short[] array = node.asPrimitiveArray();
             Arrays.parallelSort(array);
             return Nodes.node(array);
         }
