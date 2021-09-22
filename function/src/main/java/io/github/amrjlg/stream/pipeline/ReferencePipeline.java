@@ -203,8 +203,17 @@ public abstract class ReferencePipeline<Input, Output>
 
     @Override
     public CharStream mapToChar(ToCharFunction<? super Output> mapper) {
-        // TODO IMPL
-        throw new NotImplementedException();
+        return new CharPipeline.StateLessOp<Output>(this, StreamShape.REFERENCE, NOT_SORTED_AND_NOT_DISTINCT) {
+            @Override
+            public Sink<Output> opWrapSink(int flags, Sink<Character> sink) {
+                return new Sink.ChainedReference<Output, Character>(sink) {
+                    @Override
+                    public void accept(Output output) {
+                        downstream.accept(mapper.applyAsChar(output));
+                    }
+                };
+            }
+        };
     }
 
     @Override
