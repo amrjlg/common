@@ -134,7 +134,7 @@ public abstract class BytePipeline<Input>
     @Override
     public ByteStream map(ByteUnaryOperator mapper) {
         Objects.requireNonNull(mapper);
-        return new StateLessOp<Byte>(this, StreamShape.BYTE_VALUE, StreamOpFlag.NOT_SORTED | StreamOpFlag.NOT_DISTINCT) {
+        return new StateLessOp<Byte>(this, StreamShape.BYTE_VALUE, NOT_SORTED_AND_NOT_DISTINCT) {
             @Override
             public Sink<Byte> opWrapSink(int flags, Sink<Byte> sink) {
                 return new Sink.ChainedByte<Byte>(sink) {
@@ -150,7 +150,7 @@ public abstract class BytePipeline<Input>
     @Override
     public <U> Stream<U> mapToObj(ByteFunction<? extends U> mapper) {
         Objects.requireNonNull(mapper);
-        return new ReferencePipeline.StatelessOp<Byte, U>(this, StreamShape.BYTE_VALUE, StreamOpFlag.NOT_SORTED | StreamOpFlag.NOT_DISTINCT) {
+        return new ReferencePipeline.StatelessOp<Byte, U>(this, StreamShape.BYTE_VALUE, NOT_SORTED_AND_NOT_DISTINCT) {
 
             @Override
             public Sink<Byte> opWrapSink(int flags, Sink<U> sink) {
@@ -166,8 +166,17 @@ public abstract class BytePipeline<Input>
 
     @Override
     public CharStream mapToChar(ByteToCharFunction mapper) {
-        // TODO impl
-        throw new NotImplementedException();
+        return new CharPipeline.StateLessOp<Byte>(this,StreamShape.BYTE_VALUE,NOT_SORTED_AND_NOT_DISTINCT) {
+            @Override
+            public Sink<Byte> opWrapSink(int flags, Sink<Character> sink) {
+                return new Sink.ChainedByte<Character>(sink) {
+                    @Override
+                    public void accept(byte c) {
+                        downstream.accept(mapper.applyAsChar(c));
+                    }
+                };
+            }
+        };
     }
 
     @Override
@@ -196,7 +205,7 @@ public abstract class BytePipeline<Input>
 
     @Override
     public ByteStream flatMap(ByteFunction<? extends ByteStream> mapper) {
-        return new StateLessOp<Byte>(this, StreamShape.BYTE_VALUE, StreamOpFlag.NOT_SORTED | StreamOpFlag.NOT_DISTINCT) {
+        return new StateLessOp<Byte>(this, StreamShape.BYTE_VALUE, NOT_SORTED_AND_NOT_DISTINCT) {
             @Override
             public Sink<Byte> opWrapSink(int flags, Sink<Byte> sink) {
                 return new Sink.ChainedByte<Byte>(sink) {
