@@ -30,7 +30,7 @@ import java.util.Objects;
 @FunctionalInterface
 public interface CharConsumer {
 
-    void accept(char c);
+    void accept(char value);
 
     default CharConsumer andThen(CharConsumer after) {
         Objects.requireNonNull(after);

@@ -23,7 +23,7 @@ package io.github.amrjlg.function;
  * @author amrjlg
  **/
 @FunctionalInterface
-public interface ToIntFunction<T> /*extends java.util.function.ToIntFunction<T>*/ {
+public interface ToIntFunction<T> {
 
-    int applyAsInt(T t);
+    int applyAsInt(T value);
 }

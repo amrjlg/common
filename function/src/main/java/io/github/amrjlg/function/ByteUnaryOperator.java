@@ -24,7 +24,7 @@ import java.util.Objects;
  **/
 public interface ByteUnaryOperator {
 
-    byte applyAsByte(byte b);
+    byte applyAsByte(byte value);
 
 
     default ByteUnaryOperator compose(ByteUnaryOperator before) {

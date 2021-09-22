@@ -22,5 +22,5 @@ package io.github.amrjlg.function;
  **/
 public interface ByteToIntFunction {
 
-    int applyAsInt(byte b);
+    int applyAsInt(byte value);
 }

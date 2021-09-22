@@ -21,5 +21,5 @@ package io.github.amrjlg.function;
  * @author amrjlg
  **/
 public interface ShortUnaryOperator {
-    short applyAsShort(short operand);
+    short applyAsShort(short value);
 }

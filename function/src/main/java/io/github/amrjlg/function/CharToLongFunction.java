@@ -21,5 +21,5 @@ package io.github.amrjlg.function;
  * @author amrjlg
  **/
 public interface CharToLongFunction {
-    long applyAsLong(char c);
+    long applyAsLong(char value);
 }
