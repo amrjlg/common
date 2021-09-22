@@ -33,6 +33,7 @@ import io.github.amrjlg.stream.spliterator.Spliterator;
 import io.github.amrjlg.util.CharSummaryStatistics;
 import io.github.amrjlg.util.OptionalChar;
 
+import java.util.OptionalDouble;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
@@ -73,15 +74,15 @@ public interface CharStream extends BaseStream<Character, CharStream> {
 
     void forEachOrdered(CharConsumer action);
 
-    short[] toArray();
+    char[] toArray();
 
-    short reduce(short identity, CharBinaryOperator op);
+    char reduce(char identity, CharBinaryOperator op);
 
     OptionalChar reduce(CharBinaryOperator op);
 
     <R> R collect(Supplier<R> supplier, ObjCharConsumer<R> accumulator, BiConsumer<R, R> combiner);
 
-    short sum();
+    char sum();
 
     OptionalChar min();
 
@@ -89,7 +90,7 @@ public interface CharStream extends BaseStream<Character, CharStream> {
 
     long count();
 
-    OptionalChar average();
+    OptionalDouble average();
 
     CharSummaryStatistics summaryStatistics();
 
