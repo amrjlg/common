@@ -14,9 +14,9 @@ id模块 id生成器
 目前仅含有雪花算法
 
 ## interface
-1. `io.github.amrjlg.apiHandler`
-2. `io.github.amrjlg.apiSupport`
-3. `io.github.amrjlg.apiSupportHandler`通过`Support`接口判断是否执行`Handler`
+1. `io.github.amrjlg.api.Handler`
+2. `io.github.amrjlg.api.Support`
+3. `io.github.amrjlg.api.SupportHandler`通过`Support`接口判断是否执行`Handler`
 
 ## response
 1. `io.github.amrjlg.responseResult<T>`基本定义
@@ -34,6 +34,8 @@ id模块 id生成器
   - `map`
   - `empty`
   - `emptyArray`
+  - `swap` 交换数组指定索引的元素
+  - `reserved`
 - `io.github.amrjlg.utils.ByteUtil`
 - `io.github.amrjlg.utils.CollectionUtil`
 - `io.github.amrjlg.utils.DateTimeUtil`
