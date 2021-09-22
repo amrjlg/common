@@ -1837,7 +1837,7 @@ public abstract class Spliterators {
         public DoubleIteratorSpliterator(PrimitiveIterator.OfDouble iterator, long size, int characteristics) {
             this.iterator = iterator;
             this.estimateSize = size;
-            this.characteristics = (characteristics & java.util.Spliterator.CONCURRENT) == 0
+            this.characteristics = (characteristics & Spliterator.CONCURRENT) == 0
                     ? characteristics | Spliterator.SIZED | Spliterator.SUBSIZED
                     : characteristics;
         }
