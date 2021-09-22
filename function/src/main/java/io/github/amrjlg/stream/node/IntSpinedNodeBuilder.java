@@ -54,9 +54,9 @@ public class IntSpinedNodeBuilder
     }
 
     @Override
-    public void accept(int i) {
+    public void accept(int value) {
         assert building : "not building";
-        super.accept(i);
+        super.accept(value);
     }
 
 

@@ -43,52 +43,52 @@ public interface Sink<T> extends Consumer<T> {
         return false;
     }
 
-    default void accept(byte b) {
+    default void accept(byte value) {
         throw new NotImplementedException();
     }
 
-    default void accept(char c) {
+    default void accept(char value) {
         throw new NotImplementedException();
     }
 
-    default void accept(short s) {
+    default void accept(short value) {
         throw new NotImplementedException();
     }
 
-    default void accept(int i) {
+    default void accept(int value) {
         throw new NotImplementedException();
     }
 
-    default void accept(long l) {
+    default void accept(long value) {
         throw new NotImplementedException();
     }
 
-    default void accept(float f) {
+    default void accept(float value) {
         throw new NotImplementedException();
     }
 
-    default void accept(double d) {
+    default void accept(double value) {
         throw new NotImplementedException();
     }
 
     interface OfByte extends Sink<Byte>, ByteConsumer {
         @Override
-        void accept(byte b);
+        void accept(byte value);
 
         @Override
-        default void accept(Byte b) {
-            accept(b.byteValue());
+        default void accept(Byte value) {
+            accept(value.byteValue());
         }
     }
 
 
     interface OfShort extends Sink<Short>, ShortConsumer {
         @Override
-        void accept(short s);
+        void accept(short value);
 
         @Override
-        default void accept(Short s) {
-            accept(s.shortValue());
+        default void accept(Short value) {
+            accept(value.shortValue());
         }
     }
 
@@ -105,7 +105,7 @@ public interface Sink<T> extends Consumer<T> {
 
     interface OfInt extends Sink<Integer>, IntConsumer {
         @Override
-        void accept(int i);
+        void accept(int value);
 
         @Override
         default void accept(Integer integer) {
@@ -116,18 +116,18 @@ public interface Sink<T> extends Consumer<T> {
     interface OfLong extends Sink<Long>, LongConsumer {
 
         @Override
-        void accept(long l);
+        void accept(long value);
 
         @Override
-        default void accept(Long l) {
-            accept(l.longValue());
+        default void accept(Long value) {
+            accept(value.longValue());
         }
 
     }
 
     interface OfFloat extends Sink<Float>, FloatConsumer {
         @Override
-        void accept(float f);
+        void accept(float value);
 
         @Override
         default void accept(Float f) {
@@ -137,11 +137,11 @@ public interface Sink<T> extends Consumer<T> {
 
     interface OfDouble extends Sink<Double>, DoubleConsumer {
         @Override
-        void accept(double d);
+        void accept(double value);
 
         @Override
-        default void accept(Double d) {
-            accept(d.doubleValue());
+        default void accept(Double value) {
+            accept(value.doubleValue());
         }
     }
 
