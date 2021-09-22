@@ -25,27 +25,21 @@ import java.util.Iterator;
  * @author amrjlg
  **/
 public interface BaseStream<T, S extends BaseStream<T, S>>
-        extends AutoCloseable, java.util.stream.BaseStream<T, S> {
+        extends AutoCloseable {
 
-    @Override
+
     Iterator<T> iterator();
 
-    @Override
     Spliterator<T> spliterator();
 
-    @Override
     boolean isParallel();
 
-    @Override
     S sequential();
 
-    @Override
     S parallel();
 
-    @Override
     S unordered();
 
-    @Override
     S onClose(Runnable closeHandler);
 
     @Override
