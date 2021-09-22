@@ -166,26 +166,31 @@ public abstract class BytePipeline<Input>
 
     @Override
     public CharStream mapToChar(ByteToCharFunction mapper) {
+        // TODO impl
         throw new NotImplementedException();
     }
 
     @Override
     public IntStream mapToInt(ByteToIntFunction mapper) {
+        // TODO impl
         throw new NotImplementedException();
     }
 
     @Override
     public LongStream mapToLong(ByteToLongFunction mapper) {
+        // TODO impl
         throw new NotImplementedException();
     }
 
     @Override
     public FloatStream mapToFloat(ByteToFloatFunction mapper) {
+        // TODO impl
         throw new NotImplementedException();
     }
 
     @Override
     public DoubleStream mapToDouble(ByteToDoubleFunction mapper) {
+        // TODO impl
         throw new NotImplementedException();
     }
 
