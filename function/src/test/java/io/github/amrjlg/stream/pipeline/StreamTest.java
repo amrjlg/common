@@ -24,6 +24,7 @@ import io.github.amrjlg.stream.spliterator.Spliterator;
 import io.github.amrjlg.stream.spliterator.Spliterators;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
 import java.util.Comparator;
 
 
@@ -43,7 +44,7 @@ public class StreamTest {
         Stream<String> stream = new ReferencePipeline.Head<>(spliterator, StreamOpFlag.fromCharacteristics(spliterator), false);
         Comparator<String> comparator = String::compareTo;
 
-        stream.parallel().forEach(System.out::println);
+        stream.parallel().sorted(comparator.reversed()).skip(1).limit(1).forEach(System.out::println);
 
     }
 
@@ -53,15 +54,27 @@ public class StreamTest {
 
 
     @Test
-    public void byteStream(){
+    public void byteStream() {
 
         Spliterator.OfByte spliterator = Spliterators.spliterator(new byte[]{0x5, 0x6, 2, 3, 4}, Spliterator.ORDERED | Spliterator.IMMUTABLE);
 
         ByteStream stream = new BytePipeline.Head<>(spliterator, StreamOpFlag.fromCharacteristics(spliterator), false);
-        //todo  parallel
-        stream.sorted().parallel().forEach(System.out::println);
+
+        stream.parallel().filter(v -> v > 3).sorted().skip(1).limit(1).forEach(System.out::println);
+
+        System.out.println("==============");
+
+        Arrays.stream(new int[]{5, 6, 2, 3, 4}).parallel().sorted().filter(v -> v > 3).skip(1).limit(1).forEach(System.out::println);
 
 
+        System.out.println("===============");
+
+        new BytePipeline.Head<>(Spliterators.spliterator(new byte[]{0x5, 0x6, 2, 3, 4}, Spliterator.ORDERED | Spliterator.IMMUTABLE)
+                , StreamOpFlag.fromCharacteristics(spliterator), false)
+                .sorted()
+                .skip(1)
+                .limit(2)
+                .average().ifPresent(System.out::println);
     }
 }
 
