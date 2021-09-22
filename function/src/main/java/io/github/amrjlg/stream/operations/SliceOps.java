@@ -18,11 +18,13 @@
 package io.github.amrjlg.stream.operations;
 
 import io.github.amrjlg.stream.ByteStream;
+import io.github.amrjlg.stream.CharStream;
 import io.github.amrjlg.stream.Sink;
 import io.github.amrjlg.stream.Stream;
 import io.github.amrjlg.stream.StreamOpFlag;
 import io.github.amrjlg.stream.StreamShape;
 import io.github.amrjlg.stream.pipeline.BytePipeline;
+import io.github.amrjlg.stream.pipeline.CharPipeline;
 import io.github.amrjlg.stream.spliterator.SliceSpliterator;
 import io.github.amrjlg.stream.spliterator.Spliterator;
 import io.github.amrjlg.stream.spliterator.UnorderedSliceSpliterator;
@@ -228,18 +230,77 @@ public class SliceOps {
             @Override
             public Sink<Byte> opWrapSink(int flags, Sink<Byte> sink) {
                 return new Sink.ChainedByte<Byte>(sink) {
-                    long n = skip;
-                    long m = limit >= 0 ? limit : Long.MAX_VALUE;
+                    long s = skip;
+                    long l = limit >= 0 ? limit : Long.MAX_VALUE;
 
                     @Override
                     public void accept(byte value) {
-                        if (n == 0) {
-                            if (m > 0) {
-                                m--;
+                        if (s == 0) {
+                            if (l > 0) {
+                                l--;
                                 downstream.accept(value);
                             }
                         } else {
-                            n--;
+                            s--;
+                        }
+                    }
+                };
+            }
+        };
+    }
+
+    public static CharStream makeChar(AbstractPipeline<?, Character, ?> upstream, long skip, long limit) {
+        return new CharPipeline.StatefulOp<Character>(upstream, StreamShape.CHAR_VALUE, flags(limit)) {
+            Spliterator.OfChar unorderedSkipLimitSpliterator(Spliterator.OfChar spl, long skip, long limit, long size) {
+                if (skip <= size) {
+                    limit = limit >= 0 ? Math.min(limit, size - skip) : size - skip;
+                    skip = 0;
+                }
+                return new UnorderedSliceSpliterator.OfChar(spl, skip, limit);
+            }
+
+            @Override
+            protected <P_IN> Spliterator<Character> opEvaluateParallelLazy(PipelineHelper<Character> helper, Spliterator<P_IN> spliterator) {
+                long size = helper.exactOutputSizeIfKnown(spliterator);
+                if (size > 0 && spliterator.hasCharacteristics(Spliterator.SUBSIZED)) {
+                    return new SliceSpliterator.OfChar((Spliterator.OfChar) helper.wrapSpliterator(spliterator),
+                            skip, calcSliceFence(skip, limit));
+                } else if (!StreamOpFlag.SORTED.isKnown(helper.getStreamAndOpFlags())) {
+                    return unorderedSkipLimitSpliterator((Spliterator.OfChar) helper.wrapSpliterator(spliterator), skip, limit, size);
+                } else {
+                    return new SliceTask<>(this, helper, spliterator, Character[]::new, skip, limit).invoke().spliterator();
+                }
+            }
+
+            @Override
+            protected <P_IN> Node<Character> opEvaluateParallel(PipelineHelper<Character> helper, Spliterator<P_IN> spliterator, IntFunction<Character[]> generator) {
+                long size = helper.exactOutputSizeIfKnown(spliterator);
+                if (size > 0 && spliterator.hasCharacteristics(Spliterator.SUBSIZED)) {
+                    Spliterator<P_IN> spl = sliceSpliterator(helper.getSourceShape(), spliterator, skip, limit);
+                    return Nodes.collectChar(helper, spl, true);
+                } else if (!StreamOpFlag.SORTED.isKnown(helper.getStreamAndOpFlags())) {
+                    Spliterator.OfChar spl = unorderedSkipLimitSpliterator((Spliterator.OfChar) spliterator, skip, limit, size);
+                    return Nodes.collectChar(this, spl, true);
+                } else {
+                    return new SliceTask<>(this, helper, spliterator, generator, skip, limit).invoke();
+                }
+            }
+
+            @Override
+            public Sink<Character> opWrapSink(int flags, Sink<Character> sink) {
+                return new Sink.ChainedChar<Character>(sink) {
+                    long s = skip;
+                    long l = limit >= 0 ? limit : Long.MAX_VALUE;
+
+                    @Override
+                    public void accept(char value) {
+                        if (s == 0) {
+                            if (l > 0) {
+                                l--;
+                                downstream.accept(value);
+                            }
+                        } else {
+                            s--;
                         }
                     }
                 };
