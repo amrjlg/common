@@ -16,9 +16,11 @@
  */
 package io.github.amrjlg.stream;
 
+import io.github.amrjlg.stream.spliterator.Spliterator;
+
 import java.util.EnumMap;
 import java.util.Map;
-import java.util.Spliterator;
+
 
 /**
  * @see java.util.stream.StreamOpFlag
