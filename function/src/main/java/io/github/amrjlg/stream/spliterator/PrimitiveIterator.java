@@ -22,6 +22,7 @@ import io.github.amrjlg.function.CharConsumer;
 import io.github.amrjlg.function.FloatConsumer;
 import io.github.amrjlg.function.ShortConsumer;
 
+import java.util.Iterator;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.DoubleConsumer;
@@ -33,9 +34,8 @@ import java.util.function.LongConsumer;
  *
  * @author amrjlg
  **/
-public interface PrimitiveIterator<Primitive, PrimitiveConsumer> extends java.util.PrimitiveIterator<Primitive, PrimitiveConsumer> {
+public interface PrimitiveIterator<Primitive, PrimitiveConsumer> extends Iterator<Primitive> {
 
-    @Override
     void forEachRemaining(PrimitiveConsumer action);
 
     interface OfByte extends PrimitiveIterator<Byte, ByteConsumer> {
