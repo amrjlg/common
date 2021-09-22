@@ -30,7 +30,7 @@ public class SizedCharSortingSink extends AbstractCharSortingSink {
     private int offset;
 
 
-    SizedCharSortingSink(Sink<? super Character> downstream) {
+    public SizedCharSortingSink(Sink<? super Character> downstream) {
         super(downstream);
     }
 
