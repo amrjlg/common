@@ -94,7 +94,7 @@ public interface Sink<T> extends Consumer<T> {
 
     interface OfChar extends Sink<Character>, CharConsumer {
         @Override
-        void accept(char c);
+        void accept(char value);
 
         @Override
         default void accept(Character character) {
