@@ -27,6 +27,7 @@ import io.github.amrjlg.function.ByteToDoubleFunction;
 import io.github.amrjlg.function.ByteToFloatFunction;
 import io.github.amrjlg.function.ByteToIntFunction;
 import io.github.amrjlg.function.ByteToLongFunction;
+import io.github.amrjlg.function.ByteToShortFunction;
 import io.github.amrjlg.function.ByteUnaryOperator;
 import io.github.amrjlg.function.ObjByteConsumer;
 import io.github.amrjlg.stream.ByteStream;
@@ -35,6 +36,7 @@ import io.github.amrjlg.stream.DoubleStream;
 import io.github.amrjlg.stream.FloatStream;
 import io.github.amrjlg.stream.IntStream;
 import io.github.amrjlg.stream.LongStream;
+import io.github.amrjlg.stream.ShortStream;
 import io.github.amrjlg.stream.Sink;
 import io.github.amrjlg.stream.Stream;
 import io.github.amrjlg.stream.StreamOpFlag;
@@ -166,13 +168,28 @@ public abstract class BytePipeline<Input>
 
     @Override
     public CharStream mapToChar(ByteToCharFunction mapper) {
-        return new CharPipeline.StateLessOp<Byte>(this,StreamShape.BYTE_VALUE,NOT_SORTED_AND_NOT_DISTINCT) {
+        return new CharPipeline.StateLessOp<Byte>(this, StreamShape.BYTE_VALUE, NOT_SORTED_AND_NOT_DISTINCT) {
             @Override
             public Sink<Byte> opWrapSink(int flags, Sink<Character> sink) {
                 return new Sink.ChainedByte<Character>(sink) {
                     @Override
                     public void accept(byte value) {
                         downstream.accept(mapper.applyAsChar(value));
+                    }
+                };
+            }
+        };
+    }
+
+    @Override
+    public ShortStream mapToShort(ByteToShortFunction mapper) {
+        return new ShortPipeline.StatelessOp<>(this, StreamShape.BYTE_VALUE, NOT_SORTED_AND_NOT_DISTINCT) {
+            @Override
+            public Sink<Byte> opWrapSink(int flags, Sink<Short> sink) {
+                return new Sink.ChainedByte<>(sink) {
+                    @Override
+                    public void accept(byte value) {
+                        downstream.accept(mapper.applyAsShort(value));
                     }
                 };
             }
