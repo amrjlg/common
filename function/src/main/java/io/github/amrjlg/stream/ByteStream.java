@@ -26,6 +26,7 @@ import io.github.amrjlg.function.ByteToDoubleFunction;
 import io.github.amrjlg.function.ByteToFloatFunction;
 import io.github.amrjlg.function.ByteToIntFunction;
 import io.github.amrjlg.function.ByteToLongFunction;
+import io.github.amrjlg.function.ByteToShortFunction;
 import io.github.amrjlg.function.ByteUnaryOperator;
 import io.github.amrjlg.function.ObjByteConsumer;
 import io.github.amrjlg.stream.spliterator.PrimitiveIterator;
@@ -46,6 +47,8 @@ public interface ByteStream extends BaseStream<Byte, ByteStream> {
     <U> Stream<U> mapToObj(ByteFunction<? extends U> mapper);
 
     CharStream mapToChar(ByteToCharFunction mapper);
+
+    ShortStream mapToShort(ByteToShortFunction mapper);
 
     IntStream mapToInt(ByteToIntFunction mapper);
 
