@@ -22,5 +22,5 @@ package io.github.amrjlg.function;
  **/
 public interface CharPredicate {
 
-    boolean test(char c);
+    boolean test(char value);
 }

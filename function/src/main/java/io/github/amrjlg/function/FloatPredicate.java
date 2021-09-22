@@ -21,5 +21,5 @@ package io.github.amrjlg.function;
  * @author amrjlg
  **/
 public interface FloatPredicate {
-    boolean test(float f);
+    boolean test(float value);
 }

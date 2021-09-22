@@ -21,5 +21,5 @@ package io.github.amrjlg.function;
  * @author amrjlg
  **/
 public interface ShortPredicate {
-    boolean test(short s);
+    boolean test(short value);
 }

@@ -21,5 +21,5 @@ package io.github.amrjlg.function;
  * @author amrjlg
  **/
 public interface BytePredicate {
-    boolean test(byte b);
+    boolean test(byte value);
 }

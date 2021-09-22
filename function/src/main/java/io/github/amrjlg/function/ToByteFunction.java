@@ -25,5 +25,5 @@ package io.github.amrjlg.function;
 @FunctionalInterface
 public interface ToByteFunction<T> {
 
-    byte applyAsByte(T t);
+    byte applyAsByte(T value);
 }

@@ -21,5 +21,5 @@ package io.github.amrjlg.function;
  * @author amrjlg
  **/
 public interface ShortToCharFunction {
-    char applyAsInt(short operand);
+    char applyAsInt(short value);
 }

@@ -23,7 +23,7 @@ package io.github.amrjlg.function;
  * @author amrjlg
  **/
 @FunctionalInterface
-public interface ToLongFunction<T> /*extends java.util.function.ToLongFunction<T>*/ {
+public interface ToLongFunction<T>  {
 
-    long applyAsLong(T t);
+    long applyAsLong(T value);
 }

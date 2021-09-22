@@ -21,5 +21,5 @@ package io.github.amrjlg.function;
  * @author amrjlg
  **/
 public interface CharFunction<R> {
-    R apply(char c);
+    R apply(char value);
 }

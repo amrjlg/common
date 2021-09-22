@@ -23,7 +23,7 @@ package io.github.amrjlg.function;
  * @author amrjlg
  **/
 @FunctionalInterface
-public interface ToDoubleFunction<T> /*extends java.util.function.ToDoubleFunction<T>*/ {
+public interface ToDoubleFunction<T> {
 
-    double applyAsDouble(T t);
+    double applyAsDouble(T value);
 }

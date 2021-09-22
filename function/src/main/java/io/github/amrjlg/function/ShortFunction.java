@@ -21,5 +21,5 @@ package io.github.amrjlg.function;
  * @author amrjlg
  **/
 public interface ShortFunction<R> {
-    R apply(short s);
+    R apply(short value);
 }

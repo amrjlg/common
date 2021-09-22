@@ -26,7 +26,7 @@ import java.util.Objects;
 @FunctionalInterface
 public interface BooleanConsumer {
 
-    void accept(boolean c);
+    void accept(boolean value);
 
     default BooleanConsumer andThen(BooleanConsumer after) {
         Objects.requireNonNull(after);

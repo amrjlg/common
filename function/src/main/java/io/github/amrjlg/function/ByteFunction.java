@@ -22,6 +22,6 @@ package io.github.amrjlg.function;
  **/
 public interface ByteFunction<R> {
 
-    R apply(byte t);
+    R apply(byte value);
 
 }

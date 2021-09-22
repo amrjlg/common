@@ -25,5 +25,5 @@ package io.github.amrjlg.function;
 @FunctionalInterface
 public interface ToFloatFunction<T> {
 
-    float applyAsFloat(T t);
+    float applyAsFloat(T value);
 }

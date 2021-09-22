@@ -21,5 +21,5 @@ package io.github.amrjlg.function;
  * @author amrjlg
  **/
 public interface CharToIntFunction {
-    int applyAsInt(char c);
+    int applyAsInt(char value);
 }
