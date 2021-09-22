@@ -18,7 +18,9 @@
 package io.github.amrjlg.stream.operations;
 
 import io.github.amrjlg.function.ByteBinaryOperator;
+import io.github.amrjlg.function.CharBinaryOperator;
 import io.github.amrjlg.function.ObjByteConsumer;
+import io.github.amrjlg.function.ObjCharConsumer;
 import io.github.amrjlg.stream.Sink;
 import io.github.amrjlg.stream.StreamOpFlag;
 import io.github.amrjlg.stream.StreamShape;
@@ -29,7 +31,7 @@ import io.github.amrjlg.stream.sink.ReducingCollectorSink;
 import io.github.amrjlg.stream.sink.ReducingOptionalSink;
 import io.github.amrjlg.stream.sink.ReducingSink;
 import io.github.amrjlg.util.OptionalByte;
-import javafx.scene.control.Skin;
+import io.github.amrjlg.util.OptionalChar;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -192,6 +194,104 @@ public class ReduceOps {
         }
 
         return new ReduceOp<Byte, R, Adapter>(StreamShape.BYTE_VALUE) {
+            @Override
+            public Adapter makeSink() {
+                return new Adapter();
+            }
+        };
+    }
+
+    public static TerminalOp<Character, Character> makeChar(char identity, CharBinaryOperator op) {
+        class Adapter implements AccumulatingSink<Character, Character, Adapter>, Sink.OfChar {
+            char state;
+
+            @Override
+            public void begin(long size) {
+                state = identity;
+            }
+
+            @Override
+            public void accept(char value) {
+                state = op.applyAsChar(state, value);
+            }
+
+            @Override
+            public void combine(Adapter other) {
+                accept(other.state);
+            }
+
+            @Override
+            public Character get() {
+                return state;
+            }
+        }
+
+        return new ReduceOp<Character, Character, Adapter>(StreamShape.CHAR_VALUE) {
+            @Override
+            public Adapter makeSink() {
+                return new Adapter();
+            }
+        };
+    }
+
+    public static TerminalOp<Character, OptionalChar> makeChar(CharBinaryOperator operator) {
+        class Adapter implements AccumulatingSink<Character, OptionalChar, Adapter>, Sink.OfChar {
+            boolean empty;
+            char state;
+
+            @Override
+            public void begin(long size) {
+                empty = true;
+            }
+
+            @Override
+            public void accept(char value) {
+                if (empty) {
+                    state = value;
+                } else {
+                    state = operator.applyAsChar(state, value);
+                }
+            }
+
+            @Override
+            public void combine(Adapter other) {
+                if (!other.empty) {
+                    accept(other.state);
+                }
+            }
+
+            @Override
+            public OptionalChar get() {
+                return empty ? OptionalChar.empty() : OptionalChar.of(state);
+            }
+        }
+        return new ReduceOp<Character, OptionalChar, Adapter>(StreamShape.CHAR_VALUE) {
+            @Override
+            public Adapter makeSink() {
+                return new Adapter();
+            }
+        };
+    }
+
+    public static <R> TerminalOp<Character, R> makeChar(Supplier<R> supplier, ObjCharConsumer<R> accumulator, BinaryOperator<R> combiner) {
+        class Adapter extends Box<R> implements AccumulatingSink<Character, R, Adapter>, Sink.OfChar {
+
+            @Override
+            public void begin(long size) {
+                state = supplier.get();
+            }
+
+            @Override
+            public void accept(char value) {
+                accumulator.accept(state, value);
+            }
+
+            @Override
+            public void combine(Adapter other) {
+                state = combiner.apply(state, other.state);
+            }
+        }
+        return new ReduceOp<Character, R, Adapter>(StreamShape.CHAR_VALUE) {
             @Override
             public Adapter makeSink() {
                 return new Adapter();
