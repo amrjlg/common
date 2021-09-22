@@ -32,12 +32,40 @@ import java.util.function.LongConsumer;
 /**
  * @author amrjlg
  **/
-public interface Spliterator<T> extends java.util.Spliterator<T> {
+public interface Spliterator<T>  {
+    /**
+     * define some flag for characteristics
+     * 00000000 00000001 -> 0x00000001 DISTINCT
+     * 00000000 00000100 -> 0x00000004 SORTED
+     * 00000000 00010000 -> 0x00000010 ORDERED
+     * 00000000 01000000 -> 0x00000040 SIZED
+     * 00000001 00000000 -> 0x00000100 NONNULL
+     * 00000100 00000000 -> 0x00000400 IMMUTABLE
+     * 00010000 00000000 -> 0x00001000 CONCURRENT
+     * 01000000 00000000 -> 0x00004000 SUBSIZED
+     */
+    int DISTINCT = 0x00000001;
+
+    int SORTED = 0x00000004;
+
+    int ORDERED = 0x00000010;
+
+    int SIZED = 0x00000040;
+
+    int NONNULL = 0x00000100;
+
+    int IMMUTABLE = 0x00000400;
+
+    int CONCURRENT = 0x00001000;
+
+    int SUBSIZED = 0x00004000;
+
 
     boolean tryAdvance(Consumer<? super T> consumer);
 
     default void forEachRemaining(Consumer<? super T> consumer) {
-        do { } while (tryAdvance(consumer));
+        do {
+        } while (tryAdvance(consumer));
     }
 
     Spliterator<T> trySplit();
@@ -61,17 +89,16 @@ public interface Spliterator<T> extends java.util.Spliterator<T> {
 
 
     interface OfPrimitive<T, PrimitiveConsumer, PrimitiveSpliterator extends OfPrimitive<T, PrimitiveConsumer, PrimitiveSpliterator>>
-            extends Spliterator<T>, java.util.Spliterator.OfPrimitive<T, PrimitiveConsumer, PrimitiveSpliterator> {
+            extends Spliterator<T> {
 
         @Override
         PrimitiveSpliterator trySplit();
 
-        @Override
         boolean tryAdvance(PrimitiveConsumer action);
 
-        @Override
         default void forEachRemaining(PrimitiveConsumer action) {
-            do { } while (tryAdvance(action));
+            do {
+            } while (tryAdvance(action));
         }
     }
 
