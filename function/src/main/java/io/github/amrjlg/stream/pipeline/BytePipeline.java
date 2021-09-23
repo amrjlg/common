@@ -183,10 +183,10 @@ public abstract class BytePipeline<Input>
 
     @Override
     public ShortStream mapToShort(ByteToShortFunction mapper) {
-        return new ShortPipeline.StatelessOp<>(this, StreamShape.BYTE_VALUE, NOT_SORTED_AND_NOT_DISTINCT) {
+        return new ShortPipeline.StatelessOp<Byte>(this, StreamShape.BYTE_VALUE, NOT_SORTED_AND_NOT_DISTINCT) {
             @Override
             public Sink<Byte> opWrapSink(int flags, Sink<Short> sink) {
-                return new Sink.ChainedByte<>(sink) {
+                return new Sink.ChainedByte<Short>(sink) {
                     @Override
                     public void accept(byte value) {
                         downstream.accept(mapper.applyAsShort(value));
@@ -362,16 +362,11 @@ public abstract class BytePipeline<Input>
 
     @Override
     public OptionalDouble average() {
-        Supplier<long[]> supplier = () -> new long[2];
         ObjByteConsumer<long[]> consumer = ((longs, value) -> {
             longs[0]++;
             longs[1] += value;
         });
-        BiConsumer<long[], long[]> combiner = (l, r) -> {
-            l[0] += r[0];
-            l[1] += r[1];
-        };
-        long[] avg = collect(supplier, consumer, combiner);
+        long[] avg = collect(averageSupplier(), consumer, averageCombiner());
         return avg[0] > 0
                 ? OptionalDouble.of((double) avg[1] / avg[0])
                 : OptionalDouble.empty();
