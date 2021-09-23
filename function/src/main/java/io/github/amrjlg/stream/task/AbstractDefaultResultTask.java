@@ -25,19 +25,19 @@ import java.util.concurrent.atomic.AtomicReference;
 /**
  * @author amrjlg
  **/
-public abstract class AbstractShortCircuitTask<Input, Output, Result, Task extends AbstractShortCircuitTask<Input, Output, Result, Task>>
+public abstract class AbstractDefaultResultTask<Input, Output, Result, Task extends AbstractDefaultResultTask<Input, Output, Result, Task>>
         extends AbstractTask<Input, Output, Result, Task> {
 
     protected final AtomicReference<Result> sharedResult;
 
     protected volatile boolean canceled;
 
-    public AbstractShortCircuitTask(PipelineHelper<Output> helper, Spliterator<Input> spliterator) {
+    public AbstractDefaultResultTask(PipelineHelper<Output> helper, Spliterator<Input> spliterator) {
         super(helper, spliterator);
         sharedResult = new AtomicReference<>(null);
     }
 
-    public AbstractShortCircuitTask(Task parent, Spliterator<Input> spliterator) {
+    public AbstractDefaultResultTask(Task parent, Spliterator<Input> spliterator) {
         super(parent, spliterator);
         sharedResult = parent.sharedResult;
     }
@@ -62,6 +62,16 @@ public abstract class AbstractShortCircuitTask<Input, Output, Result, Task exten
     @Override
     public Result getRawResult() {
         return getLocalResult();
+    }
+
+    @Override
+    public Result getLocalResult() {
+        if (isRoot()) {
+            Result result = sharedResult.get();
+            return (result == null) ? getEmptyResult() : result;
+        } else {
+            return super.getLocalResult();
+        }
     }
 
     protected void cancel() {
@@ -116,6 +126,7 @@ public abstract class AbstractShortCircuitTask<Input, Output, Result, Task exten
         task.setLocalResult(result);
         task.tryComplete();
     }
+
     @SuppressWarnings("unchecked")
     protected void cancelLaterNodes() {
         Task node = (Task) this;
