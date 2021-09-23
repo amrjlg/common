@@ -21,6 +21,8 @@ import io.github.amrjlg.function.ByteBinaryOperator;
 import io.github.amrjlg.function.CharBinaryOperator;
 import io.github.amrjlg.function.ObjByteConsumer;
 import io.github.amrjlg.function.ObjCharConsumer;
+import io.github.amrjlg.function.ObjShortConsumer;
+import io.github.amrjlg.function.ShortBinaryOperator;
 import io.github.amrjlg.stream.Sink;
 import io.github.amrjlg.stream.StreamOpFlag;
 import io.github.amrjlg.stream.StreamShape;
@@ -32,6 +34,7 @@ import io.github.amrjlg.stream.sink.ReducingOptionalSink;
 import io.github.amrjlg.stream.sink.ReducingSink;
 import io.github.amrjlg.util.OptionalByte;
 import io.github.amrjlg.util.OptionalChar;
+import io.github.amrjlg.util.OptionalShort;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -292,6 +295,103 @@ public class ReduceOps {
             }
         }
         return new ReduceOp<Character, R, Adapter>(StreamShape.CHAR_VALUE) {
+            @Override
+            public Adapter makeSink() {
+                return new Adapter();
+            }
+        };
+    }
+
+    public static TerminalOp<Short, OptionalShort> makeShort(ShortBinaryOperator op) {
+        class Adapter implements AccumulatingSink<Short, OptionalShort, Adapter>, Sink.OfShort {
+            short state;
+            boolean empty;
+
+            @Override
+            public void begin(long size) {
+                empty = true;
+            }
+
+            @Override
+            public void accept(short value) {
+                if (empty) {
+                    state = value;
+                } else {
+                    state = op.applyAsShort(state, value);
+                }
+            }
+
+            @Override
+            public void combine(Adapter other) {
+                if (!other.empty) {
+                    accept(other.state);
+                }
+            }
+
+            @Override
+            public OptionalShort get() {
+                return empty ? OptionalShort.empty() : OptionalShort.of(state);
+            }
+        }
+        return new ReduceOp<Short, OptionalShort, Adapter>(StreamShape.SHORT_VALUE) {
+            @Override
+            public Adapter makeSink() {
+                return new Adapter();
+            }
+        };
+    }
+
+    public static TerminalOp<Short, Short> makeShort(short identity, ShortBinaryOperator op) {
+        class Adapter implements AccumulatingSink<Short, Short, Adapter>, Sink.OfShort {
+            short state;
+
+            @Override
+            public void begin(long size) {
+                state = identity;
+            }
+
+            @Override
+            public void accept(short value) {
+                state = op.applyAsShort(state, value);
+            }
+
+            @Override
+            public void combine(Adapter other) {
+                accept(other.state);
+            }
+
+            @Override
+            public Short get() {
+                return state;
+            }
+        }
+        return new ReduceOp<Short, Short, Adapter>(StreamShape.SHORT_VALUE) {
+            @Override
+            public Adapter makeSink() {
+                return new Adapter();
+            }
+        };
+    }
+
+    public static <R> TerminalOp<Short, R> makeShort(Supplier<R> supplier, ObjShortConsumer<R> accumulator, BinaryOperator<R> combine) {
+        class Adapter extends Box<R> implements AccumulatingSink<Short, R, Adapter>, Sink.OfShort {
+
+            @Override
+            public void begin(long size) {
+                state = supplier.get();
+            }
+
+            @Override
+            public void accept(short value) {
+                accumulator.accept(state, value);
+            }
+
+            @Override
+            public void combine(Adapter other) {
+                state = combine.apply(state, other.state);
+            }
+        }
+        return new ReduceOp<Short, R, Adapter>(StreamShape.SHORT_VALUE) {
             @Override
             public Adapter makeSink() {
                 return new Adapter();
