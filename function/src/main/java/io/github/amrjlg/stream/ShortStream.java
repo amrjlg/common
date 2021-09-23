@@ -34,6 +34,7 @@ import io.github.amrjlg.stream.spliterator.Spliterator;
 import io.github.amrjlg.util.OptionalShort;
 import io.github.amrjlg.util.ShortSummaryStatistics;
 
+import java.util.OptionalDouble;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
@@ -89,7 +90,7 @@ public interface ShortStream extends BaseStream<Short, ShortStream> {
 
     long count();
 
-    OptionalShort average();
+    OptionalDouble average();
 
     ShortSummaryStatistics summaryStatistics();
 
