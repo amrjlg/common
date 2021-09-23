@@ -60,9 +60,14 @@ public class OptionalFloat {
         if (present) {
             consumer.accept(value);
         }
-        throw new NoSuchElementException("No value present");
     }
 
+    public float getAsFloat() {
+        if (present) {
+            return value;
+        }
+        throw new NoSuchElementException("No value present");
+    }
     public float orElse(float value) {
         if (present) {
             return this.value;

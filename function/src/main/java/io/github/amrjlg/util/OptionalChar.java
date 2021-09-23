@@ -59,6 +59,12 @@ public class OptionalChar {
         if (present) {
             consumer.accept(value);
         }
+    }
+
+    public char getAsChar() {
+        if (present) {
+            return value;
+        }
         throw new NoSuchElementException("No value present");
     }
 
