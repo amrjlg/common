@@ -19,6 +19,7 @@ package io.github.amrjlg.stream.operations;
 
 import io.github.amrjlg.stream.ByteStream;
 import io.github.amrjlg.stream.CharStream;
+import io.github.amrjlg.stream.IntStream;
 import io.github.amrjlg.stream.ShortStream;
 import io.github.amrjlg.stream.Sink;
 import io.github.amrjlg.stream.Stream;
@@ -26,6 +27,7 @@ import io.github.amrjlg.stream.StreamOpFlag;
 import io.github.amrjlg.stream.StreamShape;
 import io.github.amrjlg.stream.pipeline.BytePipeline;
 import io.github.amrjlg.stream.pipeline.CharPipeline;
+import io.github.amrjlg.stream.pipeline.IntPipeline;
 import io.github.amrjlg.stream.pipeline.ShortPipeline;
 import io.github.amrjlg.stream.spliterator.SliceSpliterator;
 import io.github.amrjlg.stream.spliterator.Spliterator;
@@ -366,10 +368,63 @@ public class SliceOps {
             public Sink<Short> opWrapSink(int flags, Sink<Short> sink) {
                 return new Sink.ChainedShort<Short>(sink) {
                     long s = skip;
-                    long l = limit;
+                    long l = limit >= 0 ? limit : Long.MAX_VALUE;
 
                     @Override
                     public void accept(short value) {
+                        if (s == 0) {
+                            if (l > 0) {
+                                l--;
+                                downstream.accept(value);
+                            }
+                        } else {
+                            s--;
+                        }
+                    }
+                };
+            }
+        };
+    }
+
+    public static <In> IntStream makeInt(AbstractPipeline<In, Integer, IntStream> upstream, long skip, long limit) {
+        return new IntPipeline.StatefulOp<Integer>(upstream, StreamShape.INT_VALUE, flags(limit)) {
+            @Override
+            protected <P_IN> Spliterator<Integer> opEvaluateParallelLazy(PipelineHelper<Integer> helper, Spliterator<P_IN> spliterator) {
+                long size = helper.exactOutputSizeIfKnown(spliterator);
+                if (size > 0 && spliterator.hasCharacteristics(Spliterator.SUBSIZED)) {
+                    return new SliceSpliterator.OfInt((Spliterator.OfInt) helper.wrapSpliterator(spliterator),
+                            skip, calcSliceFence(skip, limit));
+                } else if (!StreamOpFlag.SORTED.isKnown(helper.getStreamAndOpFlags())) {
+                    return unorderedSkipLimitSpliterator(helper.getSourceShape(),
+                            helper.wrapSpliterator(spliterator),
+                            skip, limit, size);
+                } else {
+                    return new SliceTask<>(this, helper, spliterator, Integer[]::new, skip, limit).invoke().spliterator();
+                }
+            }
+
+            @Override
+            protected <P_IN> Node<Integer> opEvaluateParallel(PipelineHelper<Integer> helper, Spliterator<P_IN> spliterator, IntFunction<Integer[]> generator) {
+                long size = helper.exactOutputSizeIfKnown(spliterator);
+                if (size > 0 && spliterator.hasCharacteristics(Spliterator.SUBSIZED)) {
+                    Spliterator<P_IN> spl = sliceSpliterator(helper.getSourceShape(), spliterator, skip, limit);
+                    return Nodes.collectInt(helper, spl, true);
+                } else if (!StreamOpFlag.SORTED.isKnown(helper.getStreamAndOpFlags())) {
+                    Spliterator<Integer> spl = unorderedSkipLimitSpliterator(helper.getSourceShape(), helper.wrapSpliterator(spliterator), skip, limit, size);
+                    return Nodes.collectInt(this, spl, true);
+                } else {
+                    return new SliceTask<>(this, helper, spliterator, generator, skip, limit).invoke();
+                }
+            }
+
+            @Override
+            public Sink<Integer> opWrapSink(int flags, Sink<Integer> sink) {
+                return new Sink.ChainedInt<Integer>(sink) {
+                    long s = skip;
+                    long l = limit >= 0 ? limit : Long.MAX_VALUE;
+
+                    @Override
+                    public void accept(int value) {
                         if (s == 0) {
                             if (l > 0) {
                                 l--;
