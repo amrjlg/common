@@ -28,6 +28,7 @@ import io.github.amrjlg.stream.node.NodeBuilder;
 import io.github.amrjlg.stream.spliterator.Spliterator;
 
 import java.util.Objects;
+import java.util.function.BiConsumer;
 import java.util.function.IntFunction;
 import java.util.function.Supplier;
 
@@ -178,6 +179,17 @@ public abstract class AbstractPipeline<Input, Output, Stream extends BaseStream<
         if (number < 0) {
             throw new IllegalArgumentException(Long.toString(number));
         }
+    }
+
+    public static Supplier<long[]> averageSupplier() {
+        return () -> new long[2];
+    }
+
+    public static BiConsumer<long[], long[]> averageCombiner() {
+        return (l, r) -> {
+            l[0] += r[0];
+            l[1] += r[1];
+        };
     }
 
     @Override
