@@ -33,7 +33,7 @@ import java.util.function.IntFunction;
  * @author amrjlg
  **/
 public class SliceTask<Input, Output>
-        extends AbstractShortCircuitTask<Input, Output, Node<Output>, SliceTask<Input, Output>> {
+        extends AbstractDefaultResultTask<Input, Output, Node<Output>, SliceTask<Input, Output>> {
     private final AbstractPipeline<Output, Output, ?> pipeline;
     private final IntFunction<Output[]> generator;
     private final long skip, limit;
