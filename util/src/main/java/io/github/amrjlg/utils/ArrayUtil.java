@@ -275,10 +275,45 @@ public class ArrayUtil {
         }
     }
 
-
     public static <T> void consumer(T[] ts, Consumer<T> consumer) {
         if (!empty(ts))
             Arrays.stream(ts).forEach(consumer);
+    }
+
+    public static int length(boolean[] array) {
+        return array == null ? 0 : array.length;
+    }
+
+    public static int length(byte[] array) {
+        return array == null ? 0 : array.length;
+    }
+
+    public static int length(short[] array) {
+        return array == null ? 0 : array.length;
+    }
+
+    public static int length(char[] array) {
+        return array == null ? 0 : array.length;
+    }
+
+    public static int length(int[] array) {
+        return array == null ? 0 : array.length;
+    }
+
+    public static int length(long[] array) {
+        return array == null ? 0 : array.length;
+    }
+
+    public static int length(float[] array) {
+        return array == null ? 0 : array.length;
+    }
+
+    public static int length(double[] array) {
+        return array == null ? 0 : array.length;
+    }
+
+    public static <T> int length(T[] array) {
+        return array == null ? 0 : array.length;
     }
 
     public static boolean empty(boolean[] array) {
@@ -318,7 +353,7 @@ public class ArrayUtil {
     }
 
     public static <T> int[] mapToInt(T[] source, ToIntFunction<T> function) {
-        int length = empty(source) ? 0 : source.length;
+        int length = length(source);
         int[] ints = new int[length];
         for (int i = 0; i < ints.length; i++) {
             ints[i] = function.applyAsInt(source[i]);
@@ -327,7 +362,7 @@ public class ArrayUtil {
     }
 
     public static int[] mapToInt(byte[] source, ByteToIntFunction function) {
-        int length = empty(source) ? 0 : source.length;
+        int length = length(source);
         int[] ints = new int[length];
         for (int i = 0; i < ints.length; i++) {
             ints[i] = function.applyAsInt(source[i]);
@@ -336,7 +371,7 @@ public class ArrayUtil {
     }
 
     public static int[] mapToInt(short[] source, ShortToIntFunction function) {
-        int length = empty(source) ? 0 : source.length;
+        int length = length(source);
         int[] ints = new int[length];
         for (int i = 0; i < ints.length; i++) {
             ints[i] = function.applyAsInt(source[i]);
@@ -345,7 +380,7 @@ public class ArrayUtil {
     }
 
     public static int[] mapToInt(char[] source, CharToIntFunction function) {
-        int length = empty(source) ? 0 : source.length;
+        int length = length(source);
         int[] ints = new int[length];
         for (int i = 0; i < ints.length; i++) {
             ints[i] = function.applyAsInt(source[i]);
@@ -355,7 +390,7 @@ public class ArrayUtil {
 
 
     public static <T> long[] mapToLong(T[] source, ToLongFunction<T> function) {
-        int length = empty(source) ? 0 : source.length;
+        int length = length(source);
         long[] ints = new long[length];
         for (int i = 0; i < ints.length; i++) {
             ints[i] = function.applyAsLong(source[i]);
@@ -364,7 +399,7 @@ public class ArrayUtil {
     }
 
     public static long[] mapToLong(byte[] source, ByteToLongFunction function) {
-        int length = empty(source) ? 0 : source.length;
+        int length = length(source);
         long[] ints = new long[length];
         for (int i = 0; i < ints.length; i++) {
             ints[i] = function.applyAsLong(source[i]);
@@ -373,7 +408,7 @@ public class ArrayUtil {
     }
 
     public static long[] mapToLong(short[] source, ShortToLongFunction function) {
-        int length = empty(source) ? 0 : source.length;
+        int length = length(source);
         long[] ints = new long[length];
         for (int i = 0; i < ints.length; i++) {
             ints[i] = function.applyAsLong(source[i]);
@@ -382,7 +417,7 @@ public class ArrayUtil {
     }
 
     public static long[] mapToLong(char[] source, CharToLongFunction function) {
-        int length = empty(source) ? 0 : source.length;
+        int length = length(source);
         long[] ints = new long[length];
         for (int i = 0; i < ints.length; i++) {
             ints[i] = function.applyAsLong(source[i]);
@@ -392,7 +427,7 @@ public class ArrayUtil {
 
 
     public static <T> double[] mapToDouble(T[] source, ToDoubleFunction<T> function) {
-        int length = empty(source) ? 0 : source.length;
+        int length = length(source);
         double[] ints = new double[length];
         for (int i = 0; i < ints.length; i++) {
             ints[i] = function.applyAsDouble(source[i]);
@@ -401,7 +436,7 @@ public class ArrayUtil {
     }
 
     public static double[] mapToDouble(byte[] source, ByteToDoubleFunction function) {
-        int length = empty(source) ? 0 : source.length;
+        int length = length(source);
         double[] ints = new double[length];
         for (int i = 0; i < ints.length; i++) {
             ints[i] = function.applyAsDouble(source[i]);
@@ -410,7 +445,7 @@ public class ArrayUtil {
     }
 
     public static double[] mapToDouble(short[] source, ShortToDoubleFunction function) {
-        int length = empty(source) ? 0 : source.length;
+        int length = length(source);
         double[] ints = new double[length];
         for (int i = 0; i < ints.length; i++) {
             ints[i] = function.applyAsDouble(source[i]);
@@ -419,7 +454,7 @@ public class ArrayUtil {
     }
 
     public static double[] mapToDouble(char[] source, CharToDoubleFunction function) {
-        int length = empty(source) ? 0 : source.length;
+        int length = length(source);
         double[] ints = new double[length];
         for (int i = 0; i < ints.length; i++) {
             ints[i] = function.applyAsDouble(source[i]);
