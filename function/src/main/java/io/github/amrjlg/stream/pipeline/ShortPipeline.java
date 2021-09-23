@@ -8,12 +8,14 @@ import io.github.amrjlg.function.ShortFunction;
 import io.github.amrjlg.function.ShortPredicate;
 import io.github.amrjlg.function.ShortToByteFunction;
 import io.github.amrjlg.function.ShortToCharFunction;
+import io.github.amrjlg.function.ShortToDoubleFunction;
 import io.github.amrjlg.function.ShortToFloatFunction;
 import io.github.amrjlg.function.ShortToIntFunction;
 import io.github.amrjlg.function.ShortToLongFunction;
 import io.github.amrjlg.function.ShortUnaryOperator;
 import io.github.amrjlg.stream.ByteStream;
 import io.github.amrjlg.stream.CharStream;
+import io.github.amrjlg.stream.DoubleStream;
 import io.github.amrjlg.stream.FloatStream;
 import io.github.amrjlg.stream.IntStream;
 import io.github.amrjlg.stream.LongStream;
@@ -144,6 +146,12 @@ public abstract class ShortPipeline<Input> extends AbstractPipeline<Input, Short
 
     @Override
     public FloatStream mapToFloat(ShortToFloatFunction mapper) {
+        // todo impl
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public DoubleStream mapToDouble(ShortToDoubleFunction mapper) {
         // todo impl
         throw new NotImplementedException();
     }

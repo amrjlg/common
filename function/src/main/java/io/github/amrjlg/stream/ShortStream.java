@@ -25,6 +25,7 @@ import io.github.amrjlg.function.ShortFunction;
 import io.github.amrjlg.function.ShortPredicate;
 import io.github.amrjlg.function.ShortToByteFunction;
 import io.github.amrjlg.function.ShortToCharFunction;
+import io.github.amrjlg.function.ShortToDoubleFunction;
 import io.github.amrjlg.function.ShortToFloatFunction;
 import io.github.amrjlg.function.ShortToIntFunction;
 import io.github.amrjlg.function.ShortToLongFunction;
@@ -55,6 +56,8 @@ public interface ShortStream extends BaseStream<Short, ShortStream> {
     LongStream mapToLong(ShortToLongFunction mapper);
 
     FloatStream mapToFloat(ShortToFloatFunction mapper);
+
+    DoubleStream mapToDouble(ShortToDoubleFunction mapper);
 
     ShortStream flatMap(ShortFunction<? extends ShortStream> mapper);
 
