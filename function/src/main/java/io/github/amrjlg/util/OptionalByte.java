@@ -59,6 +59,13 @@ public class OptionalByte {
         if (present) {
             consumer.accept(value);
         }
+
+    }
+
+    public byte getAsByte() {
+        if (present) {
+            return value;
+        }
         throw new NoSuchElementException("No value present");
     }
 
