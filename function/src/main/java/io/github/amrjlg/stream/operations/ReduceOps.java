@@ -38,9 +38,12 @@ import io.github.amrjlg.util.OptionalShort;
 
 import java.util.Objects;
 import java.util.Optional;
+import java.util.OptionalInt;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BinaryOperator;
+import java.util.function.IntBinaryOperator;
+import java.util.function.ObjIntConsumer;
 import java.util.function.Supplier;
 import java.util.stream.Collector;
 
@@ -392,6 +395,104 @@ public class ReduceOps {
             }
         }
         return new ReduceOp<Short, R, Adapter>(StreamShape.SHORT_VALUE) {
+            @Override
+            public Adapter makeSink() {
+                return new Adapter();
+            }
+        };
+    }
+
+    public static TerminalOp<Integer, OptionalInt> makeInt(IntBinaryOperator op) {
+        class Adapter implements AccumulatingSink<Integer, OptionalInt, Adapter>, Sink.OfInt {
+            boolean empty;
+            int state;
+
+            @Override
+            public void begin(long size) {
+                empty = true;
+            }
+
+            @Override
+            public void accept(int value) {
+                if (empty) {
+                    state = value;
+                } else {
+                    state = op.applyAsInt(state, value);
+                }
+            }
+
+            @Override
+            public void combine(Adapter other) {
+                if (!other.empty) {
+                    accept(other.state);
+                }
+            }
+
+            @Override
+            public OptionalInt get() {
+                return empty ? OptionalInt.empty() : OptionalInt.of(state);
+            }
+        }
+        return new ReduceOp<Integer, OptionalInt, Adapter>(StreamShape.INT_VALUE) {
+            @Override
+            public Adapter makeSink() {
+                return new Adapter();
+            }
+        };
+    }
+
+    public static TerminalOp<Integer, Integer> makeInt(int identity, IntBinaryOperator op) {
+        class Adapter implements AccumulatingSink<Integer, Integer, Adapter>, Sink.OfInt {
+            int state;
+
+            @Override
+            public void begin(long size) {
+                state = identity;
+            }
+
+            @Override
+            public void accept(int value) {
+                state = op.applyAsInt(state, value);
+            }
+
+            @Override
+            public void combine(Adapter other) {
+                accept(other.state);
+            }
+
+            @Override
+            public Integer get() {
+                return state;
+            }
+        }
+        return new ReduceOp<Integer, Integer, Adapter>(StreamShape.INT_VALUE) {
+            @Override
+            public Adapter makeSink() {
+                return new Adapter();
+            }
+        };
+    }
+
+    public static <R> TerminalOp<Integer, R> makeInt(Supplier<R> supplier, ObjIntConsumer<R> accumulator, BinaryOperator<R> combiner) {
+
+        class Adapter extends Box<R> implements AccumulatingSink<Integer, R, Adapter>, Sink.OfInt {
+
+            @Override
+            public void begin(long size) {
+                state = supplier.get();
+            }
+
+            @Override
+            public void accept(int value) {
+                accumulator.accept(state, value);
+            }
+
+            @Override
+            public void combine(Adapter other) {
+                combiner.apply(state, other.state);
+            }
+        }
+        return new ReduceOp<Integer, R, Adapter>(StreamShape.INT_VALUE) {
             @Override
             public Adapter makeSink() {
                 return new Adapter();
