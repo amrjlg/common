@@ -49,22 +49,22 @@ public class FindOps {
     }
 
     public static TerminalOp<Character, OptionalChar> makeChar(boolean findFirst) {
-        return new FindOperation<>(StreamShape.BYTE_VALUE, findFirst, OptionalChar.empty(), OptionalChar::isPresent, FindTerminalSink.OfChar::new);
+        return new FindOperation<>(StreamShape.CHAR_VALUE, findFirst, OptionalChar.empty(), OptionalChar::isPresent, FindTerminalSink.OfChar::new);
     }
 
     public static TerminalOp<Integer, OptionalInt> makeInt(boolean findFirst) {
-        return new FindOperation<>(StreamShape.BYTE_VALUE, findFirst, OptionalInt.empty(), OptionalInt::isPresent, FindTerminalSink.OfInt::new);
+        return new FindOperation<>(StreamShape.INT_VALUE, findFirst, OptionalInt.empty(), OptionalInt::isPresent, FindTerminalSink.OfInt::new);
     }
 
     public static TerminalOp<Long, OptionalLong> makeLong(boolean findFirst) {
-        return new FindOperation<>(StreamShape.BYTE_VALUE, findFirst, OptionalLong.empty(), OptionalLong::isPresent, FindTerminalSink.OfLong::new);
+        return new FindOperation<>(StreamShape.LONG_VALUE, findFirst, OptionalLong.empty(), OptionalLong::isPresent, FindTerminalSink.OfLong::new);
     }
 
     public static TerminalOp<Float, OptionalFloat> makeFloat(boolean findFirst) {
-        return new FindOperation<>(StreamShape.BYTE_VALUE, findFirst, OptionalFloat.empty(), OptionalFloat::isPresent, FindTerminalSink.OfFloat::new);
+        return new FindOperation<>(StreamShape.FLOAT_VALUE, findFirst, OptionalFloat.empty(), OptionalFloat::isPresent, FindTerminalSink.OfFloat::new);
     }
 
     public static TerminalOp<Double, OptionalDouble> makeDouble(boolean findFirst) {
-        return new FindOperation<>(StreamShape.BYTE_VALUE, findFirst, OptionalDouble.empty(), OptionalDouble::isPresent, FindTerminalSink.OfDouble::new);
+        return new FindOperation<>(StreamShape.DOUBLE_VALUE, findFirst, OptionalDouble.empty(), OptionalDouble::isPresent, FindTerminalSink.OfDouble::new);
     }
 }
