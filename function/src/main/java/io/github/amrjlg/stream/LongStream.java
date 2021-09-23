@@ -109,8 +109,6 @@ public interface LongStream extends BaseStream<Long, LongStream> {
 
     OptionalLong findAny();
 
-    DoubleStream asDoubleStream();
-
     Stream<Long> boxed();
 
     LongStream sequential();
