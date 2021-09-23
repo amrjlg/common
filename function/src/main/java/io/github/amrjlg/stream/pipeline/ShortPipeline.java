@@ -123,8 +123,17 @@ public abstract class ShortPipeline<Input> extends AbstractPipeline<Input, Short
 
     @Override
     public IntStream mapToInt(ShortToIntFunction mapper) {
-        // todo impl
-        throw new NotImplementedException();
+        return new IntPipeline.StatelessOp<Short>(this, StreamShape.SHORT_VALUE, NOT_SORTED_AND_NOT_DISTINCT) {
+            @Override
+            public Sink<Short> opWrapSink(int flags, Sink<Integer> sink) {
+                return new Sink.ChainedShort<Integer>(sink) {
+                    @Override
+                    public void accept(short value) {
+                        downstream.accept(mapper.applyAsInt(value));
+                    }
+                };
+            }
+        };
     }
 
     @Override
@@ -380,7 +389,7 @@ public abstract class ShortPipeline<Input> extends AbstractPipeline<Input, Short
 
     @Override
     public Spliterator.OfShort spliterator() {
-        return null;
+        return toShort(super.spliterator());
     }
 
     protected static Spliterator.OfShort toShort(Spliterator<Short> spliterator) {
