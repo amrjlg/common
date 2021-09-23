@@ -20,10 +20,6 @@ package io.github.amrjlg.utils;
 import org.junit.jupiter.api.Test;
 
 import java.util.function.Function;
-import java.util.function.IntFunction;
-import java.util.function.ToIntFunction;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author amrjlg
@@ -59,7 +55,7 @@ class ArrayUtilTest {
     @Test
     void empty() {
         assert !ArrayUtil.empty(ArrayUtil.array(1));
-        assert ArrayUtil.emptyArray(ArrayUtil.arrays());
+        assert ArrayUtil.empty(ArrayUtil.arrays());
     }
 
 
