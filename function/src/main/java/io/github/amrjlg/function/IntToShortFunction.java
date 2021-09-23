@@ -24,5 +24,5 @@ package io.github.amrjlg.function;
  **/
 @FunctionalInterface
 public interface IntToShortFunction {
-    byte applyAsByte(short value);
+    short applyAsShort(int value);
 }

@@ -24,5 +24,5 @@ package io.github.amrjlg.function;
  **/
 @FunctionalInterface
 public interface IntToCharFunction {
-    byte applyAsByte(char value);
+    char applyAsChar(int value);
 }
