@@ -27,7 +27,7 @@ import java.util.concurrent.CountedCompleter;
  * @author amrjlg
  **/
 public class FindTask<PipelineInput, PipelineOutput, Result>
-        extends AbstractShortCircuitTask<PipelineInput, PipelineOutput, Result, FindTask<PipelineInput, PipelineOutput, Result>> {
+        extends AbstractDefaultResultTask<PipelineInput, PipelineOutput, Result, FindTask<PipelineInput, PipelineOutput, Result>> {
 
     private final FindOperation<PipelineOutput, Result> operation;
 

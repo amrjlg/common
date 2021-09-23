@@ -24,7 +24,7 @@ import io.github.amrjlg.stream.pipeline.PipelineHelper;
 /**
  * @author amrjlg
  **/
-public class MatchTask<Input, Output> extends AbstractShortCircuitTask<Input, Output, Boolean, MatchTask<Input, Output>> {
+public class MatchTask<Input, Output> extends AbstractDefaultResultTask<Input, Output, Boolean, MatchTask<Input, Output>> {
 
     private final MatchOperation<Output> operation;
 
