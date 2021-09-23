@@ -109,10 +109,6 @@ public interface IntStream extends BaseStream<Integer, IntStream> {
 
     OptionalInt findAny();
 
-    LongStream asLongStream();
-
-    DoubleStream asDoubleStream();
-
     Stream<Integer> boxed();
 
     IntStream sequential();
