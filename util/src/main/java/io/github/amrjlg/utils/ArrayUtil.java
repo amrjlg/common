@@ -43,68 +43,68 @@ import java.util.function.ToLongFunction;
  * @author amrjlg
  */
 public class ArrayUtil {
-    public static boolean[] array(boolean... booleans) {
-        if (booleans == null) {
+    public static boolean[] array(boolean... elements) {
+        if (elements == null) {
             return new boolean[0];
         }
-        return booleans;
+        return elements;
     }
 
-    public static byte[] array(byte... bytes) {
-        if (bytes == null) {
+    public static byte[] array(byte... elements) {
+        if (elements == null) {
             return new byte[0];
         }
-        return bytes;
+        return elements;
     }
 
-    public static char[] array(char... chars) {
-        if (chars == null) {
+    public static char[] array(char... elements) {
+        if (elements == null) {
             return new char[0];
         }
-        return chars;
+        return elements;
     }
 
-    public static short[] array(short... shorts) {
-        if (shorts == null) {
+    public static short[] array(short... elements) {
+        if (elements == null) {
             return new short[0];
         }
-        return shorts;
+        return elements;
     }
 
 
-    public static int[] array(int... ints) {
-        if (ints == null) {
+    public static int[] array(int... elements) {
+        if (elements == null) {
             return new int[0];
         }
-        return ints;
+        return elements;
     }
 
-    public static long[] array(long... longs) {
-        if (longs == null) {
+    public static long[] array(long... elements) {
+        if (elements == null) {
             return new long[0];
         }
-        return longs;
+        return elements;
     }
 
-    public static float[] array(float... floats) {
-        if (floats == null) {
+    public static float[] array(float... elements) {
+        if (elements == null) {
             return new float[0];
         }
-        return floats;
+        return elements;
     }
 
-    public static double[] array(double... doubles) {
-        if (doubles == null) {
+    public static double[] array(double... elements) {
+        if (elements == null) {
             return new double[0];
         }
-        return doubles;
+        return elements;
     }
 
-    public static <T> T[] arrays(T... ts) {
-        if (ts == null) {
+    public static <T> T[] arrays(T... elements) {
+        if (elements == null) {
             return (T[]) new Object[0];
         }
-        return ts;
+        return elements;
     }
 
     public static void swap(byte[] array, int left, int right) {
@@ -277,48 +277,48 @@ public class ArrayUtil {
 
 
     public static <T> void consumer(T[] ts, Consumer<T> consumer) {
-        if (!emptyArray(ts))
+        if (!empty(ts))
             Arrays.stream(ts).forEach(consumer);
     }
 
-    public static boolean empty(boolean[] booleans) {
-        return booleans == null || booleans.length == 0;
+    public static boolean empty(boolean[] array) {
+        return array == null || array.length == 0;
     }
 
-    public static boolean empty(byte[] numbers) {
-        return numbers == null || numbers.length == 0;
+    public static boolean empty(byte[] array) {
+        return array == null || array.length == 0;
     }
 
-    public static boolean empty(char[] numbers) {
-        return numbers == null || numbers.length == 0;
+    public static boolean empty(char[] array) {
+        return array == null || array.length == 0;
     }
 
-    public static boolean empty(short[] numbers) {
-        return numbers == null || numbers.length == 0;
+    public static boolean empty(short[] array) {
+        return array == null || array.length == 0;
     }
 
-    public static boolean empty(int[] numbers) {
-        return numbers == null || numbers.length == 0;
+    public static boolean empty(int[] array) {
+        return array == null || array.length == 0;
     }
 
-    public static boolean empty(float[] numbers) {
-        return numbers == null || numbers.length == 0;
+    public static boolean empty(float[] array) {
+        return array == null || array.length == 0;
     }
 
-    public static boolean empty(double[] numbers) {
-        return numbers == null || numbers.length == 0;
+    public static boolean empty(double[] array) {
+        return array == null || array.length == 0;
     }
 
-    public static boolean empty(long[] numbers) {
-        return numbers == null || numbers.length == 0;
+    public static boolean empty(long[] array) {
+        return array == null || array.length == 0;
     }
 
-    public static <T> boolean emptyArray(T[] ts) {
-        return ts == null || ts.length == 0;
+    public static <T> boolean empty(T[] array) {
+        return array == null || array.length == 0;
     }
 
     public static <T> int[] mapToInt(T[] source, ToIntFunction<T> function) {
-        int length = emptyArray(source) ? 0 : source.length;
+        int length = empty(source) ? 0 : source.length;
         int[] ints = new int[length];
         for (int i = 0; i < ints.length; i++) {
             ints[i] = function.applyAsInt(source[i]);
@@ -355,7 +355,7 @@ public class ArrayUtil {
 
 
     public static <T> long[] mapToLong(T[] source, ToLongFunction<T> function) {
-        int length = emptyArray(source) ? 0 : source.length;
+        int length = empty(source) ? 0 : source.length;
         long[] ints = new long[length];
         for (int i = 0; i < ints.length; i++) {
             ints[i] = function.applyAsLong(source[i]);
@@ -392,7 +392,7 @@ public class ArrayUtil {
 
 
     public static <T> double[] mapToDouble(T[] source, ToDoubleFunction<T> function) {
-        int length = emptyArray(source) ? 0 : source.length;
+        int length = empty(source) ? 0 : source.length;
         double[] ints = new double[length];
         for (int i = 0; i < ints.length; i++) {
             ints[i] = function.applyAsDouble(source[i]);
