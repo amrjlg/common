@@ -26,5 +26,5 @@ public interface ShortBinaryOperator {
      * @param right the second operand
      * @return the operator result
      */
-    short applyAsDouble(short left, short right);
+    short applyAsShort(short left, short right);
 }
