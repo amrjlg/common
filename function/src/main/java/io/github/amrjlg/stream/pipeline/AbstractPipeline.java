@@ -43,19 +43,19 @@ public abstract class AbstractPipeline<Input, Output, Stream extends BaseStream<
     private static final String MSG_CONSUMED = "source already consumed or closed";
 
     protected static final int NOT_SORTED_AND_NOT_DISTINCT = StreamOpFlag.NOT_SORTED | StreamOpFlag.NOT_DISTINCT;
-
+    @SuppressWarnings("rawtypes")
     private final AbstractPipeline sourceStage;
-
+    @SuppressWarnings("rawtypes")
     private final AbstractPipeline previousStage;
 
     protected final int sourceOrOpFlags;
-
+    @SuppressWarnings("rawtypes")
     private AbstractPipeline nextStage;
 
     private int depth;
 
     private int combinedFlags;
-
+    @SuppressWarnings("rawtypes")
     private Spliterator sourceSpliterator;
 
     private Supplier<? extends Spliterator<?>> sourceSupplier;
@@ -203,18 +203,18 @@ public abstract class AbstractPipeline<Input, Output, Stream extends BaseStream<
     }
 
     @Override
-    public <Input> long exactOutputSizeIfKnown(Spliterator<Input> spliterator) {
+    public <T> long exactOutputSizeIfKnown(Spliterator<T> spliterator) {
         return StreamOpFlag.SIZED.isKnown(getStreamAndOpFlags()) ? spliterator.getExactSizeIfKnown() : -1;
     }
 
     @Override
-    public <Input, S extends Sink<Output>> S wrapAndCopyInto(S sink, Spliterator<Input> spliterator) {
+    public <T, S extends Sink<Output>> S wrapAndCopyInto(S sink, Spliterator<T> spliterator) {
         copyInto(wrapSink(Objects.requireNonNull(sink)), spliterator);
         return sink;
     }
 
     @Override
-    public <Input> void copyInto(Sink<Input> wrappedSink, Spliterator<Input> spliterator) {
+    public <T> void copyInto(Sink<T> wrappedSink, Spliterator<T> spliterator) {
         Objects.requireNonNull(wrappedSink);
         if (StreamOpFlag.SHORT_CIRCUIT.isKnown(getStreamAndOpFlags())) {
             copyIntoWithCancel(wrappedSink, spliterator);
@@ -226,7 +226,7 @@ public abstract class AbstractPipeline<Input, Output, Stream extends BaseStream<
     }
 
     @Override
-    @SuppressWarnings({"rawtypes"})
+    @SuppressWarnings({"rawtypes", "unchecked"})
     public <P_IN> void copyIntoWithCancel(Sink<P_IN> wrappedSink, Spliterator<P_IN> spliterator) {
         AbstractPipeline pipeline = AbstractPipeline.this;
         while (pipeline.depth > 0) {
@@ -309,7 +309,7 @@ public abstract class AbstractPipeline<Input, Output, Stream extends BaseStream<
 
     public abstract Sink<Input> opWrapSink(int flags, Sink<Output> sink);
 
-
+    @SuppressWarnings("unchecked")
     protected <P_IN> Spliterator<Output> opEvaluateParallelLazy(PipelineHelper<Output> helper,
                                                                 Spliterator<P_IN> spliterator) {
         return opEvaluateParallel(helper, spliterator, i -> (Output[]) new Object[i]).spliterator();
@@ -321,6 +321,7 @@ public abstract class AbstractPipeline<Input, Output, Stream extends BaseStream<
         throw new UnsupportedOperationException("Parallel evaluation is not supported");
     }
 
+    @SuppressWarnings("unchecked")
     final Node<Output> evaluateToArrayNode(IntFunction<Output[]> generator) {
         if (linkedOrConsumed)
             throw new IllegalStateException(MSG_STREAM_LINKED);
@@ -334,6 +335,7 @@ public abstract class AbstractPipeline<Input, Output, Stream extends BaseStream<
             // upstream slice and upstream operations will not be included
             // in this slice
             depth = 0;
+
             return opEvaluateParallel(previousStage, previousStage.sourceSpliterator(0), generator);
         } else {
             return evaluate(sourceSpliterator(0), true, generator);
@@ -364,12 +366,14 @@ public abstract class AbstractPipeline<Input, Output, Stream extends BaseStream<
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public Stream sequential() {
         sourceStage.parallel = false;
         return (Stream) this;
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public Stream parallel() {
         sourceStage.parallel = true;
         return (Stream) this;
