@@ -126,7 +126,7 @@ public abstract class CharPipeline<Input> extends AbstractPipeline<Input, Charac
 
     @Override
     public CharStream map(CharUnaryOperator mapper) {
-        return new StateLessOp<Character>(this, StreamShape.CHAR_VALUE, NOT_SORTED_AND_NOT_DISTINCT) {
+        return new StateLessOp<Character>(this, StreamShape.CHAR_VALUE, MAP_OP_FLAGS) {
             @Override
             public Sink<Character> opWrapSink(int flags, Sink<Character> sink) {
                 return new Sink.ChainedChar<Character>(sink) {
@@ -141,7 +141,7 @@ public abstract class CharPipeline<Input> extends AbstractPipeline<Input, Charac
 
     @Override
     public <U> Stream<U> mapToObj(CharFunction<? extends U> mapper) {
-        return new ReferencePipeline.StatelessOp<Character, U>(this, StreamShape.CHAR_VALUE, NOT_SORTED_AND_NOT_DISTINCT) {
+        return new ReferencePipeline.StatelessOp<Character, U>(this, StreamShape.CHAR_VALUE, MAP_OP_FLAGS) {
             @Override
             public Sink<Character> opWrapSink(int flags, Sink<U> sink) {
                 return new Sink.ChainedChar<U>(sink) {
@@ -156,7 +156,7 @@ public abstract class CharPipeline<Input> extends AbstractPipeline<Input, Charac
 
     @Override
     public ByteStream mapToByte(CharToByteFunction mapper) {
-        return new BytePipeline.StateLessOp<Character>(this, StreamShape.CHAR_VALUE, NOT_SORTED_AND_NOT_DISTINCT) {
+        return new BytePipeline.StateLessOp<Character>(this, StreamShape.CHAR_VALUE, MAP_OP_FLAGS) {
             @Override
             public Sink<Character> opWrapSink(int flags, Sink<Byte> sink) {
                 return new Sink.ChainedChar<Byte>(sink) {
@@ -195,7 +195,7 @@ public abstract class CharPipeline<Input> extends AbstractPipeline<Input, Charac
 
     @Override
     public CharStream flatMap(CharFunction<? extends CharStream> mapper) {
-        return new StateLessOp<Character>(this, StreamShape.CHAR_VALUE, NOT_SORTED_AND_NOT_DISTINCT) {
+        return new StateLessOp<Character>(this, StreamShape.CHAR_VALUE, FLAT_MAP_OP_FLAGS) {
             @Override
             public Sink<Character> opWrapSink(int flags, Sink<Character> sink) {
                 return new Sink.ChainedChar<Character>(sink) {
