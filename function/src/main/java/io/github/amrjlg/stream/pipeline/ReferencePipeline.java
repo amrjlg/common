@@ -227,8 +227,17 @@ public abstract class ReferencePipeline<Input, Output>
 
     @Override
     public IntStream mapToInt(ToIntFunction<? super Output> mapper) {
-        // TODO IMPL
-        throw new NotImplementedException();
+        return new IntPipeline.StatelessOp<Output>(this,StreamShape.REFERENCE,NOT_SORTED_AND_NOT_DISTINCT) {
+            @Override
+            public Sink<Output> opWrapSink(int flags, Sink<Integer> sink) {
+                return new Sink.ChainedReference<Output, Integer>(sink) {
+                    @Override
+                    public void accept(Output output) {
+                        downstream.accept(mapper.applyAsInt(output));
+                    }
+                };
+            }
+        };
     }
 
     @Override
@@ -250,7 +259,7 @@ public abstract class ReferencePipeline<Input, Output>
     }
 
     @Override
-    public <R> Stream<R> flatMap(Function<? super Output, ? extends java.util.stream.Stream<? extends R>> mapper) {
+    public <R> Stream<R> flatMap(Function<? super Output, ? extends Stream<? extends R>> mapper) {
         // TODO IMPL
         throw new NotImplementedException();
     }
