@@ -227,7 +227,7 @@ public abstract class ReferencePipeline<Input, Output>
 
     @Override
     public IntStream mapToInt(ToIntFunction<? super Output> mapper) {
-        return new IntPipeline.StatelessOp<Output>(this,StreamShape.REFERENCE,NOT_SORTED_AND_NOT_DISTINCT) {
+        return new IntPipeline.StatelessOp<Output>(this, StreamShape.REFERENCE, NOT_SORTED_AND_NOT_DISTINCT) {
             @Override
             public Sink<Output> opWrapSink(int flags, Sink<Integer> sink) {
                 return new Sink.ChainedReference<Output, Integer>(sink) {
@@ -260,8 +260,25 @@ public abstract class ReferencePipeline<Input, Output>
 
     @Override
     public <R> Stream<R> flatMap(Function<? super Output, ? extends Stream<? extends R>> mapper) {
-        // TODO IMPL
-        throw new NotImplementedException();
+        return new StatelessOp<Output, R>(this, StreamShape.REFERENCE, NOT_SORTED_AND_NOT_DISTINCT) {
+            @Override
+            public Sink<Output> opWrapSink(int flags, Sink<R> sink) {
+                return new Sink.ChainedReference<Output, R>(sink) {
+                    @Override
+                    public void begin(long size) {
+                        downstream.begin(-1);
+                    }
+
+                    @Override
+                    public void accept(Output output) {
+                        Stream<? extends R> stream = mapper.apply(output);
+                        if (Objects.nonNull(stream)) {
+                            stream.sequential().forEach(downstream);
+                        }
+                    }
+                };
+            }
+        };
     }
 
     @Override
