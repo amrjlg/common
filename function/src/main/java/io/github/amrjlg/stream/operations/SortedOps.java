@@ -20,6 +20,7 @@ package io.github.amrjlg.stream.operations;
 import io.github.amrjlg.stream.ByteStream;
 import io.github.amrjlg.stream.CharStream;
 import io.github.amrjlg.stream.IntStream;
+import io.github.amrjlg.stream.LongStream;
 import io.github.amrjlg.stream.ShortStream;
 import io.github.amrjlg.stream.Sink;
 import io.github.amrjlg.stream.Stream;
@@ -28,14 +29,17 @@ import io.github.amrjlg.stream.StreamShape;
 import io.github.amrjlg.stream.pipeline.BytePipeline;
 import io.github.amrjlg.stream.pipeline.CharPipeline;
 import io.github.amrjlg.stream.pipeline.IntPipeline;
+import io.github.amrjlg.stream.pipeline.LongPipeline;
 import io.github.amrjlg.stream.pipeline.ShortPipeline;
 import io.github.amrjlg.stream.sink.ByteSortingSink;
 import io.github.amrjlg.stream.sink.CharSortingSink;
 import io.github.amrjlg.stream.sink.IntSortingSink;
+import io.github.amrjlg.stream.sink.LongSortingSink;
 import io.github.amrjlg.stream.sink.ShortSortingSink;
 import io.github.amrjlg.stream.sink.SizedByteSortingSink;
 import io.github.amrjlg.stream.sink.SizedCharSortingSink;
 import io.github.amrjlg.stream.sink.SizedIntSortingSink;
+import io.github.amrjlg.stream.sink.SizedLongSortingSink;
 import io.github.amrjlg.stream.sink.SizedShortSortingSink;
 import io.github.amrjlg.stream.spliterator.Spliterator;
 import io.github.amrjlg.stream.node.Node;
@@ -80,6 +84,10 @@ public class SortedOps {
 
     public static <In> IntStream makeInt(AbstractPipeline<In, Integer, IntStream> upstream) {
         return new OfInt(upstream);
+    }
+
+    public static <Input> LongStream makeLong(AbstractPipeline<Input, Long, LongStream> upstream) {
+        return new OfLong(upstream);
     }
 
 
@@ -243,6 +251,34 @@ public class SortedOps {
             Node.OfInt node = (Node.OfInt) helper.evaluate(spliterator, true, generator);
 
             int[] array = node.asPrimitiveArray();
+            Arrays.parallelSort(array);
+            return Nodes.node(array);
+        }
+    }
+
+    private static class OfLong extends LongPipeline.StatefulOp<Long> {
+        public <Input> OfLong(AbstractPipeline<Input, Long, LongStream> upstream) {
+            super(upstream,StreamShape.LONG_VALUE,StreamOpFlag.IS_ORDERED | StreamOpFlag.IS_SORTED);
+        }
+
+        @Override
+        public Sink<Long> opWrapSink(int flags, Sink<Long> sink) {
+            if (StreamOpFlag.SORTED.isKnown(flags)){
+                return sink;
+            }else if (StreamOpFlag.SIZED.isKnown(flags)){
+                return new SizedLongSortingSink(sink);
+            }else {
+                return new LongSortingSink(sink);
+            }
+        }
+
+        @Override
+        protected <P_IN> Node<Long> opEvaluateParallel(PipelineHelper<Long> helper, Spliterator<P_IN> spliterator, IntFunction<Long[]> generator) {
+            if (StreamOpFlag.SORTED.isKnown(helper.getStreamAndOpFlags())){
+                return helper.evaluate(spliterator,false,generator);
+            }
+            Node.OfLong node = (Node.OfLong) helper.evaluate(spliterator,true,generator);
+            long[] array = node.asPrimitiveArray();
             Arrays.parallelSort(array);
             return Nodes.node(array);
         }
