@@ -226,12 +226,6 @@ public abstract class ReferencePipeline<Input, Output>
     }
 
     @Override
-    public FloatStream mapToFloat(ToFloatFunction<? super Output> mapper) {
-        // TODO IMPL
-        throw new NotImplementedException();
-    }
-
-    @Override
     public IntStream mapToInt(ToIntFunction<? super Output> mapper) {
         // TODO IMPL
         throw new NotImplementedException();
@@ -239,6 +233,12 @@ public abstract class ReferencePipeline<Input, Output>
 
     @Override
     public LongStream mapToLong(ToLongFunction<? super Output> mapper) {
+        // TODO IMPL
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public FloatStream mapToFloat(ToFloatFunction<? super Output> mapper) {
         // TODO IMPL
         throw new NotImplementedException();
     }

@@ -51,11 +51,11 @@ public interface Stream<T> extends BaseStream<T, Stream<T>> /*extends java.util.
 
     CharStream mapToChar(ToCharFunction<? super T> mapper);
 
-    FloatStream mapToFloat(ToFloatFunction<? super T> mapper);
-
     IntStream mapToInt(ToIntFunction<? super T> mapper);
 
     LongStream mapToLong(ToLongFunction<? super T> mapper);
+
+    FloatStream mapToFloat(ToFloatFunction<? super T> mapper);
 
     DoubleStream mapToDouble(ToDoubleFunction<? super T> mapper);
 
