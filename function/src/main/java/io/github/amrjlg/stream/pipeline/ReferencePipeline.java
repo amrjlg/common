@@ -296,7 +296,7 @@ public abstract class ReferencePipeline<Input, Output>
                     @Override
                     public void accept(Output output) {
                         Optional.ofNullable(mapper.apply(output))
-                                .ifPresent(s -> s.sequential().forEach((ByteConsumer) downstream::accept));
+                                .ifPresent(s -> s.sequential().forEach(downstream::accept));
                     }
                 };
             }
@@ -305,8 +305,23 @@ public abstract class ReferencePipeline<Input, Output>
 
     @Override
     public ShortStream flatMapToShort(Function<? super Output, ? extends ShortStream> mapper) {
-        // TODO IMPL
-        throw new NotImplementedException();
+        return new ShortPipeline.StatelessOp<Output>(this,StreamShape.REFERENCE,FLAT_MAP_OP_FLAGS) {
+            @Override
+            public Sink<Output> opWrapSink(int flags, Sink<Short> sink) {
+                return new Sink.ChainedReference<Output, Short>(sink) {
+                    @Override
+                    public void begin(long size) {
+                        downstream.begin(-1);
+                    }
+
+                    @Override
+                    public void accept(Output output) {
+                        Optional.ofNullable(mapper.apply(output))
+                                .ifPresent(s-> s.sequential().forEach(downstream::accept));
+                    }
+                };
+            }
+        };
     }
 
     @Override
