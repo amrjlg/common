@@ -39,11 +39,14 @@ import io.github.amrjlg.util.OptionalShort;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.OptionalInt;
+import java.util.OptionalLong;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BinaryOperator;
 import java.util.function.IntBinaryOperator;
+import java.util.function.LongBinaryOperator;
 import java.util.function.ObjIntConsumer;
+import java.util.function.ObjLongConsumer;
 import java.util.function.Supplier;
 import java.util.stream.Collector;
 
@@ -493,6 +496,103 @@ public class ReduceOps {
             }
         }
         return new ReduceOp<Integer, R, Adapter>(StreamShape.INT_VALUE) {
+            @Override
+            public Adapter makeSink() {
+                return new Adapter();
+            }
+        };
+    }
+
+    public static TerminalOp<Long, OptionalLong> makeLong(LongBinaryOperator op) {
+        class Adapter implements AccumulatingSink<Long, OptionalLong, Adapter>, Sink.OfLong {
+            boolean empty;
+            long state;
+
+            @Override
+            public void begin(long size) {
+                empty = true;
+            }
+
+            @Override
+            public void accept(long value) {
+                if (empty) {
+                    state = value;
+                } else {
+                    state = op.applyAsLong(state, value);
+                }
+            }
+
+            @Override
+            public void combine(Adapter other) {
+                if (!other.empty) {
+                    accept(other.state);
+                }
+            }
+
+            @Override
+            public OptionalLong get() {
+                return empty ? OptionalLong.empty() : OptionalLong.of(state);
+            }
+        }
+        return new ReduceOp<Long, OptionalLong, Adapter>(StreamShape.LONG_VALUE) {
+            @Override
+            public Adapter makeSink() {
+                return new Adapter();
+            }
+        };
+    }
+
+    public static TerminalOp<Long, Long> makeLong(long identity, LongBinaryOperator op) {
+        class Adapter implements AccumulatingSink<Long, Long, Adapter>, Sink.OfLong {
+            long state;
+
+            @Override
+            public void begin(long size) {
+                state = identity;
+            }
+
+            @Override
+            public void accept(long value) {
+                state = op.applyAsLong(state, value);
+            }
+
+            @Override
+            public void combine(Adapter other) {
+                accept(other.state);
+            }
+
+            @Override
+            public Long get() {
+                return state;
+            }
+        }
+        return new ReduceOp<Long, Long, Adapter>(StreamShape.LONG_VALUE) {
+            @Override
+            public Adapter makeSink() {
+                return new Adapter();
+            }
+        };
+    }
+
+    public static <R> TerminalOp<Long, R> makeLong(Supplier<R> supplier, ObjLongConsumer<R> accumulator, BinaryOperator<R> combiner) {
+        class Adapter extends Box<R> implements AccumulatingSink<Long, R, Adapter>, Sink.OfLong {
+
+            @Override
+            public void begin(long size) {
+                state = supplier.get();
+            }
+
+            @Override
+            public void accept(long value) {
+                accumulator.accept(state, value);
+            }
+
+            @Override
+            public void combine(Adapter other) {
+                combiner.apply(state, other.state);
+            }
+        }
+        return new ReduceOp<Long, R, Adapter>(StreamShape.LONG_VALUE) {
             @Override
             public Adapter makeSink() {
                 return new Adapter();
