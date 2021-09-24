@@ -197,8 +197,17 @@ public abstract class ReferencePipeline<Input, Output>
 
     @Override
     public ShortStream mapToShort(ToShortFunction<? super Output> mapper) {
-        // TODO IMPL
-        throw new NotImplementedException();
+        return new ShortPipeline.StatelessOp<Output>(this, StreamShape.REFERENCE, NOT_SORTED_AND_NOT_DISTINCT) {
+            @Override
+            public Sink<Output> opWrapSink(int flags, Sink<Short> sink) {
+                return new Sink.ChainedReference<Output, Short>(sink) {
+                    @Override
+                    public void accept(Output output) {
+                        downstream.accept(mapper.applyAsShort(output));
+                    }
+                };
+            }
+        };
     }
 
     @Override

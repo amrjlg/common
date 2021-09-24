@@ -25,5 +25,5 @@ package io.github.amrjlg.function;
 @FunctionalInterface
 public interface ToShortFunction<T> {
 
-    short applyAsByte(T value);
+    short applyAsShort(T value);
 }
