@@ -18,6 +18,7 @@
 package io.github.amrjlg.stream.pipeline;
 
 import io.github.amrjlg.exception.NotImplementedException;
+import io.github.amrjlg.function.ByteConsumer;
 import io.github.amrjlg.function.ToByteFunction;
 import io.github.amrjlg.function.ToCharFunction;
 import io.github.amrjlg.function.ToFloatFunction;
@@ -283,8 +284,23 @@ public abstract class ReferencePipeline<Input, Output>
 
     @Override
     public ByteStream flatMapToByte(Function<? super Output, ? extends ByteStream> mapper) {
-        // TODO IMPL
-        throw new NotImplementedException();
+        return new BytePipeline.StateLessOp<Output>(this, StreamShape.REFERENCE, NOT_SORTED_AND_NOT_DISTINCT) {
+            @Override
+            public Sink<Output> opWrapSink(int flags, Sink<Byte> sink) {
+                return new Sink.ChainedReference<Output, Byte>(sink) {
+                    @Override
+                    public void begin(long size) {
+                        downstream.begin(-1);
+                    }
+
+                    @Override
+                    public void accept(Output output) {
+                        Optional.ofNullable(mapper.apply(output))
+                                .ifPresent(s -> s.sequential().forEach((ByteConsumer) downstream::accept));
+                    }
+                };
+            }
+        };
     }
 
     @Override
