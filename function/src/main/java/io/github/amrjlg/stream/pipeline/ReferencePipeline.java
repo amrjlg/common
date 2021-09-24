@@ -326,8 +326,23 @@ public abstract class ReferencePipeline<Input, Output>
 
     @Override
     public CharStream flatMapToChar(Function<? super Output, ? extends CharStream> mapper) {
-        // TODO IMPL
-        throw new NotImplementedException();
+        return new CharPipeline.StateLessOp<Output>(this,StreamShape.REFERENCE,FLAT_MAP_OP_FLAGS) {
+            @Override
+            public Sink<Output> opWrapSink(int flags, Sink<Character> sink) {
+                return new Sink.ChainedReference<Output, Character>(sink) {
+                    @Override
+                    public void begin(long size) {
+                        downstream.begin(-1);
+                    }
+
+                    @Override
+                    public void accept(Output output) {
+                        Optional.ofNullable(mapper.apply(output))
+                                .ifPresent(s-> s.sequential().forEach(downstream::accept));
+                    }
+                };
+            }
+        };
     }
 
     @Override
