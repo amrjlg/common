@@ -63,7 +63,7 @@ public interface Stream<T> extends BaseStream<T, Stream<T>> /*extends java.util.
 
     <R> Stream<R> map(Function<? super T, ? extends R> mapper);
 
-    <R> Stream<R> flatMap(Function<? super T, ? extends java.util.stream.Stream<? extends R>> mapper);
+    <R> Stream<R> flatMap(Function<? super T, ? extends Stream<? extends R>> mapper);
 
     ByteStream flatMapToByte(Function<? super T, ? extends ByteStream> mapper);
 
