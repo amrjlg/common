@@ -18,9 +18,17 @@
 package io.github.amrjlg.function;
 
 /**
+ * byte 二元运算
+ *
  * @author amrjlg
  **/
 public interface ByteBinaryOperator {
-
+    /**
+     * 二元运算
+     *
+     * @param left  左操作数
+     * @param right 右操作数
+     * @return 结果
+     */
     byte applyAsByte(byte left, byte right);
 }

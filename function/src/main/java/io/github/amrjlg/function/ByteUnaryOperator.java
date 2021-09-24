@@ -20,24 +20,46 @@ package io.github.amrjlg.function;
 import java.util.Objects;
 
 /**
+ * byte 一元运算
+ *
  * @author amrjlg
  **/
 public interface ByteUnaryOperator {
-
+    /**
+     * 运算操作
+     *
+     * @param value 操作数
+     * @return 运算结果
+     */
     byte applyAsByte(byte value);
 
-
+    /**
+     * 前置运算
+     *
+     * @param before 前置运算
+     * @return ByteUnaryOperator
+     */
     default ByteUnaryOperator compose(ByteUnaryOperator before) {
         Objects.requireNonNull(before);
         return v -> applyAsByte(before.applyAsByte(v));
     }
 
-
+    /**
+     * 后置运算
+     *
+     * @param after 后置运算
+     * @return ByteUnaryOperator
+     */
     default ByteUnaryOperator andThen(ByteUnaryOperator after) {
         Objects.requireNonNull(after);
         return t -> after.applyAsByte(applyAsByte(t));
     }
 
+    /**
+     * 原样输出
+     *
+     * @return ByteUnaryOperator
+     */
     static ByteUnaryOperator identity() {
         return t -> t;
     }
