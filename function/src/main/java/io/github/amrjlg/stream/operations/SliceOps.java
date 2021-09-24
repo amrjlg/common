@@ -20,6 +20,7 @@ package io.github.amrjlg.stream.operations;
 import io.github.amrjlg.stream.ByteStream;
 import io.github.amrjlg.stream.CharStream;
 import io.github.amrjlg.stream.IntStream;
+import io.github.amrjlg.stream.LongStream;
 import io.github.amrjlg.stream.ShortStream;
 import io.github.amrjlg.stream.Sink;
 import io.github.amrjlg.stream.Stream;
@@ -28,6 +29,7 @@ import io.github.amrjlg.stream.StreamShape;
 import io.github.amrjlg.stream.pipeline.BytePipeline;
 import io.github.amrjlg.stream.pipeline.CharPipeline;
 import io.github.amrjlg.stream.pipeline.IntPipeline;
+import io.github.amrjlg.stream.pipeline.LongPipeline;
 import io.github.amrjlg.stream.pipeline.ShortPipeline;
 import io.github.amrjlg.stream.spliterator.SliceSpliterator;
 import io.github.amrjlg.stream.spliterator.Spliterator;
@@ -425,6 +427,57 @@ public class SliceOps {
 
                     @Override
                     public void accept(int value) {
+                        if (s == 0) {
+                            if (l > 0) {
+                                l--;
+                                downstream.accept(value);
+                            }
+                        } else {
+                            s--;
+                        }
+                    }
+                };
+            }
+        };
+    }
+
+    public static <Input> LongStream makeLong(AbstractPipeline<Input, Long, LongStream> upstream, long skip, long limit) {
+        return new LongPipeline.StatefulOp<Long>(upstream, StreamShape.LONG_VALUE, flags(limit)) {
+            @Override
+            protected <P_IN> Spliterator<Long> opEvaluateParallelLazy(PipelineHelper<Long> helper, Spliterator<P_IN> spliterator) {
+                long size = helper.exactOutputSizeIfKnown(spliterator);
+                if (size > 0 && spliterator.hasCharacteristics(Spliterator.SUBSIZED)) {
+                    return new SliceSpliterator.OfLong((Spliterator.OfLong) helper.wrapSpliterator(spliterator),
+                            skip, calcSliceFence(skip, limit));
+                } else if (StreamOpFlag.SORTED.isKnown(helper.getStreamAndOpFlags())) {
+                    return new SliceTask<>(this, helper, spliterator, Long[]::new, skip, limit).invoke().spliterator();
+                } else {
+                    return unorderedSkipLimitSpliterator(helper.getSourceShape(), helper.wrapSpliterator(spliterator), skip, limit, size);
+                }
+            }
+
+            @Override
+            protected <P_IN> Node<Long> opEvaluateParallel(PipelineHelper<Long> helper, Spliterator<P_IN> spliterator, IntFunction<Long[]> generator) {
+                long size = helper.exactOutputSizeIfKnown(spliterator);
+                if (size > 0 && spliterator.hasCharacteristics(Spliterator.SUBSIZED)) {
+                    Spliterator<P_IN> spl = sliceSpliterator(helper.getSourceShape(), spliterator, skip, limit);
+                    return Nodes.collectLong(helper, spl, true);
+                } else if (StreamOpFlag.SORTED.isKnown(helper.getStreamAndOpFlags())) {
+                    return new SliceTask<>(this, helper, spliterator, generator, skip, limit).invoke();
+                } else {
+                    Spliterator<Long> spl = unorderedSkipLimitSpliterator(helper.getSourceShape(), helper.wrapSpliterator(spliterator), skip, limit, size);
+                    return Nodes.collectLong(this, spl, true);
+                }
+            }
+
+            @Override
+            public Sink<Long> opWrapSink(int flags, Sink<Long> sink) {
+                return new Sink.ChainedLong<Long>(sink) {
+                    long s = skip;
+                    long l = limit >= 0 ? limit : Long.MAX_VALUE;
+
+                    @Override
+                    public void accept(long value) {
                         if (s == 0) {
                             if (l > 0) {
                                 l--;
