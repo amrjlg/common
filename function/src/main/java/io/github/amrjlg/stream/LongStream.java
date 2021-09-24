@@ -61,7 +61,7 @@ public interface LongStream extends BaseStream<Long, LongStream> {
 
     DoubleStream mapToDouble(LongToDoubleFunction mapper);
 
-    LongStream flatMap(LongFunction<? extends java.util.stream.LongStream> mapper);
+    LongStream flatMap(LongFunction<? extends LongStream> mapper);
 
     LongStream filter(LongPredicate predicate);
 
