@@ -198,7 +198,7 @@ public abstract class ReferencePipeline<Input, Output>
 
     @Override
     public ShortStream mapToShort(ToShortFunction<? super Output> mapper) {
-        return new ShortPipeline.StatelessOp<Output>(this, StreamShape.REFERENCE, NOT_SORTED_AND_NOT_DISTINCT) {
+        return new ShortPipeline.StatelessOp<Output>(this, StreamShape.REFERENCE, MAP_OP_FLAGS) {
             @Override
             public Sink<Output> opWrapSink(int flags, Sink<Short> sink) {
                 return new Sink.ChainedReference<Output, Short>(sink) {
@@ -213,7 +213,7 @@ public abstract class ReferencePipeline<Input, Output>
 
     @Override
     public CharStream mapToChar(ToCharFunction<? super Output> mapper) {
-        return new CharPipeline.StateLessOp<Output>(this, StreamShape.REFERENCE, NOT_SORTED_AND_NOT_DISTINCT) {
+        return new CharPipeline.StateLessOp<Output>(this, StreamShape.REFERENCE, MAP_OP_FLAGS) {
             @Override
             public Sink<Output> opWrapSink(int flags, Sink<Character> sink) {
                 return new Sink.ChainedReference<Output, Character>(sink) {
@@ -228,7 +228,7 @@ public abstract class ReferencePipeline<Input, Output>
 
     @Override
     public IntStream mapToInt(ToIntFunction<? super Output> mapper) {
-        return new IntPipeline.StatelessOp<Output>(this, StreamShape.REFERENCE, NOT_SORTED_AND_NOT_DISTINCT) {
+        return new IntPipeline.StatelessOp<Output>(this, StreamShape.REFERENCE, MAP_OP_FLAGS) {
             @Override
             public Sink<Output> opWrapSink(int flags, Sink<Integer> sink) {
                 return new Sink.ChainedReference<Output, Integer>(sink) {
@@ -261,7 +261,7 @@ public abstract class ReferencePipeline<Input, Output>
 
     @Override
     public <R> Stream<R> flatMap(Function<? super Output, ? extends Stream<? extends R>> mapper) {
-        return new StatelessOp<Output, R>(this, StreamShape.REFERENCE, NOT_SORTED_AND_NOT_DISTINCT) {
+        return new StatelessOp<Output, R>(this, StreamShape.REFERENCE, MAP_OP_FLAGS) {
             @Override
             public Sink<Output> opWrapSink(int flags, Sink<R> sink) {
                 return new Sink.ChainedReference<Output, R>(sink) {
@@ -284,7 +284,7 @@ public abstract class ReferencePipeline<Input, Output>
 
     @Override
     public ByteStream flatMapToByte(Function<? super Output, ? extends ByteStream> mapper) {
-        return new BytePipeline.StateLessOp<Output>(this, StreamShape.REFERENCE, NOT_SORTED_AND_NOT_DISTINCT) {
+        return new BytePipeline.StateLessOp<Output>(this, StreamShape.REFERENCE, MAP_OP_FLAGS) {
             @Override
             public Sink<Output> opWrapSink(int flags, Sink<Byte> sink) {
                 return new Sink.ChainedReference<Output, Byte>(sink) {

@@ -136,7 +136,7 @@ public abstract class BytePipeline<Input>
     @Override
     public ByteStream map(ByteUnaryOperator mapper) {
         Objects.requireNonNull(mapper);
-        return new StateLessOp<Byte>(this, StreamShape.BYTE_VALUE, NOT_SORTED_AND_NOT_DISTINCT) {
+        return new StateLessOp<Byte>(this, StreamShape.BYTE_VALUE, MAP_OP_FLAGS) {
             @Override
             public Sink<Byte> opWrapSink(int flags, Sink<Byte> sink) {
                 return new Sink.ChainedByte<Byte>(sink) {
@@ -152,7 +152,7 @@ public abstract class BytePipeline<Input>
     @Override
     public <U> Stream<U> mapToObj(ByteFunction<? extends U> mapper) {
         Objects.requireNonNull(mapper);
-        return new ReferencePipeline.StatelessOp<Byte, U>(this, StreamShape.BYTE_VALUE, NOT_SORTED_AND_NOT_DISTINCT) {
+        return new ReferencePipeline.StatelessOp<Byte, U>(this, StreamShape.BYTE_VALUE, MAP_OP_FLAGS) {
 
             @Override
             public Sink<Byte> opWrapSink(int flags, Sink<U> sink) {
@@ -168,7 +168,7 @@ public abstract class BytePipeline<Input>
 
     @Override
     public CharStream mapToChar(ByteToCharFunction mapper) {
-        return new CharPipeline.StateLessOp<Byte>(this, StreamShape.BYTE_VALUE, NOT_SORTED_AND_NOT_DISTINCT) {
+        return new CharPipeline.StateLessOp<Byte>(this, StreamShape.BYTE_VALUE, MAP_OP_FLAGS) {
             @Override
             public Sink<Byte> opWrapSink(int flags, Sink<Character> sink) {
                 return new Sink.ChainedByte<Character>(sink) {
@@ -183,7 +183,7 @@ public abstract class BytePipeline<Input>
 
     @Override
     public ShortStream mapToShort(ByteToShortFunction mapper) {
-        return new ShortPipeline.StatelessOp<Byte>(this, StreamShape.BYTE_VALUE, NOT_SORTED_AND_NOT_DISTINCT) {
+        return new ShortPipeline.StatelessOp<Byte>(this, StreamShape.BYTE_VALUE, MAP_OP_FLAGS) {
             @Override
             public Sink<Byte> opWrapSink(int flags, Sink<Short> sink) {
                 return new Sink.ChainedByte<Short>(sink) {
@@ -222,7 +222,7 @@ public abstract class BytePipeline<Input>
 
     @Override
     public ByteStream flatMap(ByteFunction<? extends ByteStream> mapper) {
-        return new StateLessOp<Byte>(this, StreamShape.BYTE_VALUE, NOT_SORTED_AND_NOT_DISTINCT) {
+        return new StateLessOp<Byte>(this, StreamShape.BYTE_VALUE, FLAT_MAP_OP_FLAGS) {
             @Override
             public Sink<Byte> opWrapSink(int flags, Sink<Byte> sink) {
                 return new Sink.ChainedByte<Byte>(sink) {

@@ -65,7 +65,7 @@ public abstract class ShortPipeline<Input> extends AbstractPipeline<Input, Short
 
     @Override
     public ShortStream map(ShortUnaryOperator mapper) {
-        return new StatelessOp<Short>(this, StreamShape.SHORT_VALUE, NOT_SORTED_AND_NOT_DISTINCT) {
+        return new StatelessOp<Short>(this, StreamShape.SHORT_VALUE, MAP_OP_FLAGS) {
             @Override
             public Sink<Short> opWrapSink(int flags, Sink<Short> sink) {
                 return new Sink.ChainedShort<Short>(sink) {
@@ -80,7 +80,7 @@ public abstract class ShortPipeline<Input> extends AbstractPipeline<Input, Short
 
     @Override
     public <U> Stream<U> mapToObj(ShortFunction<? extends U> mapper) {
-        return new ReferencePipeline.StatelessOp<Short, U>(this, StreamShape.SHORT_VALUE, NOT_SORTED_AND_NOT_DISTINCT) {
+        return new ReferencePipeline.StatelessOp<Short, U>(this, StreamShape.SHORT_VALUE, MAP_OP_FLAGS) {
             @Override
             public Sink<Short> opWrapSink(int flags, Sink<U> sink) {
                 return new Sink.ChainedShort<U>(sink) {
@@ -95,7 +95,7 @@ public abstract class ShortPipeline<Input> extends AbstractPipeline<Input, Short
 
     @Override
     public ByteStream mapToByte(ShortToByteFunction mapper) {
-        return new BytePipeline.StateLessOp<Short>(this, StreamShape.SHORT_VALUE, NOT_SORTED_AND_NOT_DISTINCT) {
+        return new BytePipeline.StateLessOp<Short>(this, StreamShape.SHORT_VALUE, MAP_OP_FLAGS) {
             @Override
             public Sink<Short> opWrapSink(int flags, Sink<Byte> sink) {
                 return new Sink.ChainedShort<Byte>(sink) {
@@ -110,7 +110,7 @@ public abstract class ShortPipeline<Input> extends AbstractPipeline<Input, Short
 
     @Override
     public CharStream mapToChar(ShortToCharFunction mapper) {
-        return new CharPipeline.StateLessOp<Short>(this, StreamShape.SHORT_VALUE, NOT_SORTED_AND_NOT_DISTINCT) {
+        return new CharPipeline.StateLessOp<Short>(this, StreamShape.SHORT_VALUE, MAP_OP_FLAGS) {
             @Override
             public Sink<Short> opWrapSink(int flags, Sink<Character> sink) {
                 return new Sink.ChainedShort<Character>(sink) {
@@ -125,7 +125,7 @@ public abstract class ShortPipeline<Input> extends AbstractPipeline<Input, Short
 
     @Override
     public IntStream mapToInt(ShortToIntFunction mapper) {
-        return new IntPipeline.StatelessOp<Short>(this, StreamShape.SHORT_VALUE, NOT_SORTED_AND_NOT_DISTINCT) {
+        return new IntPipeline.StatelessOp<Short>(this, StreamShape.SHORT_VALUE, MAP_OP_FLAGS) {
             @Override
             public Sink<Short> opWrapSink(int flags, Sink<Integer> sink) {
                 return new Sink.ChainedShort<Integer>(sink) {
@@ -158,7 +158,7 @@ public abstract class ShortPipeline<Input> extends AbstractPipeline<Input, Short
 
     @Override
     public ShortStream flatMap(ShortFunction<? extends ShortStream> mapper) {
-        return new StatelessOp<Short>(this, StreamShape.SHORT_VALUE, NOT_SORTED_AND_NOT_DISTINCT) {
+        return new StatelessOp<Short>(this, StreamShape.SHORT_VALUE, FLAT_MAP_OP_FLAGS) {
             @Override
             public Sink<Short> opWrapSink(int flags, Sink<Short> sink) {
                 return new Sink.ChainedShort<Short>(sink) {

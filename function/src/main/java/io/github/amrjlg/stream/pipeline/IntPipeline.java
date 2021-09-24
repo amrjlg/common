@@ -141,7 +141,7 @@ public abstract class IntPipeline<In> extends AbstractPipeline<In, Integer, IntS
 
     @Override
     public IntStream map(IntUnaryOperator mapper) {
-        return new StatelessOp<Integer>(this, StreamShape.INT_VALUE, NOT_SORTED_AND_NOT_DISTINCT) {
+        return new StatelessOp<Integer>(this, StreamShape.INT_VALUE, MAP_OP_FLAGS) {
             @Override
             public Sink<Integer> opWrapSink(int flags, Sink<Integer> sink) {
                 return new Sink.ChainedInt<Integer>(sink) {
@@ -156,7 +156,7 @@ public abstract class IntPipeline<In> extends AbstractPipeline<In, Integer, IntS
 
     @Override
     public <U> Stream<U> mapToObj(IntFunction<? extends U> mapper) {
-        return new ReferencePipeline.StatelessOp<Integer, U>(this, StreamShape.INT_VALUE, NOT_SORTED_AND_NOT_DISTINCT) {
+        return new ReferencePipeline.StatelessOp<Integer, U>(this, StreamShape.INT_VALUE, MAP_OP_FLAGS) {
             @Override
             public Sink<Integer> opWrapSink(int flags, Sink<U> sink) {
                 return new Sink.ChainedInt<U>(sink) {
@@ -171,7 +171,7 @@ public abstract class IntPipeline<In> extends AbstractPipeline<In, Integer, IntS
 
     @Override
     public ByteStream mapToByte(IntToByteFunction mapper) {
-        return new BytePipeline.StateLessOp<Integer>(this, StreamShape.INT_VALUE, NOT_SORTED_AND_NOT_DISTINCT) {
+        return new BytePipeline.StateLessOp<Integer>(this, StreamShape.INT_VALUE, MAP_OP_FLAGS) {
             @Override
             public Sink<Integer> opWrapSink(int flags, Sink<Byte> sink) {
                 return new Sink.ChainedInt<Byte>(sink) {
@@ -186,7 +186,7 @@ public abstract class IntPipeline<In> extends AbstractPipeline<In, Integer, IntS
 
     @Override
     public CharStream mapToChar(IntToCharFunction mapper) {
-        return new CharPipeline.StateLessOp<Integer>(this, StreamShape.INT_VALUE, NOT_SORTED_AND_NOT_DISTINCT) {
+        return new CharPipeline.StateLessOp<Integer>(this, StreamShape.INT_VALUE, MAP_OP_FLAGS) {
             @Override
             public Sink<Integer> opWrapSink(int flags, Sink<Character> sink) {
                 return new Sink.ChainedInt<Character>(sink) {
@@ -201,7 +201,7 @@ public abstract class IntPipeline<In> extends AbstractPipeline<In, Integer, IntS
 
     @Override
     public ShortStream mapToShort(IntToShortFunction mapper) {
-        return new ShortPipeline.StatelessOp<Integer>(this, StreamShape.INT_VALUE, NOT_SORTED_AND_NOT_DISTINCT) {
+        return new ShortPipeline.StatelessOp<Integer>(this, StreamShape.INT_VALUE, MAP_OP_FLAGS) {
             @Override
             public Sink<Integer> opWrapSink(int flags, Sink<Short> sink) {
                 return new Sink.ChainedInt<Short>(sink) {
@@ -234,10 +234,15 @@ public abstract class IntPipeline<In> extends AbstractPipeline<In, Integer, IntS
 
     @Override
     public IntStream flatMap(IntFunction<? extends IntStream> mapper) {
-        return new StatelessOp<Integer>(this, StreamShape.INT_VALUE, NOT_SORTED_AND_NOT_DISTINCT) {
+        return new StatelessOp<Integer>(this, StreamShape.INT_VALUE, FLAT_MAP_OP_FLAGS) {
             @Override
             public Sink<Integer> opWrapSink(int flags, Sink<Integer> sink) {
                 return new Sink.ChainedInt<Integer>(sink) {
+                    @Override
+                    public void begin(long size) {
+                        downstream.begin(-1);
+                    }
+
                     @Override
                     public void accept(int value) {
                         try (IntStream stream = mapper.apply(value)) {
