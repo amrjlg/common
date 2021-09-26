@@ -243,8 +243,17 @@ public abstract class ReferencePipeline<Input, Output>
 
     @Override
     public LongStream mapToLong(ToLongFunction<? super Output> mapper) {
-        // TODO IMPL
-        throw new NotImplementedException();
+        return new LongPipeline.StatelessOp<Output>(this, StreamShape.REFERENCE, MAP_OP_FLAGS) {
+            @Override
+            public Sink<Output> opWrapSink(int flags, Sink<Long> sink) {
+                return new Sink.ChainedReference<Output, Long>(sink) {
+                    @Override
+                    public void accept(Output output) {
+                        downstream.accept(mapper.applyAsLong(output));
+                    }
+                };
+            }
+        };
     }
 
     @Override
@@ -305,7 +314,7 @@ public abstract class ReferencePipeline<Input, Output>
 
     @Override
     public ShortStream flatMapToShort(Function<? super Output, ? extends ShortStream> mapper) {
-        return new ShortPipeline.StatelessOp<Output>(this,StreamShape.REFERENCE,FLAT_MAP_OP_FLAGS) {
+        return new ShortPipeline.StatelessOp<Output>(this, StreamShape.REFERENCE, FLAT_MAP_OP_FLAGS) {
             @Override
             public Sink<Output> opWrapSink(int flags, Sink<Short> sink) {
                 return new Sink.ChainedReference<Output, Short>(sink) {
@@ -317,7 +326,7 @@ public abstract class ReferencePipeline<Input, Output>
                     @Override
                     public void accept(Output output) {
                         Optional.ofNullable(mapper.apply(output))
-                                .ifPresent(s-> s.sequential().forEach(downstream::accept));
+                                .ifPresent(s -> s.sequential().forEach(downstream::accept));
                     }
                 };
             }
@@ -326,7 +335,7 @@ public abstract class ReferencePipeline<Input, Output>
 
     @Override
     public CharStream flatMapToChar(Function<? super Output, ? extends CharStream> mapper) {
-        return new CharPipeline.StateLessOp<Output>(this,StreamShape.REFERENCE,FLAT_MAP_OP_FLAGS) {
+        return new CharPipeline.StateLessOp<Output>(this, StreamShape.REFERENCE, FLAT_MAP_OP_FLAGS) {
             @Override
             public Sink<Output> opWrapSink(int flags, Sink<Character> sink) {
                 return new Sink.ChainedReference<Output, Character>(sink) {
@@ -338,7 +347,7 @@ public abstract class ReferencePipeline<Input, Output>
                     @Override
                     public void accept(Output output) {
                         Optional.ofNullable(mapper.apply(output))
-                                .ifPresent(s-> s.sequential().forEach(downstream::accept));
+                                .ifPresent(s -> s.sequential().forEach(downstream::accept));
                     }
                 };
             }
@@ -347,7 +356,7 @@ public abstract class ReferencePipeline<Input, Output>
 
     @Override
     public IntStream flatMapToInt(Function<? super Output, ? extends IntStream> mapper) {
-        return new IntPipeline.StatelessOp<Output>(this,StreamShape.REFERENCE,FLAT_MAP_OP_FLAGS) {
+        return new IntPipeline.StatelessOp<Output>(this, StreamShape.REFERENCE, FLAT_MAP_OP_FLAGS) {
             @Override
             public Sink<Output> opWrapSink(int flags, Sink<Integer> sink) {
                 return new Sink.ChainedReference<Output, Integer>(sink) {
@@ -359,7 +368,7 @@ public abstract class ReferencePipeline<Input, Output>
                     @Override
                     public void accept(Output output) {
                         Optional.ofNullable(mapper.apply(output))
-                                .ifPresent(s-> s.sequential().forEach(downstream::accept));
+                                .ifPresent(s -> s.sequential().forEach(downstream::accept));
                     }
                 };
             }
