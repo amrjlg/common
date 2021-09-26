@@ -186,8 +186,17 @@ public abstract class CharPipeline<Input> extends AbstractPipeline<Input, Charac
 
     @Override
     public LongStream mapToLong(CharToLongFunction mapper) {
-        // TODO impl
-        throw new NotImplementedException();
+        return new LongPipeline.StatelessOp<Character>(this,StreamShape.CHAR_VALUE,MAP_OP_FLAGS) {
+            @Override
+            public Sink<Character> opWrapSink(int flags, Sink<Long> sink) {
+                return new Sink.ChainedChar<Long>(sink) {
+                    @Override
+                    public void accept(char value) {
+                        downstream.accept(mapper.applyAsLong(value));
+                    }
+                };
+            }
+        };
     }
 
     @Override
