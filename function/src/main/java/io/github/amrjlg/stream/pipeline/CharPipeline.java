@@ -171,8 +171,17 @@ public abstract class CharPipeline<Input> extends AbstractPipeline<Input, Charac
 
     @Override
     public IntStream mapToInt(CharToIntFunction mapper) {
-        // TODO impl
-        throw new NotImplementedException();
+        return new IntPipeline.StatelessOp<Character>(this,StreamShape.CHAR_VALUE,MAP_OP_FLAGS) {
+            @Override
+            public Sink<Character> opWrapSink(int flags, Sink<Integer> sink) {
+                return new Sink.ChainedChar<Integer>(sink) {
+                    @Override
+                    public void accept(char value) {
+                        downstream.accept(mapper.applyAsInt(value));
+                    }
+                };
+            }
+        };
     }
 
     @Override
