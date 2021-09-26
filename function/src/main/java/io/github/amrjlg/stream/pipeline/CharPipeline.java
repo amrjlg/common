@@ -332,10 +332,10 @@ public abstract class CharPipeline<Input> extends AbstractPipeline<Input, Charac
 
     @Override
     public OptionalDouble average() {
-        ObjCharConsumer<long[]> consumer = ((longs, value) -> {
-            longs[0]++;
-            longs[1] += value;
-        });
+        ObjCharConsumer<long[]> consumer = (values, value) -> {
+            values[0]++;
+            values[1]+=value;
+        };
         long[] avg = collect(averageSupplier(), consumer, averageCombiner());
         return avg[0] > 0
                 ? OptionalDouble.of((double) avg[1] / avg[0])
