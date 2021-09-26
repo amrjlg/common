@@ -41,13 +41,16 @@ import io.github.amrjlg.util.OptionalShort;
 
 import java.util.Objects;
 import java.util.Optional;
+import java.util.OptionalDouble;
 import java.util.OptionalInt;
 import java.util.OptionalLong;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BinaryOperator;
+import java.util.function.DoubleBinaryOperator;
 import java.util.function.IntBinaryOperator;
 import java.util.function.LongBinaryOperator;
+import java.util.function.ObjDoubleConsumer;
 import java.util.function.ObjIntConsumer;
 import java.util.function.ObjLongConsumer;
 import java.util.function.Supplier;
@@ -690,6 +693,103 @@ public class ReduceOps {
             }
         }
         return new ReduceOp<Float, R, Adapter>(StreamShape.FLOAT_VALUE) {
+            @Override
+            public Adapter makeSink() {
+                return new Adapter();
+            }
+        };
+    }
+
+    public static TerminalOp<Double, OptionalDouble> makeDouble(DoubleBinaryOperator op) {
+        class Adapter implements AccumulatingSink<Double,OptionalDouble,Adapter>,Sink.OfDouble{
+
+            boolean empty;
+            double state;
+
+            @Override
+            public void begin(long size) {
+                empty = true;
+            }
+
+            @Override
+            public void accept(double value) {
+                if (empty){
+                    state = value;
+                }else {
+                    state = op.applyAsDouble(state,value);
+                }
+            }
+
+            @Override
+            public void combine(Adapter other) {
+                if (!other.empty){
+                    accept(other.state);
+                }
+            }
+
+            @Override
+            public OptionalDouble get() {
+                return empty ? OptionalDouble.empty() : OptionalDouble.of(state);
+            }
+        }
+        return new ReduceOp<Double, OptionalDouble,Adapter>(StreamShape.DOUBLE_VALUE) {
+            @Override
+            public Adapter makeSink() {
+                return new Adapter();
+            }
+        };
+    }
+
+    public static TerminalOp<Double, Double> makeDouble(double identity, DoubleBinaryOperator op) {
+        class Adapter implements AccumulatingSink<Double,Double,Adapter>,Sink.OfDouble{
+            double state ;
+            @Override
+            public void begin(long size) {
+                state = identity;
+            }
+
+            @Override
+            public void accept(double value) {
+                state = op.applyAsDouble(state,value);
+            }
+
+            @Override
+            public void combine(Adapter other) {
+                accept(other.state);
+            }
+
+            @Override
+            public Double get() {
+                return state;
+            }
+        }
+        return new ReduceOp<Double, Double, Adapter>(StreamShape.DOUBLE_VALUE) {
+            @Override
+            public Adapter makeSink() {
+                return new Adapter();
+            }
+        };
+    }
+
+    public static <R> TerminalOp<Double, R> makeDouble(Supplier<R> supplier, ObjDoubleConsumer<R> accumulator, BinaryOperator<R> combiner) {
+        class Adapter extends Box<R> implements AccumulatingSink<Double,R,Adapter>,Sink.OfDouble{
+
+            @Override
+            public void begin(long size) {
+                state = supplier.get();
+            }
+
+            @Override
+            public void accept(double value) {
+                accumulator.accept(state,value);
+            }
+
+            @Override
+            public void combine(Adapter other) {
+                state = combiner.apply(state,other.state);
+            }
+        }
+        return new ReduceOp<Double, R, Adapter>(StreamShape.DOUBLE_VALUE) {
             @Override
             public Adapter makeSink() {
                 return new Adapter();

@@ -21,5 +21,5 @@ package io.github.amrjlg.function;
  * @author amrjlg
  **/
 public interface DoubleToCharFunction {
-    char applyAsByte(double value);
+    char applyAsChar(double value);
 }

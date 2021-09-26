@@ -21,5 +21,5 @@ package io.github.amrjlg.function;
  * @author amrjlg
  **/
 public interface DoubleToFloatFunction {
-    float applyAsByte(double value);
+    float applyAsFloat(double value);
 }

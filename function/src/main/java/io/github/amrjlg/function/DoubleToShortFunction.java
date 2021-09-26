@@ -21,5 +21,5 @@ package io.github.amrjlg.function;
  * @author amrjlg
  **/
 public interface DoubleToShortFunction {
-    short applyAsByte(double value);
+    short applyAsShort(double value);
 }

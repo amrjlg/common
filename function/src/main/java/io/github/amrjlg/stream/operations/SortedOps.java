@@ -19,6 +19,7 @@ package io.github.amrjlg.stream.operations;
 
 import io.github.amrjlg.stream.ByteStream;
 import io.github.amrjlg.stream.CharStream;
+import io.github.amrjlg.stream.DoubleStream;
 import io.github.amrjlg.stream.FloatStream;
 import io.github.amrjlg.stream.IntStream;
 import io.github.amrjlg.stream.LongStream;
@@ -32,6 +33,7 @@ import io.github.amrjlg.stream.node.Nodes;
 import io.github.amrjlg.stream.pipeline.AbstractPipeline;
 import io.github.amrjlg.stream.pipeline.BytePipeline;
 import io.github.amrjlg.stream.pipeline.CharPipeline;
+import io.github.amrjlg.stream.pipeline.DoublePipeline;
 import io.github.amrjlg.stream.pipeline.FloatPipeline;
 import io.github.amrjlg.stream.pipeline.IntPipeline;
 import io.github.amrjlg.stream.pipeline.LongPipeline;
@@ -40,6 +42,7 @@ import io.github.amrjlg.stream.pipeline.ReferencePipeline;
 import io.github.amrjlg.stream.pipeline.ShortPipeline;
 import io.github.amrjlg.stream.sink.ByteSortingSink;
 import io.github.amrjlg.stream.sink.CharSortingSink;
+import io.github.amrjlg.stream.sink.DoubleSortingSink;
 import io.github.amrjlg.stream.sink.FloatSortingSink;
 import io.github.amrjlg.stream.sink.IntSortingSink;
 import io.github.amrjlg.stream.sink.LongSortingSink;
@@ -47,6 +50,7 @@ import io.github.amrjlg.stream.sink.RefSortingSink;
 import io.github.amrjlg.stream.sink.ShortSortingSink;
 import io.github.amrjlg.stream.sink.SizedByteSortingSink;
 import io.github.amrjlg.stream.sink.SizedCharSortingSink;
+import io.github.amrjlg.stream.sink.SizedDoubleSortingSink;
 import io.github.amrjlg.stream.sink.SizedFloatSortingSink;
 import io.github.amrjlg.stream.sink.SizedIntSortingSink;
 import io.github.amrjlg.stream.sink.SizedLongSortingSink;
@@ -96,6 +100,10 @@ public class SortedOps {
 
     public static <Input> FloatStream makeFLoat(AbstractPipeline<Input, Float, FloatStream> upstream) {
         return new OfFloat(upstream);
+    }
+
+    public static <T> DoubleStream makeDouble(AbstractPipeline<T, Double, DoubleStream> upstream) {
+        return new OfDouble(upstream);
     }
 
 
@@ -315,6 +323,34 @@ public class SortedOps {
             }
             Node.OfFloat node = (Node.OfFloat) helper.evaluate(spliterator, true, generator);
             float[] array = node.asPrimitiveArray();
+            Arrays.parallelSort(array);
+            return Nodes.node(array);
+        }
+    }
+
+    private static class OfDouble extends DoublePipeline.StatefulOp<Double> {
+        public <T> OfDouble(AbstractPipeline<T, Double, DoubleStream> upstream) {
+            super(upstream, StreamShape.DOUBLE_VALUE, StreamOpFlag.IS_ORDERED);
+        }
+
+        @Override
+        public Sink<Double> opWrapSink(int flags, Sink<Double> sink) {
+            if (StreamOpFlag.SORTED.isKnown(flags)) {
+                return sink;
+            } else if (StreamOpFlag.SORTED.isKnown(flags)) {
+                return new SizedDoubleSortingSink(sink);
+            } else {
+                return new DoubleSortingSink(sink);
+            }
+        }
+
+        @Override
+        protected <P_IN> Node<Double> opEvaluateParallel(PipelineHelper<Double> helper, Spliterator<P_IN> spliterator, IntFunction<Double[]> generator) {
+            if (StreamOpFlag.SORTED.isKnown(helper.getStreamAndOpFlags())) {
+                return helper.evaluate(spliterator, false, generator);
+            }
+            Node.OfDouble node = (Node.OfDouble) helper.evaluate(spliterator, true, generator);
+            double[] array = node.asPrimitiveArray();
             Arrays.parallelSort(array);
             return Nodes.node(array);
         }
