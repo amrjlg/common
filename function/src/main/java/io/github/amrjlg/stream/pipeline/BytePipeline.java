@@ -213,8 +213,17 @@ public abstract class BytePipeline<Input>
 
     @Override
     public LongStream mapToLong(ByteToLongFunction mapper) {
-        // TODO impl
-        throw new NotImplementedException();
+        return new LongPipeline.StatelessOp<Byte>(this,StreamShape.BYTE_VALUE,MAP_OP_FLAGS) {
+            @Override
+            public Sink<Byte> opWrapSink(int flags, Sink<Long> sink) {
+                return new Sink.ChainedByte<Long>(sink) {
+                    @Override
+                    public void accept(byte value) {
+                        downstream.accept(mapper.applyAsLong(value));
+                    }
+                };
+            }
+        };
     }
 
     @Override
