@@ -201,8 +201,17 @@ public abstract class CharPipeline<Input> extends AbstractPipeline<Input, Charac
 
     @Override
     public FloatStream mapToFloat(CharToFloatFunction mapper) {
-        // TODO impl
-        throw new NotImplementedException();
+        return new FloatPipeline.StatelessOp<Character>(this,StreamShape.CHAR_VALUE,MAP_OP_FLAGS) {
+            @Override
+            public Sink<Character> opWrapSink(int flags, Sink<Float> sink) {
+                return new Sink.ChainedChar<Float>(sink) {
+                    @Override
+                    public void accept(char value) {
+                        downstream.accept(mapper.applyAsFloat(value));
+                    }
+                };
+            }
+        };
     }
 
     @Override
