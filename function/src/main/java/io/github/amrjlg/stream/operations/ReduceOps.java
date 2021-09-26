@@ -19,8 +19,10 @@ package io.github.amrjlg.stream.operations;
 
 import io.github.amrjlg.function.ByteBinaryOperator;
 import io.github.amrjlg.function.CharBinaryOperator;
+import io.github.amrjlg.function.FloatBinaryOperator;
 import io.github.amrjlg.function.ObjByteConsumer;
 import io.github.amrjlg.function.ObjCharConsumer;
+import io.github.amrjlg.function.ObjFloatConsumer;
 import io.github.amrjlg.function.ObjShortConsumer;
 import io.github.amrjlg.function.ShortBinaryOperator;
 import io.github.amrjlg.stream.Sink;
@@ -34,6 +36,7 @@ import io.github.amrjlg.stream.sink.ReducingOptionalSink;
 import io.github.amrjlg.stream.sink.ReducingSink;
 import io.github.amrjlg.util.OptionalByte;
 import io.github.amrjlg.util.OptionalChar;
+import io.github.amrjlg.util.OptionalFloat;
 import io.github.amrjlg.util.OptionalShort;
 
 import java.util.Objects;
@@ -593,6 +596,100 @@ public class ReduceOps {
             }
         }
         return new ReduceOp<Long, R, Adapter>(StreamShape.LONG_VALUE) {
+            @Override
+            public Adapter makeSink() {
+                return new Adapter();
+            }
+        };
+    }
+
+    public static TerminalOp<Float, OptionalFloat> makeFloat(FloatBinaryOperator op) {
+        class Adapter implements AccumulatingSink<Float, OptionalFloat, Adapter>, Sink.OfFloat {
+            boolean empty;
+            float state;
+
+            @Override
+            public void begin(long size) {
+                empty = true;
+            }
+
+            @Override
+            public void accept(float value) {
+                state = op.applyAsFloat(state, value);
+            }
+
+            @Override
+            public void combine(Adapter other) {
+                if (!other.empty) {
+                    accept(other.state);
+                }
+            }
+
+            @Override
+            public OptionalFloat get() {
+                return empty ? OptionalFloat.empty() : OptionalFloat.of(state);
+            }
+        }
+        return new ReduceOp<Float, OptionalFloat, Adapter>(StreamShape.FLOAT_VALUE) {
+            @Override
+            public Adapter makeSink() {
+                return new Adapter();
+            }
+        };
+    }
+
+    public static TerminalOp<Float, Float> makeFloat(float identity, FloatBinaryOperator op) {
+        class Adapter implements AccumulatingSink<Float, Float, Adapter>, Sink.OfFloat {
+            float state;
+
+            @Override
+            public void begin(long size) {
+                state = identity;
+            }
+
+            @Override
+            public void accept(float value) {
+                state = op.applyAsFloat(state, value);
+            }
+
+            @Override
+            public void combine(Adapter other) {
+                accept(other.state);
+            }
+
+            @Override
+            public Float get() {
+                return state;
+            }
+        }
+
+        return new ReduceOp<Float, Float, Adapter>(StreamShape.FLOAT_VALUE) {
+            @Override
+            public Adapter makeSink() {
+                return new Adapter();
+            }
+        };
+    }
+
+    public static <R> TerminalOp<Float, R> makeFloat(Supplier<R> supplier, ObjFloatConsumer<R> accumulator, BinaryOperator<R> combiner) {
+        class Adapter extends Box<R> implements AccumulatingSink<Float, R, Adapter>, Sink.OfFloat {
+
+            @Override
+            public void begin(long size) {
+                state = supplier.get();
+            }
+
+            @Override
+            public void accept(float value) {
+                accumulator.accept(state, value);
+            }
+
+            @Override
+            public void combine(Adapter other) {
+                state = combiner.apply(state, other.state);
+            }
+        }
+        return new ReduceOp<Float, R, Adapter>(StreamShape.FLOAT_VALUE) {
             @Override
             public Adapter makeSink() {
                 return new Adapter();

@@ -30,7 +30,7 @@ public class SizedFloatSortingSink extends AbstractFloatSortingSink {
     private int offset;
 
 
-    SizedFloatSortingSink(Sink<? super Float> downstream) {
+    public SizedFloatSortingSink(Sink<? super Float> downstream) {
         super(downstream);
     }
 

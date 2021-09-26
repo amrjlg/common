@@ -33,6 +33,7 @@ import io.github.amrjlg.stream.spliterator.Spliterator;
 import io.github.amrjlg.util.OptionalFloat;
 import io.github.amrjlg.util.FloatSummaryStatistics;
 
+import java.util.OptionalDouble;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
@@ -89,7 +90,7 @@ public interface FloatStream extends BaseStream<Float,FloatStream> {
 
     long count();
 
-    OptionalFloat average();
+    OptionalDouble average();
 
     FloatSummaryStatistics summaryStatistics();
 
