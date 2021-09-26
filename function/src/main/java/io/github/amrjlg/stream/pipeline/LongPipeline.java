@@ -370,7 +370,8 @@ public abstract class LongPipeline<Input> extends AbstractPipeline<Input, Long, 
     @Override
     public OptionalDouble average() {
         ObjLongConsumer<long[]> consumer = (values, value) -> {
-
+            values[0]++;
+            values[1]+=value;
         };
         long[] avg = collect(averageSupplier(), consumer, averageCombiner());
         return avg[0] > 0
