@@ -198,8 +198,17 @@ public abstract class BytePipeline<Input>
 
     @Override
     public IntStream mapToInt(ByteToIntFunction mapper) {
-        // TODO impl
-        throw new NotImplementedException();
+        return new IntPipeline.StatelessOp<Byte>(this, StreamShape.BYTE_VALUE, MAP_OP_FLAGS) {
+            @Override
+            public Sink<Byte> opWrapSink(int flags, Sink<Integer> sink) {
+                return new Sink.ChainedByte<Integer>(sink) {
+                    @Override
+                    public void accept(byte value) {
+                        downstream.accept(mapper.applyAsInt(value));
+                    }
+                };
+            }
+        };
     }
 
     @Override
