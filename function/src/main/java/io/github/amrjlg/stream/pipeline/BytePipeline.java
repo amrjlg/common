@@ -228,8 +228,17 @@ public abstract class BytePipeline<Input>
 
     @Override
     public FloatStream mapToFloat(ByteToFloatFunction mapper) {
-        // TODO impl
-        throw new NotImplementedException();
+        return new FloatPipeline.StatelessOp<Byte>(this,StreamShape.BYTE_VALUE,MAP_OP_FLAGS) {
+            @Override
+            public Sink<Byte> opWrapSink(int flags, Sink<Float> sink) {
+                return new Sink.ChainedByte<Float>(sink) {
+                    @Override
+                    public void accept(byte value) {
+                        downstream.accept(mapper.applyAsFloat(value));
+                    }
+                };
+            }
+        };
     }
 
     @Override

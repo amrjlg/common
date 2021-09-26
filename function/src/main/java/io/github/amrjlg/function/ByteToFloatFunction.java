@@ -22,5 +22,5 @@ package io.github.amrjlg.function;
  **/
 public interface ByteToFloatFunction {
 
-    float applyAsFloat();
+    float applyAsFloat(byte value);
 }
