@@ -258,8 +258,17 @@ public abstract class ReferencePipeline<Input, Output>
 
     @Override
     public FloatStream mapToFloat(ToFloatFunction<? super Output> mapper) {
-        // TODO IMPL
-        throw new NotImplementedException();
+        return new FloatPipeline.StatelessOp<Output>(this,StreamShape.REFERENCE,MAP_OP_FLAGS) {
+            @Override
+            public Sink<Output> opWrapSink(int flags, Sink<Float> sink) {
+                return new Sink.ChainedReference<Output, Float>(sink) {
+                    @Override
+                    public void accept(Output output) {
+                        downstream.accept(mapper.applyAsFloat(output));
+                    }
+                };
+            }
+        };
     }
 
     @Override
