@@ -30,7 +30,7 @@ public class SizedDoubleSortingSink extends AbstractDoubleSortingSink {
     private int offset;
 
 
-    SizedDoubleSortingSink(Sink<? super Double> downstream) {
+    public SizedDoubleSortingSink(Sink<? super Double> downstream) {
         super(downstream);
     }
 
