@@ -19,6 +19,7 @@ package io.github.amrjlg.stream.operations;
 
 import io.github.amrjlg.stream.ByteStream;
 import io.github.amrjlg.stream.CharStream;
+import io.github.amrjlg.stream.FloatStream;
 import io.github.amrjlg.stream.IntStream;
 import io.github.amrjlg.stream.LongStream;
 import io.github.amrjlg.stream.ShortStream;
@@ -26,29 +27,32 @@ import io.github.amrjlg.stream.Sink;
 import io.github.amrjlg.stream.Stream;
 import io.github.amrjlg.stream.StreamOpFlag;
 import io.github.amrjlg.stream.StreamShape;
-import io.github.amrjlg.stream.pipeline.BytePipeline;
-import io.github.amrjlg.stream.pipeline.CharPipeline;
-import io.github.amrjlg.stream.pipeline.IntPipeline;
-import io.github.amrjlg.stream.pipeline.LongPipeline;
-import io.github.amrjlg.stream.pipeline.ShortPipeline;
-import io.github.amrjlg.stream.sink.ByteSortingSink;
-import io.github.amrjlg.stream.sink.CharSortingSink;
-import io.github.amrjlg.stream.sink.IntSortingSink;
-import io.github.amrjlg.stream.sink.LongSortingSink;
-import io.github.amrjlg.stream.sink.ShortSortingSink;
-import io.github.amrjlg.stream.sink.SizedByteSortingSink;
-import io.github.amrjlg.stream.sink.SizedCharSortingSink;
-import io.github.amrjlg.stream.sink.SizedIntSortingSink;
-import io.github.amrjlg.stream.sink.SizedLongSortingSink;
-import io.github.amrjlg.stream.sink.SizedShortSortingSink;
-import io.github.amrjlg.stream.spliterator.Spliterator;
 import io.github.amrjlg.stream.node.Node;
 import io.github.amrjlg.stream.node.Nodes;
 import io.github.amrjlg.stream.pipeline.AbstractPipeline;
+import io.github.amrjlg.stream.pipeline.BytePipeline;
+import io.github.amrjlg.stream.pipeline.CharPipeline;
+import io.github.amrjlg.stream.pipeline.FloatPipeline;
+import io.github.amrjlg.stream.pipeline.IntPipeline;
+import io.github.amrjlg.stream.pipeline.LongPipeline;
 import io.github.amrjlg.stream.pipeline.PipelineHelper;
 import io.github.amrjlg.stream.pipeline.ReferencePipeline;
+import io.github.amrjlg.stream.pipeline.ShortPipeline;
+import io.github.amrjlg.stream.sink.ByteSortingSink;
+import io.github.amrjlg.stream.sink.CharSortingSink;
+import io.github.amrjlg.stream.sink.FloatSortingSink;
+import io.github.amrjlg.stream.sink.IntSortingSink;
+import io.github.amrjlg.stream.sink.LongSortingSink;
 import io.github.amrjlg.stream.sink.RefSortingSink;
+import io.github.amrjlg.stream.sink.ShortSortingSink;
+import io.github.amrjlg.stream.sink.SizedByteSortingSink;
+import io.github.amrjlg.stream.sink.SizedCharSortingSink;
+import io.github.amrjlg.stream.sink.SizedFloatSortingSink;
+import io.github.amrjlg.stream.sink.SizedIntSortingSink;
+import io.github.amrjlg.stream.sink.SizedLongSortingSink;
 import io.github.amrjlg.stream.sink.SizedRefSortingSink;
+import io.github.amrjlg.stream.sink.SizedShortSortingSink;
+import io.github.amrjlg.stream.spliterator.Spliterator;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -88,6 +92,10 @@ public class SortedOps {
 
     public static <Input> LongStream makeLong(AbstractPipeline<Input, Long, LongStream> upstream) {
         return new OfLong(upstream);
+    }
+
+    public static <Input> FloatStream makeFLoat(AbstractPipeline<Input, Float, FloatStream> upstream) {
+        return new OfFloat(upstream);
     }
 
 
@@ -258,27 +266,55 @@ public class SortedOps {
 
     private static class OfLong extends LongPipeline.StatefulOp<Long> {
         public <Input> OfLong(AbstractPipeline<Input, Long, LongStream> upstream) {
-            super(upstream,StreamShape.LONG_VALUE,StreamOpFlag.IS_ORDERED | StreamOpFlag.IS_SORTED);
+            super(upstream, StreamShape.LONG_VALUE, StreamOpFlag.IS_ORDERED | StreamOpFlag.IS_SORTED);
         }
 
         @Override
         public Sink<Long> opWrapSink(int flags, Sink<Long> sink) {
-            if (StreamOpFlag.SORTED.isKnown(flags)){
+            if (StreamOpFlag.SORTED.isKnown(flags)) {
                 return sink;
-            }else if (StreamOpFlag.SIZED.isKnown(flags)){
+            } else if (StreamOpFlag.SIZED.isKnown(flags)) {
                 return new SizedLongSortingSink(sink);
-            }else {
+            } else {
                 return new LongSortingSink(sink);
             }
         }
 
         @Override
         protected <P_IN> Node<Long> opEvaluateParallel(PipelineHelper<Long> helper, Spliterator<P_IN> spliterator, IntFunction<Long[]> generator) {
-            if (StreamOpFlag.SORTED.isKnown(helper.getStreamAndOpFlags())){
-                return helper.evaluate(spliterator,false,generator);
+            if (StreamOpFlag.SORTED.isKnown(helper.getStreamAndOpFlags())) {
+                return helper.evaluate(spliterator, false, generator);
             }
-            Node.OfLong node = (Node.OfLong) helper.evaluate(spliterator,true,generator);
+            Node.OfLong node = (Node.OfLong) helper.evaluate(spliterator, true, generator);
             long[] array = node.asPrimitiveArray();
+            Arrays.parallelSort(array);
+            return Nodes.node(array);
+        }
+    }
+
+    private static class OfFloat extends FloatPipeline.StatefulOp<Float> {
+        public <Input> OfFloat(AbstractPipeline<Input, Float, FloatStream> upstream) {
+            super(upstream, StreamShape.FLOAT_VALUE, StreamOpFlag.IS_SORTED);
+        }
+
+        @Override
+        public Sink<Float> opWrapSink(int flags, Sink<Float> sink) {
+            if (StreamOpFlag.SORTED.isKnown(flags)) {
+                return sink;
+            } else if (StreamOpFlag.SIZED.isKnown(flags)) {
+                return new SizedFloatSortingSink(sink);
+            } else {
+                return new FloatSortingSink(sink);
+            }
+        }
+
+        @Override
+        protected <P_IN> Node<Float> opEvaluateParallel(PipelineHelper<Float> helper, Spliterator<P_IN> spliterator, IntFunction<Float[]> generator) {
+            if (StreamOpFlag.SORTED.isKnown(helper.getStreamAndOpFlags())) {
+                return helper.evaluate(spliterator, false, generator);
+            }
+            Node.OfFloat node = (Node.OfFloat) helper.evaluate(spliterator, true, generator);
+            float[] array = node.asPrimitiveArray();
             Arrays.parallelSort(array);
             return Nodes.node(array);
         }
