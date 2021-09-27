@@ -17,19 +17,11 @@
 
 package io.github.amrjlg.stream.pipeline;
 
-import io.github.amrjlg.stream.ByteStream;
-import io.github.amrjlg.stream.CharStream;
-import io.github.amrjlg.stream.IntStream;
-import io.github.amrjlg.stream.ShortStream;
-import io.github.amrjlg.stream.Stream;
-import io.github.amrjlg.stream.StreamOpFlag;
-import io.github.amrjlg.stream.spliterator.Spliterator;
-import io.github.amrjlg.stream.spliterator.Spliterators;
+import io.github.amrjlg.stream.Streams;
 import io.github.amrjlg.utils.ArrayUtil;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
-import java.util.Comparator;
 
 
 /**
@@ -43,60 +35,45 @@ public class StreamTest {
 
         String[] array = ArrayUtil.arrays("a", "b", "c", "d", "e", "f");
 
-        Spliterator<String> spliterator = Spliterators.spliterator(array, Spliterator.ORDERED | Spliterator.IMMUTABLE);
-
-        Stream<String> stream = new ReferencePipeline.Head<>(spliterator, StreamOpFlag.fromCharacteristics(spliterator), false);
-        Comparator<String> comparator = String::compareTo;
-
-        stream.parallel().sorted(comparator.reversed()).skip(1).limit(1).forEach(System.out::println);
+        Streams.stream(array).parallel().skip(1)
+                .filter(v -> v.contains("f")).limit(100).findAny().ifPresent(System.out::println);
 
     }
 
 
     @Test
     public void byteStream() {
+        byte[] array = {5, 6, 2, 3, 4};
 
-        Spliterator.OfByte spliterator = Spliterators.spliterator(new byte[]{0x5, 0x6, 2, 3, 4}, Spliterator.ORDERED | Spliterator.IMMUTABLE);
-
-        ByteStream stream = new BytePipeline.Head<>(spliterator, StreamOpFlag.fromCharacteristics(spliterator), false);
-
-        stream.parallel().filter(v -> v > 3).sorted().skip(1).limit(1).forEach(System.out::println);
-
-        System.out.println("==============");
-
-        Arrays.stream(new int[]{5, 6, 2, 3, 4}).parallel().sorted().filter(v -> v > 3).skip(1).limit(1).forEach(System.out::println);
-
-
-        System.out.println("===============");
-
-        new BytePipeline.Head<>(Spliterators.spliterator(new byte[]{0x5, 0x6, 2, 3, 4}, Spliterator.ORDERED | Spliterator.IMMUTABLE)
-                , StreamOpFlag.fromCharacteristics(spliterator), false)
+        Streams.stream(array)
+                .sorted()
                 .parallel()
-                .findFirst().ifPresent(System.out::println);
+                .skip(1)
+                .filter(v -> v > 0x2)
+                .limit(6)
+                .findAny().ifPresent(System.out::println);
     }
 
     @Test
     public void charStream() {
         char[] array = ArrayUtil.array('c', 'a', 'f', 'b', 'd', 'e');
 
-        Spliterator.OfChar spliterator = Spliterators.spliterator(array, Spliterator.ORDERED | Spliterator.IMMUTABLE);
-
-        CharStream stream = new CharPipeline.Head<>(spliterator, StreamOpFlag.fromCharacteristics(spliterator), false);
-
-        stream.sorted().filter(v -> v > 'c')
-                .findAny()
-                .ifPresent(System.out::println); // e;
-//                .average().ifPresent(System.out::println);  101.0
+        Streams.stream(array)
+                .parallel()
+                .skip(1)
+                .filter(v -> v > 'c')
+                .limit(1)
+                .findFirst()
+                .ifPresent(System.out::println);
     }
 
     @Test
     public void shortStream() {
         short[] array = new short[]{3, 5, 4, 1, 2, 6, 8, 7, 9};
-        Spliterator.OfShort spliterator = Spliterators.spliterator(array, Spliterator.IMMUTABLE);
-        ShortStream stream = new ShortPipeline.Head<>(spliterator, StreamOpFlag.fromCharacteristics(spliterator), false);
-
-
-        stream.parallel().filter(v -> v > 1)
+        Streams.stream(array).parallel()
+                .skip(1)
+                .filter(v -> v > 1)
+                .limit(10)
                 .findAny()
                 .ifPresent(System.out::println);
     }
@@ -104,14 +81,53 @@ public class StreamTest {
     @Test
     public void intStream() {
         int[] array = ArrayUtil.array(3, 5, 4, 1, 2, 6, 8, 7, 9);
-        Spliterator.OfInt spliterator = Spliterators.spliterator(array, Spliterator.IMMUTABLE);
 
-        IntStream stream = new IntPipeline.Head<>(spliterator, StreamOpFlag.fromCharacteristics(spliterator), false);
-
-        Arrays.stream(array).parallel().filter(v -> v > 1).findAny().ifPresent(System.out::println);
-        stream.parallel()
+        Arrays.stream(array).parallel()
+                .skip(1)
                 .filter(v -> v > 1)
-                .findAny().ifPresent(System.out::println);
+                .limit(2).findFirst().ifPresent(System.out::println);
+        System.out.println("===========");
+        Streams.stream(array).parallel()
+                .skip(1)
+                .filter(v -> v > 1)
+                .limit(2)
+                .findFirst().ifPresent(System.out::println);
+    }
+
+    @Test
+    public void longStream() {
+        long[] array = new long[]{3, 5, 4, 1, 2, 6, 8, 7, 9, 9};
+        Streams.stream(array)
+                .parallel()
+                .skip(1)
+                .filter(v -> v > 1)
+                .limit(2)
+                .findAny()
+                .ifPresent(System.out::println);
+    }
+
+    @Test
+    public void floatStream() {
+        float[] array = new float[]{3, 5, 4, 1, 2, 6, 8, 7, 9, 9};
+        Streams.stream(array)
+                .parallel()
+                .skip(1)
+                .filter(v -> v > 1)
+                .limit(2)
+                .findAny()
+                .ifPresent(System.out::println);
+    }
+
+    @Test
+    public void doubleStream() {
+        double[] array = new double[]{3, 5, 4, 1, 2, 6, 8, 7, 9, 9};
+        Streams.stream(array)
+                .parallel()
+                .skip(1)
+                .filter(v -> v > 1)
+                .limit(2)
+                .findAny()
+                .ifPresent(System.out::println);
     }
 }
 
