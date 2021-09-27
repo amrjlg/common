@@ -36,7 +36,7 @@ import java.util.function.LongConsumer;
 /**
  * @author amrjlg
  **/
-@SuppressWarnings("all")
+@SuppressWarnings("unused")
 public abstract class Spliterators {
 
     private Spliterators() {
