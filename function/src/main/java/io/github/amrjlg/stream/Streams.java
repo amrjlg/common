@@ -17,10 +17,17 @@
 
 package io.github.amrjlg.stream;
 
+import io.github.amrjlg.stream.pipeline.BytePipeline;
+import io.github.amrjlg.stream.pipeline.Pipelines;
+import io.github.amrjlg.stream.spliterator.Spliterator;
+import io.github.amrjlg.stream.spliterator.Spliterators;
+
 /**
  * @author amrjlg
  **/
 public class Streams {
+
+    public static final int CHARACTERISTICS = Spliterator.IMMUTABLE | Spliterator.ORDERED;
 
     public static Runnable composeWithExceptions(Runnable first, Runnable second) {
         return () -> {
@@ -40,4 +47,71 @@ public class Streams {
             second.run();
         };
     }
+
+    public static <T> Stream<T> stream(T[] array) {
+        return stream(array, 0, array.length);
+    }
+
+    public static <T> Stream<T> stream(T[] array, int start, int end) {
+        return Pipelines.stream(Spliterators.spliterator(array, start, end, CHARACTERISTICS), false);
+    }
+
+
+    public static ByteStream stream(byte[] array) {
+        return stream(array, 0, array.length);
+    }
+
+    public static ByteStream stream(byte[] array, int start, int end) {
+        return Pipelines.byteStream(Spliterators.spliterator(array, start, end, CHARACTERISTICS), false);
+    }
+
+    public static ShortStream stream(short[] array) {
+        return stream(array, 0, array.length);
+    }
+
+    public static ShortStream stream(short[] array, int start, int end) {
+        return Pipelines.shortStream(Spliterators.spliterator(array, start, end, CHARACTERISTICS), false);
+    }
+
+    public static CharStream stream(char[] array) {
+        return stream(array, 0, array.length);
+    }
+
+    public static CharStream stream(char[] array, int start, int end) {
+        return Pipelines.charStream(Spliterators.spliterator(array, start, end, CHARACTERISTICS), false);
+    }
+
+    public static IntStream stream(int[] array) {
+        return stream(array, 0, array.length);
+    }
+
+    public static IntStream stream(int[] array, int start, int end) {
+        return Pipelines.intStream(Spliterators.spliterator(array, start, end, CHARACTERISTICS), false);
+    }
+
+    public static LongStream stream(long[] array) {
+        return stream(array, 0, array.length);
+    }
+
+    public static LongStream stream(long[] array, int start, int end) {
+        return Pipelines.longStream(Spliterators.spliterator(array, start, end, CHARACTERISTICS), false);
+    }
+
+    public static FloatStream stream(float[] array) {
+        return stream(array, 0, array.length);
+    }
+
+    public static FloatStream stream(float[] array, int start, int end) {
+        return Pipelines.floatStream(Spliterators.spliterator(array, start, end, CHARACTERISTICS), false);
+    }
+
+    public static DoubleStream stream(double[] array) {
+        return stream(array, 0, array.length);
+    }
+
+    public static DoubleStream stream(double[] array, int start, int end) {
+        return Pipelines.doubleStream(Spliterators.spliterator(array, start, end, CHARACTERISTICS), false);
+    }
+
+
 }
