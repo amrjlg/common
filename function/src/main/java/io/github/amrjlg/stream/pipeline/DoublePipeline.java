@@ -279,9 +279,8 @@ public abstract class DoublePipeline<T> extends AbstractPipeline<T, Double, Doub
                 return new Sink.ChainedDouble<Double>(sink) {
                     @Override
                     public void begin(long size) {
-                        downstream.accept(-1);
+                        downstream.begin(-1);
                     }
-
                     @Override
                     public void accept(double value) {
                         if (predicate.test(value)) {

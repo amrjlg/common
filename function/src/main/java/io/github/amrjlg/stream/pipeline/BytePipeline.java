@@ -89,15 +89,14 @@ public abstract class BytePipeline<Input>
         if (spliterator instanceof Spliterator.OfByte) {
             return (Spliterator.OfByte) spliterator;
         }
-        throw new UnsupportedOperationException("");
+        throw new UnsupportedOperationException();
     }
 
     private static ByteConsumer toByte(Sink<Byte> sink) {
         if (sink instanceof ByteConsumer) {
             return (ByteConsumer) sink;
-        } else {
-            return sink::accept;
         }
+        throw new UnsupportedOperationException();
     }
 
 
@@ -255,7 +254,7 @@ public abstract class BytePipeline<Input>
                 return new Sink.ChainedByte<Byte>(sink) {
                     @Override
                     public void begin(long size) {
-                        downstream.accept(-1);
+                        downstream.begin(-1);
                     }
 
                     @Override
@@ -278,6 +277,10 @@ public abstract class BytePipeline<Input>
             @Override
             public Sink<Byte> opWrapSink(int flags, Sink<Byte> sink) {
                 return new Sink.ChainedByte<Byte>(sink) {
+                    @Override
+                    public void begin(long size) {
+                        downstream.begin(-1);
+                    }
                     @Override
                     public void accept(byte value) {
                         if (predicate.test(value)) {

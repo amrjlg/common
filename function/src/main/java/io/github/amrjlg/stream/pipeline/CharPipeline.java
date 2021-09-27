@@ -229,7 +229,7 @@ public abstract class CharPipeline<Input> extends AbstractPipeline<Input, Charac
 
                     @Override
                     public void begin(long size) {
-                        downstream.accept(-1);
+                        downstream.begin(-1);
                     }
 
                     @Override
@@ -251,6 +251,10 @@ public abstract class CharPipeline<Input> extends AbstractPipeline<Input, Charac
             @Override
             public Sink<Character> opWrapSink(int flags, Sink<Character> sink) {
                 return new Sink.ChainedChar<Character>(sink) {
+                    @Override
+                    public void begin(long size) {
+                        downstream.begin(-1);
+                    }
                     @Override
                     public void accept(char value) {
                         if (predicate.test(value)) {

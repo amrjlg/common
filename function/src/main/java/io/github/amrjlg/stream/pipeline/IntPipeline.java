@@ -263,6 +263,10 @@ public abstract class IntPipeline<In> extends AbstractPipeline<In, Integer, IntS
             public Sink<Integer> opWrapSink(int flags, Sink<Integer> sink) {
                 return new Sink.ChainedInt<Integer>(sink) {
                     @Override
+                    public void begin(long size) {
+                        downstream.begin(-1);
+                    }
+                    @Override
                     public void accept(int value) {
                         if (predicate.test(value)) {
                             downstream.accept(value);

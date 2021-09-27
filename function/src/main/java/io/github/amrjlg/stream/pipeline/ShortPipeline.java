@@ -187,6 +187,10 @@ public abstract class ShortPipeline<Input> extends AbstractPipeline<Input, Short
             public Sink<Short> opWrapSink(int flags, Sink<Short> sink) {
                 return new Sink.ChainedShort<Short>(sink) {
                     @Override
+                    public void begin(long size) {
+                        downstream.begin(-1);
+                    }
+                    @Override
                     public void accept(short value) {
                         if (predicate.test(value)) {
                             downstream.accept(value);
