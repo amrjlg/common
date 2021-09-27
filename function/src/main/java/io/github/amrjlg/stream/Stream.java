@@ -140,4 +140,8 @@ public interface Stream<T> extends BaseStream<T, Stream<T>> /*extends java.util.
     Stream<T> onClose(Runnable closeHandler);
 
     void close();
+
+    static <T> Stream<T> of(T[] array) {
+        return Streams.stream(array);
+    }
 }
