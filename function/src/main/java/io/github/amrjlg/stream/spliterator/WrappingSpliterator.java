@@ -100,7 +100,7 @@ public abstract class WrappingSpliterator<Input, Output, Buffer extends Abstract
 
     private boolean fillBuffer() {
         while (buffer.count() == 0) {
-            if (bufferSink.cancellationRequested() || pusher.getAsBoolean()) {
+            if (bufferSink.cancellationRequested() || !pusher.getAsBoolean()) {
                 if (finished) {
                     return false;
                 } else {
