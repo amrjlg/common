@@ -21,15 +21,16 @@ import io.github.amrjlg.stream.Sink;
 import io.github.amrjlg.stream.StreamOpFlag;
 import io.github.amrjlg.stream.StreamShape;
 import io.github.amrjlg.stream.TerminalOp;
-import io.github.amrjlg.stream.spliterator.DistinctSpliterator;
-import io.github.amrjlg.stream.spliterator.Spliterator;
 import io.github.amrjlg.stream.node.Node;
 import io.github.amrjlg.stream.node.Nodes;
 import io.github.amrjlg.stream.pipeline.AbstractPipeline;
 import io.github.amrjlg.stream.pipeline.PipelineHelper;
 import io.github.amrjlg.stream.pipeline.ReferencePipeline;
+import io.github.amrjlg.stream.spliterator.DistinctSpliterator;
+import io.github.amrjlg.stream.spliterator.Spliterator;
 
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -41,6 +42,66 @@ import java.util.function.IntFunction;
  * @see java.util.stream.DistinctOps
  **/
 public class DistinctOps {
+
+    public static <T> Sink<T> unSortedDistinctSink(Sink<T> sink) {
+        return new Sink.ChainedReference<T, T>(sink) {
+            Set<T> seen;
+
+            @Override
+            public void begin(long size) {
+                seen = new HashSet<>();
+                downstream.begin(-1);
+            }
+
+            @Override
+            public void end() {
+                seen = null;
+                downstream.end();
+            }
+
+            @Override
+            public void accept(T t) {
+                if (!seen.contains(t)) {
+                    seen.add(t);
+                    downstream.accept(t);
+                }
+            }
+        };
+    }
+
+    public static <T> Sink<T> sortedDistinctSink(Sink<T> sink) {
+        return new Sink.ChainedReference<T, T>(sink) {
+            boolean previsionIsNull;
+            T prevision;
+
+            @Override
+            public void begin(long size) {
+                previsionIsNull = false;
+                prevision = null;
+                downstream.begin(-1);
+            }
+
+            @Override
+            public void end() {
+                previsionIsNull = false;
+                prevision = null;
+                downstream.end();
+            }
+
+            @Override
+            public void accept(T t) {
+                if (t == null) {
+                    if (!previsionIsNull) {
+                        previsionIsNull = true;
+                        downstream.accept(prevision = null);
+                    }
+                } else if (!t.equals(prevision)) {
+                    downstream.accept(prevision = t);
+                }
+            }
+        };
+    }
+
     public static <T> ReferencePipeline<T, T> makeRef(AbstractPipeline<?, T, ?> pipeline) {
 
 
@@ -52,60 +113,9 @@ public class DistinctOps {
                 if (StreamOpFlag.DISTINCT.isKnown(flags)) {
                     return sink;
                 } else if (StreamOpFlag.SORTED.isKnown(flags)) {
-                    return new Sink.ChainedReference<T, T>(sink) {
-                        boolean seenNull;
-                        T lastSeen;
-
-                        @Override
-                        public void begin(long size) {
-                            seenNull = false;
-                            lastSeen = null;
-                            downstream.begin(-1);
-                        }
-
-                        @Override
-                        public void end() {
-                            seenNull = false;
-                            lastSeen = null;
-                            downstream.end();
-                        }
-
-                        @Override
-                        public void accept(T t) {
-                            if (t == null) {
-                                if (!seenNull) {
-                                    seenNull = true;
-                                    downstream.accept(lastSeen = null);
-                                }
-                            } else if (lastSeen == null || !t.equals(lastSeen)) {
-                                downstream.accept(lastSeen = t);
-                            }
-                        }
-                    };
+                    return sortedDistinctSink(sink);
                 } else {
-                    return new Sink.ChainedReference<T, T>(sink) {
-                        Set<T> seen;
-
-                        @Override
-                        public void begin(long size) {
-                            seen = new HashSet<>();
-                            downstream.begin(-1);
-                        }
-
-                        @Override
-                        public void end() {
-                            seen = null;
-                            downstream.end();
-                        }
-
-                        @Override
-                        public void accept(T t) {
-                            if (!seen.contains(t)) {
-                                seen.add(t);
-                                downstream.accept(t);
-                            }
-                        }
-                    };
+                    return unSortedDistinctSink(sink);
                 }
             }
 
@@ -155,7 +165,8 @@ public class DistinctOps {
 
 
             private <P_IN> Node<T> reduce(PipelineHelper<T> helper, Spliterator<P_IN> spliterator) {
-                return null;
+                TerminalOp<T, LinkedHashSet<T>> op = ReduceOps.<T, LinkedHashSet<T>>makeRef(LinkedHashSet::new, LinkedHashSet::add, LinkedHashSet::addAll);
+                return Nodes.node(op.evaluateParallel(helper, spliterator));
             }
         };
     }
