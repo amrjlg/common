@@ -268,6 +268,10 @@ public abstract class FloatPipeline<Input> extends AbstractPipeline<Input, Float
             public Sink<Float> opWrapSink(int flags, Sink<Float> sink) {
                 return new Sink.ChainedFloat<Float>(sink) {
                     @Override
+                    public void begin(long size) {
+                        downstream.begin(-1);
+                    }
+                    @Override
                     public void accept(float value) {
                         if (predicate.test(value)) {
                             downstream.accept(value);
