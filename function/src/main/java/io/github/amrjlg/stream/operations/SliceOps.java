@@ -130,7 +130,7 @@ public class SliceOps {
                 if (size > 0 && spliterator.hasCharacteristics(Spliterator.SUBSIZED)) {
                     return new SliceSpliterator.OfByte((Spliterator.OfByte) helper.wrapSpliterator(spliterator),
                             skip, calcSliceFence(skip, limit));
-                } else if (StreamOpFlag.SORTED.isKnown(helper.getStreamAndOpFlags())) {
+                } else if (StreamOpFlag.ORDERED.isKnown(helper.getStreamAndOpFlags())) {
                     return new SliceTask<>(this, helper, spliterator, Byte[]::new, skip, limit)
                             .invoke().spliterator();
                 } else {
@@ -144,7 +144,7 @@ public class SliceOps {
                 if (size > 0 && spliterator.hasCharacteristics(Spliterator.SUBSIZED)) {
                     Spliterator<P_IN> spl = sliceSpliterator(StreamShape.BYTE_VALUE, spliterator, skip, limit);
                     return Nodes.collectByte(helper, spl, true);
-                } else if (StreamOpFlag.SORTED.isKnown(helper.getStreamAndOpFlags())) {
+                } else if (StreamOpFlag.ORDERED.isKnown(helper.getStreamAndOpFlags())) {
                     return new SliceTask<>(this, helper, spliterator, generator, skip, limit).invoke();
                 } else {
                     Spliterator.OfByte spl = (Spliterator.OfByte) unorderedSkipLimitSpliterator(
@@ -187,7 +187,7 @@ public class SliceOps {
                 if (size > 0 && spliterator.hasCharacteristics(Spliterator.SUBSIZED)) {
                     return new SliceSpliterator.OfChar((Spliterator.OfChar) helper.wrapSpliterator(spliterator),
                             skip, calcSliceFence(skip, limit));
-                } else if (StreamOpFlag.SORTED.isKnown(helper.getStreamAndOpFlags())) {
+                } else if (StreamOpFlag.ORDERED.isKnown(helper.getStreamAndOpFlags())) {
                     return new SliceTask<>(this, helper, spliterator, Character[]::new, skip, limit).invoke().spliterator();
                 } else {
                     return unorderedSkipLimitSpliterator(StreamShape.CHAR_VALUE, helper.wrapSpliterator(spliterator), skip, limit, size);
@@ -200,7 +200,7 @@ public class SliceOps {
                 if (size > 0 && spliterator.hasCharacteristics(Spliterator.SUBSIZED)) {
                     Spliterator<P_IN> spl = sliceSpliterator(StreamShape.CHAR_VALUE, spliterator, skip, limit);
                     return Nodes.collectChar(helper, spl, true);
-                } else if (!StreamOpFlag.SORTED.isKnown(helper.getStreamAndOpFlags())) {
+                } else if (!StreamOpFlag.ORDERED.isKnown(helper.getStreamAndOpFlags())) {
                     return new SliceTask<>(this, helper, spliterator, generator, skip, limit).invoke();
                 } else {
                     Spliterator.OfChar spl = (Spliterator.OfChar) unorderedSkipLimitSpliterator(StreamShape.CHAR_VALUE, spliterator, skip, limit, size);
@@ -238,7 +238,7 @@ public class SliceOps {
                 if (size > 0 && spliterator.hasCharacteristics(Spliterator.SUBSIZED)) {
                     Spliterator<P_IN> spl = sliceSpliterator(helper.getSourceShape(), spliterator, skip, limit);
                     return Nodes.collectShort(helper, spl, true);
-                } else if (StreamOpFlag.SORTED.isKnown(helper.getStreamAndOpFlags())) {
+                } else if (StreamOpFlag.ORDERED.isKnown(helper.getStreamAndOpFlags())) {
                     return new SliceTask<>(this, helper, spliterator, generator, skip, limit).invoke();
                 } else {
                     Spliterator<P_IN> spl = unorderedSkipLimitSpliterator(StreamShape.SHORT_VALUE, spliterator, skip, limit, size);
@@ -252,7 +252,7 @@ public class SliceOps {
                 if (size > 0 && spliterator.hasCharacteristics(Spliterator.SUBSIZED)) {
                     return new SliceSpliterator.OfShort((Spliterator.OfShort) helper.wrapSpliterator(spliterator),
                             skip, calcSliceFence(skip, limit));
-                } else if (StreamOpFlag.SORTED.isKnown(helper.getStreamAndOpFlags())) {
+                } else if (StreamOpFlag.ORDERED.isKnown(helper.getStreamAndOpFlags())) {
                     return new SliceTask<>(this, helper, spliterator, Short[]::new, skip, limit).invoke().spliterator();
                 } else {
                     return unorderedSkipLimitSpliterator(StreamShape.SHORT_VALUE, helper.wrapSpliterator(spliterator), skip, limit, size);
@@ -289,7 +289,7 @@ public class SliceOps {
                 if (size > 0 && spliterator.hasCharacteristics(Spliterator.SUBSIZED)) {
                     return new SliceSpliterator.OfInt((Spliterator.OfInt) helper.wrapSpliterator(spliterator),
                             skip, calcSliceFence(skip, limit));
-                } else if (StreamOpFlag.SORTED.isKnown(helper.getStreamAndOpFlags())) {
+                } else if (StreamOpFlag.ORDERED.isKnown(helper.getStreamAndOpFlags())) {
                     return new SliceTask<>(this, helper, spliterator, Integer[]::new, skip, limit).invoke().spliterator();
                 } else {
                     return unorderedSkipLimitSpliterator(StreamShape.INT_VALUE,
@@ -304,7 +304,7 @@ public class SliceOps {
                 if (size > 0 && spliterator.hasCharacteristics(Spliterator.SUBSIZED)) {
                     Spliterator<P_IN> spl = sliceSpliterator(helper.getSourceShape(), spliterator, skip, limit);
                     return Nodes.collectInt(helper, spl, true);
-                } else if (StreamOpFlag.SORTED.isKnown(helper.getStreamAndOpFlags())) {
+                } else if (StreamOpFlag.ORDERED.isKnown(helper.getStreamAndOpFlags())) {
                     return new SliceTask<>(this, helper, spliterator, generator, skip, limit).invoke();
                 } else {
                     Spliterator<Integer> spl = unorderedSkipLimitSpliterator(StreamShape.INT_VALUE, helper.wrapSpliterator(spliterator), skip, limit, size);
@@ -342,7 +342,7 @@ public class SliceOps {
                 if (size > 0 && spliterator.hasCharacteristics(Spliterator.SUBSIZED)) {
                     return new SliceSpliterator.OfLong((Spliterator.OfLong) helper.wrapSpliterator(spliterator),
                             skip, calcSliceFence(skip, limit));
-                } else if (StreamOpFlag.SORTED.isKnown(helper.getStreamAndOpFlags())) {
+                } else if (StreamOpFlag.ORDERED.isKnown(helper.getStreamAndOpFlags())) {
                     return new SliceTask<>(this, helper, spliterator, Long[]::new, skip, limit).invoke().spliterator();
                 } else {
                     return unorderedSkipLimitSpliterator(StreamShape.LONG_VALUE, helper.wrapSpliterator(spliterator), skip, limit, size);
@@ -355,7 +355,7 @@ public class SliceOps {
                 if (size > 0 && spliterator.hasCharacteristics(Spliterator.SUBSIZED)) {
                     Spliterator<P_IN> spl = sliceSpliterator(helper.getSourceShape(), spliterator, skip, limit);
                     return Nodes.collectLong(helper, spl, true);
-                } else if (StreamOpFlag.SORTED.isKnown(helper.getStreamAndOpFlags())) {
+                } else if (StreamOpFlag.ORDERED.isKnown(helper.getStreamAndOpFlags())) {
                     return new SliceTask<>(this, helper, spliterator, generator, skip, limit).invoke();
                 } else {
                     Spliterator<Long> spl = unorderedSkipLimitSpliterator(StreamShape.LONG_VALUE, helper.wrapSpliterator(spliterator), skip, limit, size);
@@ -393,7 +393,7 @@ public class SliceOps {
                 if (size > 0 && spliterator.hasCharacteristics(Spliterator.SUBSIZED)) {
                     return new SliceSpliterator.OfFloat((Spliterator.OfFloat) helper.wrapSpliterator(spliterator),
                             skip, calcSliceFence(skip, limit));
-                } else if (StreamOpFlag.SORTED.isKnown(helper.getStreamAndOpFlags())) {
+                } else if (StreamOpFlag.ORDERED.isKnown(helper.getStreamAndOpFlags())) {
                     return new SliceTask<>(this, helper, spliterator, Float[]::new, skip, limit).invoke().spliterator();
                 } else {
                     return unorderedSkipLimitSpliterator(StreamShape.FLOAT_VALUE, helper.wrapSpliterator(spliterator), skip, limit, size);
@@ -406,7 +406,7 @@ public class SliceOps {
                 if (size > 0 && spliterator.hasCharacteristics(Spliterator.SUBSIZED)) {
                     Spliterator<P_IN> spl = sliceSpliterator(helper.getSourceShape(), spliterator, skip, limit);
                     return Nodes.collectFloat(helper, spl, true);
-                } else if (StreamOpFlag.SORTED.isKnown(helper.getStreamAndOpFlags())) {
+                } else if (StreamOpFlag.ORDERED.isKnown(helper.getStreamAndOpFlags())) {
                     return new SliceTask<>(this, helper, spliterator, generator, skip, limit).invoke();
                 } else {
                     Spliterator<Float> spl = unorderedSkipLimitSpliterator(StreamShape.FLOAT_VALUE, helper.wrapSpliterator(spliterator), skip, limit, size);
@@ -444,7 +444,7 @@ public class SliceOps {
                 if (size > 0 && spliterator.hasCharacteristics(Spliterator.SUBSIZED)) {
                     return new SliceSpliterator.OfDouble((Spliterator.OfDouble) helper.wrapSpliterator(spliterator),
                             skip, calcSliceFence(skip, limit));
-                } else if (StreamOpFlag.SORTED.isKnown(helper.getStreamAndOpFlags())) {
+                } else if (StreamOpFlag.ORDERED.isKnown(helper.getStreamAndOpFlags())) {
                     return new SliceTask<>(this, helper, spliterator, Double[]::new, skip, limit).invoke().spliterator();
                 } else {
                     return unorderedSkipLimitSpliterator(StreamShape.DOUBLE_VALUE, helper.wrapSpliterator(spliterator), skip, limit, size);
@@ -457,7 +457,7 @@ public class SliceOps {
                 if (size > 0 && spliterator.hasCharacteristics(Spliterator.SUBSIZED)) {
                     Spliterator<P_IN> spl = sliceSpliterator(helper.getSourceShape(), spliterator, skip, limit);
                     return Nodes.collectDouble(helper, spl, true);
-                } else if (StreamOpFlag.SORTED.isKnown(helper.getStreamAndOpFlags())) {
+                } else if (StreamOpFlag.ORDERED.isKnown(helper.getStreamAndOpFlags())) {
                     return new SliceTask<>(this, helper, spliterator, generator, skip, limit).invoke();
                 } else {
                     Spliterator<Double> spl = unorderedSkipLimitSpliterator(StreamShape.DOUBLE_VALUE, helper.wrapSpliterator(spliterator), skip, limit, size);
