@@ -243,7 +243,7 @@ public abstract class WrappingSpliterator<Input, Output, Buffer extends Abstract
         @Override
         void initPartialTraversalState() {
             buffer = new SpinedBuffer.OfByte();
-            bufferSink = helper.wrapSink(buffer::accept);
+            bufferSink = helper.wrapSink((Sink.OfByte) buffer::accept);
             pusher = () -> spliterator.tryAdvance(bufferSink);
         }
 
@@ -257,7 +257,7 @@ public abstract class WrappingSpliterator<Input, Output, Buffer extends Abstract
             if (buffer == null && !finished) {
                 Objects.requireNonNull(consumer);
                 init();
-                helper.wrapAndCopyInto(consumer::accept, spliterator);
+                helper.wrapAndCopyInto((Sink.OfByte)consumer::accept, spliterator);
                 finished = true;
             } else {
                 while (tryAdvance(consumer)) {
@@ -296,7 +296,7 @@ public abstract class WrappingSpliterator<Input, Output, Buffer extends Abstract
         @Override
         void initPartialTraversalState() {
             buffer = new SpinedBuffer.OfShort();
-            bufferSink = helper.wrapSink(buffer::accept);
+            bufferSink = helper.wrapSink((Sink.OfShort)buffer::accept);
             pusher = () -> spliterator.tryAdvance(bufferSink);
         }
 
@@ -310,7 +310,7 @@ public abstract class WrappingSpliterator<Input, Output, Buffer extends Abstract
             if (buffer == null && !finished) {
                 Objects.requireNonNull(consumer);
                 init();
-                helper.wrapAndCopyInto(consumer::accept, spliterator);
+                helper.wrapAndCopyInto((Sink.OfShort)consumer::accept, spliterator);
                 finished = true;
             } else {
                 while (tryAdvance(consumer)) {
@@ -349,7 +349,7 @@ public abstract class WrappingSpliterator<Input, Output, Buffer extends Abstract
         @Override
         void initPartialTraversalState() {
             buffer = new SpinedBuffer.OfChar();
-            bufferSink = helper.wrapSink(buffer::accept);
+            bufferSink = helper.wrapSink((Sink.OfChar)buffer::accept);
             pusher = () -> spliterator.tryAdvance(bufferSink);
         }
 
@@ -363,7 +363,7 @@ public abstract class WrappingSpliterator<Input, Output, Buffer extends Abstract
             if (buffer == null && !finished) {
                 Objects.requireNonNull(consumer);
                 init();
-                helper.wrapAndCopyInto(consumer::accept, spliterator);
+                helper.wrapAndCopyInto((Sink.OfChar)consumer::accept, spliterator);
                 finished = true;
             } else {
                 while (tryAdvance(consumer)) {
@@ -402,7 +402,7 @@ public abstract class WrappingSpliterator<Input, Output, Buffer extends Abstract
         @Override
         void initPartialTraversalState() {
             buffer = new SpinedBuffer.OfInt();
-            bufferSink = helper.wrapSink(buffer::accept);
+            bufferSink = helper.wrapSink((Sink.OfInt) buffer::accept);
             pusher = () -> spliterator.tryAdvance(bufferSink);
         }
 
@@ -416,7 +416,7 @@ public abstract class WrappingSpliterator<Input, Output, Buffer extends Abstract
             if (buffer == null && !finished) {
                 Objects.requireNonNull(consumer);
                 init();
-                helper.wrapAndCopyInto(consumer::accept, spliterator);
+                helper.wrapAndCopyInto((Sink.OfInt)consumer::accept, spliterator);
                 finished = true;
             } else {
                 while (tryAdvance(consumer)) {
@@ -455,7 +455,7 @@ public abstract class WrappingSpliterator<Input, Output, Buffer extends Abstract
         @Override
         void initPartialTraversalState() {
             buffer = new SpinedBuffer.OfLong();
-            bufferSink = helper.wrapSink(buffer::accept);
+            bufferSink = helper.wrapSink((Sink.OfLong)buffer::accept);
             pusher = () -> spliterator.tryAdvance(bufferSink);
         }
 
@@ -469,7 +469,7 @@ public abstract class WrappingSpliterator<Input, Output, Buffer extends Abstract
             if (buffer == null && !finished) {
                 Objects.requireNonNull(consumer);
                 init();
-                helper.wrapAndCopyInto(consumer::accept, spliterator);
+                helper.wrapAndCopyInto((Sink.OfLong)consumer::accept, spliterator);
                 finished = true;
             } else {
                 while (tryAdvance(consumer)) {
@@ -508,7 +508,7 @@ public abstract class WrappingSpliterator<Input, Output, Buffer extends Abstract
         @Override
         void initPartialTraversalState() {
             buffer = new SpinedBuffer.OfFloat();
-            bufferSink = helper.wrapSink(buffer::accept);
+            bufferSink = helper.wrapSink((Sink.OfFloat)buffer::accept);
             pusher = () -> spliterator.tryAdvance(bufferSink);
         }
 
@@ -522,7 +522,7 @@ public abstract class WrappingSpliterator<Input, Output, Buffer extends Abstract
             if (buffer == null && !finished) {
                 Objects.requireNonNull(consumer);
                 init();
-                helper.wrapAndCopyInto(consumer::accept, spliterator);
+                helper.wrapAndCopyInto((Sink.OfFloat)consumer::accept, spliterator);
                 finished = true;
             } else {
                 while (tryAdvance(consumer)) {
@@ -561,7 +561,7 @@ public abstract class WrappingSpliterator<Input, Output, Buffer extends Abstract
         @Override
         void initPartialTraversalState() {
             buffer = new SpinedBuffer.OfDouble();
-            bufferSink = helper.wrapSink(buffer::accept);
+            bufferSink = helper.wrapSink((Sink.OfDouble)buffer::accept);
             pusher = () -> spliterator.tryAdvance(bufferSink);
         }
 
@@ -575,7 +575,7 @@ public abstract class WrappingSpliterator<Input, Output, Buffer extends Abstract
             if (buffer == null && !finished) {
                 Objects.requireNonNull(consumer);
                 init();
-                helper.wrapAndCopyInto(consumer::accept, spliterator);
+                helper.wrapAndCopyInto((Sink.OfDouble)consumer::accept, spliterator);
                 finished = true;
             } else {
                 while (tryAdvance(consumer)) {
