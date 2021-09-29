@@ -73,7 +73,7 @@ public interface IntStream extends BaseStream<Integer, IntStream> {
 
     IntStream limit(long maxSize);
 
-    IntStream skip(long n);
+    IntStream skip(long skip);
 
     void forEach(IntConsumer action);
 
