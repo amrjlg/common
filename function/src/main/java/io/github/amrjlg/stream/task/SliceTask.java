@@ -127,7 +127,7 @@ public class SliceTask<Input, Output>
     }
 
     private Node<Output> doTruncate(Node<Output> node) {
-        long size = targetSize >= 0 ? Math.min(node.count(), limit + targetSize) : nodeSize;
+        long size = limit >= 0 ? Math.min(node.count(), skip + limit) : nodeSize;
         return node.truncate(skip, size, generator);
     }
 
