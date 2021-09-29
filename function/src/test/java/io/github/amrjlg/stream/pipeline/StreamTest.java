@@ -33,10 +33,10 @@ public class StreamTest {
     @Test
     public void stream() {
 
-        String[] array = ArrayUtil.arrays("a", "b", "c", "d", "e", "f");
+        String[] array = ArrayUtil.arrays("af", "bf", "cf", "df", "ef", "f");
 
         Streams.stream(array).parallel().skip(1)
-                .filter(v -> v.contains("f")).limit(100).findAny().ifPresent(System.out::println);
+                .filter(v -> v.contains("f")).limit(3).forEach(System.out::println);
 
     }
 
@@ -46,12 +46,11 @@ public class StreamTest {
         byte[] array = {5, 6, 2, 3, 4};
 
         Streams.stream(array)
-                .sorted()
                 .parallel()
                 .skip(1)
                 .filter(v -> v > 0x2)
-                .limit(6)
-                .findAny().ifPresent(System.out::println);
+                .limit(2)
+                .forEach(System.out::println);
     }
 
     @Test
@@ -85,13 +84,14 @@ public class StreamTest {
         Arrays.stream(array).parallel()
                 .skip(1)
                 .filter(v -> v > 1)
-                .limit(2).findFirst().ifPresent(System.out::println);
+                .limit(1)
+                .forEach(System.out::println);
         System.out.println("===========");
         Streams.stream(array).parallel()
                 .skip(1)
                 .filter(v -> v > 1)
-                .limit(2)
-                .findFirst().ifPresent(System.out::println);
+                .limit(1)
+                .forEach(System.out::println);
     }
 
     @Test
@@ -113,9 +113,8 @@ public class StreamTest {
                 .parallel()
                 .skip(1)
                 .filter(v -> v > 1)
-                .limit(2)
-                .findAny()
-                .ifPresent(System.out::println);
+                .limit(0)
+                .forEach(System.out::println);
     }
 
     @Test
