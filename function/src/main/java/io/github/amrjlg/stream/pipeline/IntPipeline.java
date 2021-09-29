@@ -310,12 +310,12 @@ public abstract class IntPipeline<In> extends AbstractPipeline<In, Integer, IntS
     }
 
     @Override
-    public IntStream skip(long n) {
-        positive(n);
-        if (n == 0) {
+    public IntStream skip(long skip) {
+        positive(skip);
+        if (skip == 0) {
             return this;
         }
-        return SliceOps.makeInt(this, n, -1);
+        return SliceOps.makeInt(this, skip, -1);
     }
 
     @Override
