@@ -92,28 +92,28 @@ public class SliceOps {
             @Override
             public Sink<T> opWrapSink(int flags, Sink<T> sink) {
                 return new Sink.ChainedReference<T, T>(sink) {
-                    long n = skip;
-                    long m = limit >= 0 ? limit : Long.MAX_VALUE;
+                    long s = skip;
+                    long l = limit >= 0 ? limit : Long.MAX_VALUE;
 
                     @Override
                     public void begin(long size) {
-                        downstream.begin(calcSize(size, skip, m));
+                        downstream.begin(calcSize(size, skip, l));
                     }
 
                     @Override
                     public boolean cancellationRequested() {
-                        return m == 0 || downstream.cancellationRequested();
+                        return l == 0 || downstream.cancellationRequested();
                     }
 
                     @Override
                     public void accept(T t) {
-                        if (n == 0) {
-                            if (m > 0) {
-                                m--;
+                        if (s == 0) {
+                            if (l > 0) {
+                                l--;
                                 downstream.accept(t);
                             }
                         } else {
-                            n--;
+                            s--;
                         }
                     }
                 };
@@ -319,11 +319,24 @@ public class SliceOps {
                     long l = limit >= 0 ? limit : Long.MAX_VALUE;
 
                     @Override
+                    public void begin(long size) {
+                        downstream.begin(calcSize(size, skip, l));
+                    }
+
+                    @Override
+                    public boolean cancellationRequested() {
+                        System.out.println("cancellationRequested");
+                        return l == 0 || downstream.cancellationRequested();
+                    }
+
+                    @Override
                     public void accept(int value) {
+                        System.out.printf("-----skip-%d,limit-%d\r\n", s, l);
                         if (s == 0) {
                             if (l > 0) {
                                 l--;
                                 downstream.accept(value);
+                                System.out.printf("-----skip-%d,limit-%d\r\n", s, l);
                             }
                         } else {
                             s--;
@@ -419,6 +432,16 @@ public class SliceOps {
                 return new Sink.ChainedFloat<Float>(sink) {
                     long s = skip;
                     long l = limit >= 0 ? limit : Long.MAX_VALUE;
+
+                    @Override
+                    public void begin(long size) {
+                        downstream.begin(calcSize(size, skip, l));
+                    }
+
+                    @Override
+                    public boolean cancellationRequested() {
+                        return l == 0 || downstream.cancellationRequested();
+                    }
 
                     @Override
                     public void accept(float value) {
