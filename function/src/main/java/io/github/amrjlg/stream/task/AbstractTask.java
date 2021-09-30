@@ -68,9 +68,10 @@ public abstract class AbstractTask<Input, Output, Result, Task extends AbstractT
 
 
     protected final long getTargetSize(long sizeEstimate) {
-        long s;
-        return ((s = targetSize) != 0 ? s :
-                (targetSize = suggestTargetSize(sizeEstimate)));
+        if (targetSize == 0) {
+            targetSize = suggestTargetSize(sizeEstimate);
+        }
+        return targetSize;
     }
 
 
@@ -147,6 +148,7 @@ public abstract class AbstractTask<Input, Output, Result, Task extends AbstractT
         spliterator = null;
         leftChild = rightChild = null;
     }
+
     protected boolean isLeftmostNode() {
         @SuppressWarnings("unchecked")
         Task node = (Task) this;
