@@ -18,4 +18,5 @@ dependencies {
     compile project(":interface")
     compile project(":exception")
     compile project(":id")
+    compile project(":function")
 }
