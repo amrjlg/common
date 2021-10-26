@@ -28,7 +28,7 @@ tasks.withType(Javadoc) {
     options.links = ["https://docs.oracle.com/javase/8/docs/api"]
     options.docTitle = archivesBaseName
     options.tags = ["date","implSpec"]
-
+    options.addStringOption("Xdoclint:none", "-quiet")
 }
 
 
