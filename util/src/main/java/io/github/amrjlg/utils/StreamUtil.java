@@ -48,7 +48,7 @@ import java.util.stream.LongStream;
  **/
 public class StreamUtil {
     /**
-     * stream to map ,the value like {@link HashMap#put(K, U)}
+     * stream to map ,the value like {@link HashMap#put}
      *
      * @param key   function to get key
      * @param value function to get value
@@ -70,7 +70,7 @@ public class StreamUtil {
     }
 
     /**
-     * stream to map ,the value like {@link HashMap#put(K, U)}
+     * stream to map ,the value like {@link HashMap#put}
      *
      * @param key   function to get key
      * @param value function to get value
@@ -92,11 +92,11 @@ public class StreamUtil {
     }
 
     /**
-     * stream to map ,the value like {@link HashMap#put(K, U)}
+     * stream to map ,the value like {@link HashMap#put}
      *
      * @param key   function to get key
      * @param value function to get value
-     * @param first merge type, if have same key, <code>true<code/> will keep old value,else will use new value
+     * @param first merge type, if have same key, {@code true} will keep old value,else will use new value
      * @see #toMapKeepFirst(Function, Function)
      * @see #toMapKeepLast(Function, Function)
      */
@@ -105,7 +105,7 @@ public class StreamUtil {
     }
 
     /**
-     * stream to map ,the value like {@link HashMap#put(K, U)}
+     * stream to map ,the value like {@link HashMap#put}
      *
      * @param key   function to get key
      * @param value function to get value
