@@ -23,7 +23,7 @@ import io.github.amrjlg.stream.spliterator.Spliterator;
 /**
  * @param <Input>
  * @param <R>
- * @see java.util.stream.TerminalOp<Input,R>
+ * @see java.util.stream.TerminalOp
  */
 public interface TerminalOp<Input, R> {
     /**

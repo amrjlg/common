@@ -18,15 +18,16 @@ tasks.withType(JavaCompile) {
 }
 // for more information https://docs.gradle.org/current/javadoc/org/gradle/external/javadoc/StandardJavadocDocletOptions.html
 tasks.withType(Javadoc) {
-    options {
-        encoding "UTF-8"
-        charSet "UTF-8"
-        author true
-        version true
-        // 需要https才能生效
-        links "https://docs.oracle.com/javase/8/docs/api"
-        title project.group + '-' + project.name
-    }
+    options.encoding = "UTF-8"
+    options.charSet = "UTF-8"
+    options.docEncoding = "UTF-8"
+    options.linkSource = true
+    options.author = true
+    options.version = true
+    // = 需要https才能生效
+    options.links = ["https://docs.oracle.com/javase/8/docs/api"]
+    options.docTitle = archivesBaseName
+    options.tags = ["date","implSpec"]
 
 }
 
