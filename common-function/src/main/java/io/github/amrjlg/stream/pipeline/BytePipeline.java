@@ -17,7 +17,6 @@
 
 package io.github.amrjlg.stream.pipeline;
 
-import io.github.amrjlg.exception.NotImplementedException;
 import io.github.amrjlg.function.ByteBinaryOperator;
 import io.github.amrjlg.function.ByteConsumer;
 import io.github.amrjlg.function.ByteFunction;
