@@ -93,6 +93,7 @@ public abstract class LongPipeline<Input> extends AbstractPipeline<Input, Long, 
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     Spliterator<Long> lazySpliterator(Supplier<? extends Spliterator<Long>> supplier) {
         return new DelegatingSpliterator.OfLong((Supplier<? extends Spliterator.OfLong>) supplier);
     }
