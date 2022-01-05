@@ -21,5 +21,5 @@ package io.github.amrjlg.function;
  * @author amrjlg
  **/
 public interface LongToFloatFunction {
-    float applyAsByte(long value);
+    float applyAsFloat(long value);
 }
