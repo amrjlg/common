@@ -231,8 +231,17 @@ public abstract class IntPipeline<In> extends AbstractPipeline<In, Integer, IntS
 
     @Override
     public FloatStream mapToFloat(IntToFloatFunction mapper) {
-        // TODO IMPL
-        throw new NotImplementedException();
+        return new FloatPipeline.StatelessOp<Integer>(this,StreamShape.INT_VALUE,MAP_OP_FLAGS) {
+            @Override
+            public Sink<Integer> opWrapSink(int flags, Sink<Float> sink) {
+                return new Sink.ChainedInt<Float>(sink) {
+                    @Override
+                    public void accept(int value) {
+                        downstream.accept(mapper.applyAsFloat(value));
+                    }
+                };
+            }
+        };
     }
 
     @Override
