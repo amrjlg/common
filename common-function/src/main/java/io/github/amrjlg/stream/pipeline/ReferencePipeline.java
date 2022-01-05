@@ -273,8 +273,17 @@ public abstract class ReferencePipeline<Input, Output>
 
     @Override
     public DoubleStream mapToDouble(ToDoubleFunction<? super Output> mapper) {
-        // TODO IMPL
-        throw new NotImplementedException();
+        return new DoublePipeline.StatelessOp<Output>(this,StreamShape.REFERENCE,MAP_OP_FLAGS) {
+            @Override
+            public Sink<Output> opWrapSink(int flags, Sink<Double> sink) {
+                return new Sink.ChainedReference<Output, Double>(sink) {
+                    @Override
+                    public void accept(Output output) {
+                        downstream.accept(mapper.applyAsDouble(output));
+                    }
+                };
+            }
+        };
     }
 
     @Override
