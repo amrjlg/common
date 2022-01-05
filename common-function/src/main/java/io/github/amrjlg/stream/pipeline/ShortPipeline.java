@@ -1,6 +1,5 @@
 package io.github.amrjlg.stream.pipeline;
 
-import io.github.amrjlg.exception.NotImplementedException;
 import io.github.amrjlg.function.ObjShortConsumer;
 import io.github.amrjlg.function.ShortBinaryOperator;
 import io.github.amrjlg.function.ShortConsumer;
@@ -170,8 +169,17 @@ public abstract class ShortPipeline<Input> extends AbstractPipeline<Input, Short
 
     @Override
     public DoubleStream mapToDouble(ShortToDoubleFunction mapper) {
-        // todo impl
-        throw new NotImplementedException();
+        return new DoublePipeline.StatelessOp<Short>(this,StreamShape.SHORT_VALUE,MAP_OP_FLAGS) {
+            @Override
+            public Sink<Short> opWrapSink(int flags, Sink<Double> sink) {
+                return new Sink.ChainedShort<Double>(sink) {
+                    @Override
+                    public void accept(short value) {
+                        downstream.accept(mapper.applyAsDouble(value));
+                    }
+                };
+            }
+        };
     }
 
     @Override
@@ -392,6 +400,7 @@ public abstract class ShortPipeline<Input> extends AbstractPipeline<Input, Short
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     Spliterator<Short> lazySpliterator(Supplier<? extends Spliterator<Short>> supplier) {
         return new DelegatingSpliterator.OfShort((Supplier<? extends Spliterator.OfShort>) supplier);
     }
