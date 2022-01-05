@@ -216,8 +216,19 @@ public abstract class CharPipeline<Input> extends AbstractPipeline<Input, Charac
 
     @Override
     public DoubleStream mapToDouble(CharToDoubleFunction mapper) {
-        // TODO impl
-        throw new NotImplementedException();
+        return new DoublePipeline.StatelessOp<Character>(this,StreamShape.CHAR_VALUE,MAP_OP_FLAGS){
+
+            @Override
+            public Sink<Character> opWrapSink(int flags, Sink<Double> sink) {
+                return new Sink.ChainedChar<Double>(sink){
+
+                    @Override
+                    public void accept(char value) {
+                        downstream.accept(mapper.applyAsDouble(value));
+                    }
+                };
+            }
+        };
     }
 
     @Override
