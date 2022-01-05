@@ -17,7 +17,6 @@
 
 package io.github.amrjlg.stream.pipeline;
 
-import io.github.amrjlg.exception.NotImplementedException;
 import io.github.amrjlg.function.FloatBinaryOperator;
 import io.github.amrjlg.function.FloatConsumer;
 import io.github.amrjlg.function.FloatFunction;

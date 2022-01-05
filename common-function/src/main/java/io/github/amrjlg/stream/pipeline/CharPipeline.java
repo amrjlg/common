@@ -17,7 +17,6 @@
 
 package io.github.amrjlg.stream.pipeline;
 
-import io.github.amrjlg.exception.NotImplementedException;
 import io.github.amrjlg.function.CharBinaryOperator;
 import io.github.amrjlg.function.CharConsumer;
 import io.github.amrjlg.function.CharFunction;
