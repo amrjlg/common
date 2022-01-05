@@ -242,8 +242,17 @@ public abstract class BytePipeline<Input>
 
     @Override
     public DoubleStream mapToDouble(ByteToDoubleFunction mapper) {
-        // TODO impl
-        throw new NotImplementedException();
+        return new DoublePipeline.StatelessOp<Byte>(this,StreamShape.BYTE_VALUE,MAP_OP_FLAGS){
+            @Override
+            public Sink<Byte> opWrapSink(int flags, Sink<Double> sink) {
+                return new Sink.ChainedByte<Double>(sink){
+                    @Override
+                    public void accept(byte value) {
+                        downstream.accept(mapper.applyAsDouble(value));
+                    }
+                };
+            }
+        };
     }
 
     @Override
