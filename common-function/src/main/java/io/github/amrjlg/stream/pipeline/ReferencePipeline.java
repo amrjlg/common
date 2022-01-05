@@ -17,23 +17,10 @@
 
 package io.github.amrjlg.stream.pipeline;
 
-import io.github.amrjlg.exception.NotImplementedException;
-import io.github.amrjlg.function.ByteConsumer;
 import io.github.amrjlg.function.ToByteFunction;
 import io.github.amrjlg.function.ToCharFunction;
 import io.github.amrjlg.function.ToFloatFunction;
 import io.github.amrjlg.function.ToShortFunction;
-import io.github.amrjlg.stream.spliterator.DelegatingSpliterator;
-import io.github.amrjlg.stream.spliterator.Spliterators;
-import io.github.amrjlg.stream.spliterator.WrappingSpliterator;
-import io.github.amrjlg.stream.operations.DistinctOps;
-import io.github.amrjlg.stream.operations.FindOps;
-import io.github.amrjlg.stream.operations.ForeachOps;
-import io.github.amrjlg.stream.operations.MatchKind;
-import io.github.amrjlg.stream.operations.MatchOps;
-import io.github.amrjlg.stream.operations.ReduceOps;
-import io.github.amrjlg.stream.operations.SliceOps;
-import io.github.amrjlg.stream.operations.SortedOps;
 import io.github.amrjlg.stream.ByteStream;
 import io.github.amrjlg.stream.CharStream;
 import io.github.amrjlg.stream.DoubleStream;
@@ -45,10 +32,21 @@ import io.github.amrjlg.stream.Sink;
 import io.github.amrjlg.stream.Stream;
 import io.github.amrjlg.stream.StreamOpFlag;
 import io.github.amrjlg.stream.StreamShape;
-import io.github.amrjlg.stream.spliterator.Spliterator;
 import io.github.amrjlg.stream.node.Node;
 import io.github.amrjlg.stream.node.NodeBuilder;
 import io.github.amrjlg.stream.node.Nodes;
+import io.github.amrjlg.stream.operations.DistinctOps;
+import io.github.amrjlg.stream.operations.FindOps;
+import io.github.amrjlg.stream.operations.ForeachOps;
+import io.github.amrjlg.stream.operations.MatchKind;
+import io.github.amrjlg.stream.operations.MatchOps;
+import io.github.amrjlg.stream.operations.ReduceOps;
+import io.github.amrjlg.stream.operations.SliceOps;
+import io.github.amrjlg.stream.operations.SortedOps;
+import io.github.amrjlg.stream.spliterator.DelegatingSpliterator;
+import io.github.amrjlg.stream.spliterator.Spliterator;
+import io.github.amrjlg.stream.spliterator.Spliterators;
+import io.github.amrjlg.stream.spliterator.WrappingSpliterator;
 
 import java.util.Comparator;
 import java.util.Iterator;
@@ -258,7 +256,7 @@ public abstract class ReferencePipeline<Input, Output>
 
     @Override
     public FloatStream mapToFloat(ToFloatFunction<? super Output> mapper) {
-        return new FloatPipeline.StatelessOp<Output>(this,StreamShape.REFERENCE,MAP_OP_FLAGS) {
+        return new FloatPipeline.StatelessOp<Output>(this, StreamShape.REFERENCE, MAP_OP_FLAGS) {
             @Override
             public Sink<Output> opWrapSink(int flags, Sink<Float> sink) {
                 return new Sink.ChainedReference<Output, Float>(sink) {
@@ -273,7 +271,7 @@ public abstract class ReferencePipeline<Input, Output>
 
     @Override
     public DoubleStream mapToDouble(ToDoubleFunction<? super Output> mapper) {
-        return new DoublePipeline.StatelessOp<Output>(this,StreamShape.REFERENCE,MAP_OP_FLAGS) {
+        return new DoublePipeline.StatelessOp<Output>(this, StreamShape.REFERENCE, MAP_OP_FLAGS) {
             @Override
             public Sink<Output> opWrapSink(int flags, Sink<Double> sink) {
                 return new Sink.ChainedReference<Output, Double>(sink) {
@@ -395,7 +393,7 @@ public abstract class ReferencePipeline<Input, Output>
 
     @Override
     public LongStream flatMapToLong(Function<? super Output, ? extends LongStream> mapper) {
-        return new LongPipeline.StatelessOp<Output>(this,StreamShape.REFERENCE,MAP_OP_FLAGS) {
+        return new LongPipeline.StatelessOp<Output>(this, StreamShape.REFERENCE, MAP_OP_FLAGS) {
             @Override
             public Sink<Output> opWrapSink(int flags, Sink<Long> sink) {
                 return new Sink.ChainedReference<Output, Long>(sink) {
@@ -407,7 +405,7 @@ public abstract class ReferencePipeline<Input, Output>
                     @Override
                     public void accept(Output output) {
                         Optional.ofNullable(mapper.apply(output))
-                                .ifPresent(s->s.sequential().forEach(downstream::accept));
+                                .ifPresent(s -> s.sequential().forEach(downstream::accept));
                     }
                 };
             }
@@ -416,7 +414,7 @@ public abstract class ReferencePipeline<Input, Output>
 
     @Override
     public FloatStream flatMapToFloat(Function<? super Output, ? extends FloatStream> mapper) {
-        return new FloatPipeline.StatelessOp<Output>(this,StreamShape.REFERENCE,MAP_OP_FLAGS) {
+        return new FloatPipeline.StatelessOp<Output>(this, StreamShape.REFERENCE, MAP_OP_FLAGS) {
             @Override
             public Sink<Output> opWrapSink(int flags, Sink<Float> sink) {
                 return new Sink.ChainedReference<Output, Float>(sink) {
@@ -428,7 +426,7 @@ public abstract class ReferencePipeline<Input, Output>
                     @Override
                     public void accept(Output output) {
                         Optional.ofNullable(mapper.apply(output))
-                                .ifPresent(s->s.sequential().forEach(downstream::accept));
+                                .ifPresent(s -> s.sequential().forEach(downstream::accept));
                     }
                 };
             }
@@ -437,8 +435,23 @@ public abstract class ReferencePipeline<Input, Output>
 
     @Override
     public DoubleStream flatMapToDouble(Function<? super Output, ? extends DoubleStream> mapper) {
-        // TODO IMPL
-        throw new NotImplementedException();
+        return new DoublePipeline.StatelessOp<Output>(this, StreamShape.REFERENCE, MAP_OP_FLAGS) {
+            @Override
+            public Sink<Output> opWrapSink(int flags, Sink<Double> sink) {
+                return new Sink.ChainedReference<Output, Double>(sink) {
+                    @Override
+                    public void begin(long size) {
+                        downstream.begin(-1);
+                    }
+
+                    @Override
+                    public void accept(Output output) {
+                        Optional.ofNullable(mapper.apply(output))
+                                .ifPresent(s -> s.sequential().forEach(downstream::accept));
+                    }
+                };
+            }
+        };
     }
 
     @Override
