@@ -1,5 +1,7 @@
 description "common-exception"
+
 dependencies {
     implementation project(":common-interface")
 }
+
 

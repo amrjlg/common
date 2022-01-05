@@ -1,5 +1,0 @@
-description "commont-util"
-
-dependencies {
-    implementation project(':common-function')
-}

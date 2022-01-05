@@ -1,4 +1,3 @@
-rootProject.name = 'common'
 include 'common-util'
 include 'common-response'
 include 'common-interface'
@@ -6,4 +5,9 @@ include 'common-exception'
 include 'common-id'
 include 'common-all'
 include 'common-function'
+
+rootProject.name = 'common'
+rootProject.children.each {project ->
+    project.buildFileName = "${project.name}.gradle"
+}
 

@@ -3,10 +3,10 @@ description "common-all"
 
 
 dependencies {
-    implementation project(":common-util")
-    implementation project(":common-response")
-    implementation project(":common-interface")
-    implementation project(":common-exception")
-    implementation project(":common-id")
-    implementation project(":common-function")
+    compile project(":common-util")
+    compile project(":common-response")
+    compile project(":common-interface")
+    compile project(":common-exception")
+    compile project(":common-id")
+    compile project(":common-function")
 }
