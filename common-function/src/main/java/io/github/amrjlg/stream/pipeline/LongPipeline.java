@@ -243,8 +243,17 @@ public abstract class LongPipeline<Input> extends AbstractPipeline<Input, Long, 
 
     @Override
     public DoubleStream mapToDouble(LongToDoubleFunction mapper) {
-        //TODO IMPL
-        throw new UnsupportedOperationException();
+        return new DoublePipeline.StatelessOp<Long>(this,StreamShape.LONG_VALUE,MAP_OP_FLAGS) {
+            @Override
+            public Sink<Long> opWrapSink(int flags, Sink<Double> sink) {
+                return new Sink.ChainedLong<Double>(sink) {
+                    @Override
+                    public void accept(long value) {
+                        downstream.accept(mapper.applyAsDouble(value));
+                    }
+                };
+            }
+        };
     }
 
     @Override
