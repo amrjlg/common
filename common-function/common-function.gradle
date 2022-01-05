@@ -1,7 +1,6 @@
 description "common-function"
 
 dependencies {
-    testCompile project(":common-util")
     compile project(":common-exception")
 }
 
