@@ -216,8 +216,17 @@ public abstract class IntPipeline<In> extends AbstractPipeline<In, Integer, IntS
 
     @Override
     public LongStream mapToLong(IntToLongFunction mapper) {
-        // TODO IMPL
-        throw new NotImplementedException();
+        return new LongPipeline.StatelessOp<Integer>(this,StreamShape.INT_VALUE,MAP_OP_FLAGS) {
+            @Override
+            public Sink<Integer> opWrapSink(int flags, Sink<Long> sink) {
+                return new Sink.ChainedInt<Long>(sink){
+                    @Override
+                    public void accept(int value) {
+                        downstream.accept(mapper.applyAsLong(value));
+                    }
+                };
+            }
+        };
     }
 
     @Override
