@@ -155,8 +155,17 @@ public abstract class ShortPipeline<Input> extends AbstractPipeline<Input, Short
 
     @Override
     public FloatStream mapToFloat(ShortToFloatFunction mapper) {
-        // todo impl
-        throw new NotImplementedException();
+        return new FloatPipeline.StatelessOp<Short>(this,StreamShape.SHORT_VALUE,MAP_OP_FLAGS) {
+            @Override
+            public Sink<Short> opWrapSink(int flags, Sink<Float> sink) {
+                return new Sink.ChainedShort<Float>(sink) {
+                    @Override
+                    public void accept(short value) {
+                        downstream.accept(mapper.applyAsFloat(value));
+                    }
+                };
+            }
+        };
     }
 
     @Override
