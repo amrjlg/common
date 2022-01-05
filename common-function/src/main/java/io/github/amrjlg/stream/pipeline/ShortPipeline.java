@@ -140,8 +140,17 @@ public abstract class ShortPipeline<Input> extends AbstractPipeline<Input, Short
 
     @Override
     public LongStream mapToLong(ShortToLongFunction mapper) {
-        // todo impl
-        throw new NotImplementedException();
+        return new LongPipeline.StatelessOp<Short>(this,StreamShape.SHORT_VALUE,MAP_OP_FLAGS) {
+            @Override
+            public Sink<Short> opWrapSink(int flags, Sink<Long> sink) {
+                return new Sink.ChainedShort<Long>(sink) {
+                    @Override
+                    public void accept(short value) {
+                        downstream.accept(mapper.applyAsLong(value));
+                    }
+                };
+            }
+        };
     }
 
     @Override
