@@ -241,8 +241,17 @@ public abstract class FloatPipeline<Input> extends AbstractPipeline<Input, Float
 
     @Override
     public DoubleStream mapToDouble(FloatToDoubleFunction mapper) {
-        // TODO IMPL
-        throw new NotImplementedException();
+        return new DoublePipeline.StatelessOp<Float>(this,StreamShape.DOUBLE_VALUE,MAP_OP_FLAGS) {
+            @Override
+            public Sink<Float> opWrapSink(int flags, Sink<Double> sink) {
+                return new Sink.ChainedFloat<Double>(sink){
+                    @Override
+                    public void accept(float value) {
+                        downstream.accept(mapper.applyAsDouble(value));
+                    }
+                };
+            }
+        };
     }
 
     @Override
