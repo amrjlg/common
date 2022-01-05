@@ -17,7 +17,6 @@
 
 package io.github.amrjlg.stream.pipeline;
 
-import io.github.amrjlg.exception.NotImplementedException;
 import io.github.amrjlg.function.IntToByteFunction;
 import io.github.amrjlg.function.IntToCharFunction;
 import io.github.amrjlg.function.IntToFloatFunction;
@@ -246,8 +245,17 @@ public abstract class IntPipeline<In> extends AbstractPipeline<In, Integer, IntS
 
     @Override
     public DoubleStream mapToDouble(IntToDoubleFunction mapper) {
-        // TODO IMPL
-        throw new NotImplementedException();
+        return new DoublePipeline.StatelessOp<Integer>(this,StreamShape.INT_VALUE,MAP_OP_FLAGS) {
+            @Override
+            public Sink<Integer> opWrapSink(int flags, Sink<Double> sink) {
+                return new Sink.ChainedInt<Double>(sink) {
+                    @Override
+                    public void accept(int value) {
+                        downstream.accept(mapper.applyAsDouble(value));
+                    }
+                };
+            }
+        };
     }
 
     @Override
