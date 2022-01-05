@@ -263,6 +263,7 @@ public class ReduceOps {
             public void accept(char value) {
                 if (empty) {
                     state = value;
+                    empty = false;
                 } else {
                     state = operator.applyAsChar(state, value);
                 }
@@ -328,6 +329,7 @@ public class ReduceOps {
             public void accept(short value) {
                 if (empty) {
                     state = value;
+                    empty = false;
                 } else {
                     state = op.applyAsShort(state, value);
                 }
@@ -425,6 +427,7 @@ public class ReduceOps {
             public void accept(int value) {
                 if (empty) {
                     state = value;
+                    empty = false;
                 } else {
                     state = op.applyAsInt(state, value);
                 }
@@ -523,6 +526,7 @@ public class ReduceOps {
             public void accept(long value) {
                 if (empty) {
                     state = value;
+                    empty = false;
                 } else {
                     state = op.applyAsLong(state, value);
                 }
@@ -618,7 +622,12 @@ public class ReduceOps {
 
             @Override
             public void accept(float value) {
-                state = op.applyAsFloat(state, value);
+                if (empty) {
+                    empty = false;
+                    state = value;
+                } else {
+                    state = op.applyAsFloat(state, value);
+                }
             }
 
             @Override
@@ -701,7 +710,7 @@ public class ReduceOps {
     }
 
     public static TerminalOp<Double, OptionalDouble> makeDouble(DoubleBinaryOperator op) {
-        class Adapter implements AccumulatingSink<Double,OptionalDouble,Adapter>,Sink.OfDouble{
+        class Adapter implements AccumulatingSink<Double, OptionalDouble, Adapter>, Sink.OfDouble {
 
             boolean empty;
             double state;
@@ -713,16 +722,17 @@ public class ReduceOps {
 
             @Override
             public void accept(double value) {
-                if (empty){
+                if (empty) {
                     state = value;
-                }else {
-                    state = op.applyAsDouble(state,value);
+                    empty = false;
+                } else {
+                    state = op.applyAsDouble(state, value);
                 }
             }
 
             @Override
             public void combine(Adapter other) {
-                if (!other.empty){
+                if (!other.empty) {
                     accept(other.state);
                 }
             }
@@ -732,7 +742,7 @@ public class ReduceOps {
                 return empty ? OptionalDouble.empty() : OptionalDouble.of(state);
             }
         }
-        return new ReduceOp<Double, OptionalDouble,Adapter>(StreamShape.DOUBLE_VALUE) {
+        return new ReduceOp<Double, OptionalDouble, Adapter>(StreamShape.DOUBLE_VALUE) {
             @Override
             public Adapter makeSink() {
                 return new Adapter();
@@ -741,8 +751,9 @@ public class ReduceOps {
     }
 
     public static TerminalOp<Double, Double> makeDouble(double identity, DoubleBinaryOperator op) {
-        class Adapter implements AccumulatingSink<Double,Double,Adapter>,Sink.OfDouble{
-            double state ;
+        class Adapter implements AccumulatingSink<Double, Double, Adapter>, Sink.OfDouble {
+            double state;
+
             @Override
             public void begin(long size) {
                 state = identity;
@@ -750,7 +761,7 @@ public class ReduceOps {
 
             @Override
             public void accept(double value) {
-                state = op.applyAsDouble(state,value);
+                state = op.applyAsDouble(state, value);
             }
 
             @Override
@@ -772,7 +783,7 @@ public class ReduceOps {
     }
 
     public static <R> TerminalOp<Double, R> makeDouble(Supplier<R> supplier, ObjDoubleConsumer<R> accumulator, BinaryOperator<R> combiner) {
-        class Adapter extends Box<R> implements AccumulatingSink<Double,R,Adapter>,Sink.OfDouble{
+        class Adapter extends Box<R> implements AccumulatingSink<Double, R, Adapter>, Sink.OfDouble {
 
             @Override
             public void begin(long size) {
@@ -781,12 +792,12 @@ public class ReduceOps {
 
             @Override
             public void accept(double value) {
-                accumulator.accept(state,value);
+                accumulator.accept(state, value);
             }
 
             @Override
             public void combine(Adapter other) {
-                state = combiner.apply(state,other.state);
+                state = combiner.apply(state, other.state);
             }
         }
         return new ReduceOp<Double, R, Adapter>(StreamShape.DOUBLE_VALUE) {
