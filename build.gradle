@@ -1,5 +1,4 @@
 group 'io.github.amrjlg'
-version '1.5-SNAPSHOT'
 
 
 ext {

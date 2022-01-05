@@ -1,6 +1,18 @@
 apply plugin: "maven-publish"
 
 publishing {
+
+	// publish to public/private maven repository
+	//	repositories {
+	//		maven {
+	//			url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+	//			credentials {
+	//				username ossrhUsername
+	//				password ossrhPassword
+	//			}
+	//		}
+	//	}
+
 	publications {
 		mavenJava(MavenPublication) {
 			pom {
@@ -49,16 +61,16 @@ publishing {
 	}
 }
 
-configureDeploymentRepository(project)
-
-void configureDeploymentRepository(Project project) {
-	project.plugins.withType(MavenPublishPlugin.class).all {
-		PublishingExtension publishing = project.getExtensions().getByType(PublishingExtension.class);
-		if (project.hasProperty("deploymentRepository")) {
-			publishing.repositories.maven {
-				it.url = project.property("deploymentRepository")
-				it.name = "deployment"
-			}
-		}
-	}
-}
+//configureDeploymentRepository(project)
+//
+//void configureDeploymentRepository(Project project) {
+//    project.plugins.withType(MavenPublishPlugin.class).all {
+//        PublishingExtension publishing = project.getExtensions().getByType(PublishingExtension.class);
+//        if (project.hasProperty("deploymentRepository")) {
+//            publishing.repositories.maven {
+//                it.url = project.property("deploymentRepository")
+//                it.name = "deployment"
+//            }
+//        }
+//    }
+//}
