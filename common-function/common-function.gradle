@@ -1,7 +1,7 @@
 description "common-function"
 
 dependencies {
-    testImplementation project(":common-util")
-    implementation project(":common-exception")
+    testCompile project(":common-util")
+    compile project(":common-exception")
 }
 

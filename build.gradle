@@ -6,19 +6,21 @@ ext {
     moduleProjects = subprojects.findAll { it.name.startsWith("common-") }
 }
 
-configure(moduleProjects) { project ->
+configure(moduleProjects) { p ->
     apply from: "$rootDir/gradle/common-module.gradle"
-
-    dependencies {
-        testCompile("org.junit.jupiter:junit-jupiter-api:5.8.2")
-        testCompile("org.junit.jupiter:junit-jupiter-params:5.8.2")
-    }
 
     test {
         useJUnitPlatform()
     }
 
+    dependencies {
+        testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
+        testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+    }
+
+
     repositories {
+        mavenLocal()
         mavenCentral()
     }
 }

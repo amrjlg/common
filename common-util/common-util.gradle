@@ -1,0 +1,5 @@
+description "commont-util"
+
+dependencies {
+    compile project(':common-function')
+}
