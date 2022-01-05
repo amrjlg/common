@@ -1,0 +1,7 @@
+description "common-function"
+
+dependencies {
+    testImplementation project(":common-util")
+    implementation project(":common-exception")
+}
+
