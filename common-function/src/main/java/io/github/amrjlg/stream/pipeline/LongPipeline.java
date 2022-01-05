@@ -227,8 +227,17 @@ public abstract class LongPipeline<Input> extends AbstractPipeline<Input, Long, 
 
     @Override
     public FloatStream mapToFloat(LongToFloatFunction mapper) {
-        //TODO IMPL
-        throw new UnsupportedOperationException();
+        return new FloatPipeline.StatelessOp<Long>(this,StreamShape.LONG_VALUE,MAP_OP_FLAGS) {
+            @Override
+            public Sink<Long> opWrapSink(int flags, Sink<Float> sink) {
+                return new Sink.ChainedLong<Float>(sink) {
+                    @Override
+                    public void accept(long value) {
+                        downstream.accept(mapper.applyAsFloat(value));
+                    }
+                };
+            }
+        };
     }
 
     @Override
