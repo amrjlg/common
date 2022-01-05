@@ -416,8 +416,23 @@ public abstract class ReferencePipeline<Input, Output>
 
     @Override
     public FloatStream flatMapToFloat(Function<? super Output, ? extends FloatStream> mapper) {
-        // TODO IMPL
-        throw new NotImplementedException();
+        return new FloatPipeline.StatelessOp<Output>(this,StreamShape.REFERENCE,MAP_OP_FLAGS) {
+            @Override
+            public Sink<Output> opWrapSink(int flags, Sink<Float> sink) {
+                return new Sink.ChainedReference<Output, Float>(sink) {
+                    @Override
+                    public void begin(long size) {
+                        downstream.begin(-1);
+                    }
+
+                    @Override
+                    public void accept(Output output) {
+                        Optional.ofNullable(mapper.apply(output))
+                                .ifPresent(s->s.sequential().forEach(downstream::accept));
+                    }
+                };
+            }
+        };
     }
 
     @Override
