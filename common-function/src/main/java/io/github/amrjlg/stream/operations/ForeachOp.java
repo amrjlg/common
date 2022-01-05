@@ -69,6 +69,9 @@ public abstract class ForeachOp<T> implements TerminalOp<T, Void>, TerminalSink<
         return null;
     }
 
+    @Override
+    public abstract StreamShape inputShape();
+
     public static final class OfRef<T> extends ForeachOp<T> {
         final Consumer<? super T> consumer;
 
@@ -81,11 +84,17 @@ public abstract class ForeachOp<T> implements TerminalOp<T, Void>, TerminalSink<
         public void accept(T t) {
             consumer.accept(t);
         }
+
+        @Override
+        public StreamShape inputShape() {
+            return StreamShape.REFERENCE;
+        }
     }
 
-    public static final class OfByte extends ForeachOp<Byte> implements Sink.OfByte{
+    public static final class OfByte extends ForeachOp<Byte> implements Sink.OfByte {
         private final ByteConsumer consumer;
-        public OfByte(ByteConsumer consumer,boolean ordered) {
+
+        public OfByte(ByteConsumer consumer, boolean ordered) {
             super(ordered);
             this.consumer = consumer;
             Objects.requireNonNull(consumer);
@@ -102,8 +111,9 @@ public abstract class ForeachOp<T> implements TerminalOp<T, Void>, TerminalSink<
         }
     }
 
-    public static final class OfShort extends ForeachOp<Short> implements Sink.OfShort{
+    public static final class OfShort extends ForeachOp<Short> implements Sink.OfShort {
         private final ShortConsumer consumer;
+
         public OfShort(ShortConsumer consumer, boolean ordered) {
             super(ordered);
             this.consumer = consumer;
@@ -114,11 +124,17 @@ public abstract class ForeachOp<T> implements TerminalOp<T, Void>, TerminalSink<
         public void accept(short value) {
             consumer.accept(value);
         }
+
+        @Override
+        public StreamShape inputShape() {
+            return StreamShape.SHORT_VALUE;
+        }
     }
 
-    public static final class OfChar extends ForeachOp<Character> implements Sink.OfChar{
+    public static final class OfChar extends ForeachOp<Character> implements Sink.OfChar {
         private final CharConsumer consumer;
-        public OfChar(CharConsumer consumer,boolean ordered) {
+
+        public OfChar(CharConsumer consumer, boolean ordered) {
             super(ordered);
             this.consumer = consumer;
             Objects.requireNonNull(consumer);
@@ -135,8 +151,9 @@ public abstract class ForeachOp<T> implements TerminalOp<T, Void>, TerminalSink<
         }
     }
 
-    public static final class OfInt extends ForeachOp<Integer> implements Sink.OfInt{
+    public static final class OfInt extends ForeachOp<Integer> implements Sink.OfInt {
         private final IntConsumer consumer;
+
         public OfInt(IntConsumer consumer, boolean ordered) {
             super(ordered);
             this.consumer = consumer;
@@ -154,8 +171,9 @@ public abstract class ForeachOp<T> implements TerminalOp<T, Void>, TerminalSink<
         }
     }
 
-    public static final class OfLong extends ForeachOp<Long> implements Sink.OfLong{
+    public static final class OfLong extends ForeachOp<Long> implements Sink.OfLong {
         private final LongConsumer consumer;
+
         public OfLong(LongConsumer consumer, boolean ordered) {
             super(ordered);
             this.consumer = consumer;
@@ -173,8 +191,9 @@ public abstract class ForeachOp<T> implements TerminalOp<T, Void>, TerminalSink<
         }
     }
 
-    public static final class OfFloat extends ForeachOp<Float> implements Sink.OfFloat{
+    public static final class OfFloat extends ForeachOp<Float> implements Sink.OfFloat {
         private final FloatConsumer consumer;
+
         public OfFloat(FloatConsumer consumer, boolean ordered) {
             super(ordered);
             this.consumer = consumer;
@@ -192,8 +211,9 @@ public abstract class ForeachOp<T> implements TerminalOp<T, Void>, TerminalSink<
         }
     }
 
-    public static final class OfDouble extends ForeachOp<Double> implements Sink.OfDouble{
+    public static final class OfDouble extends ForeachOp<Double> implements Sink.OfDouble {
         private final DoubleConsumer consumer;
+
         public OfDouble(DoubleConsumer consumer, boolean ordered) {
             super(ordered);
             this.consumer = consumer;
