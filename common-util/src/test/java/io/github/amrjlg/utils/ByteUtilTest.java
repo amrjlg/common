@@ -24,13 +24,13 @@ import org.junit.jupiter.api.Test;
 class ByteUtilTest {
 
     @Test
-    void toInts() {
+    void toIntArray() {
 
         byte[] bytes = new byte[]{
                 0x06, 0x06, 0x06, 0x06,
                 0x06, 0x06,
         };
-        int[] values = ByteUtil.toInts(bytes);
+        int[] values = ByteUtil.toIntArray(bytes);
         for (int value : values) {
             System.out.println(value);
         }
@@ -40,12 +40,12 @@ class ByteUtilTest {
     }
 
     @Test
-    void toLongs() {
+    void toLongArray() {
         byte[] bytes = new byte[]{
                 (byte) 0x0F, (byte) 0XFF, (byte) 0xFF, (byte) 0XFF, (byte) 0xFF, (byte) 0XFF, (byte) 0xFF, (byte) 0XFF,
                 0x06, (byte) 0XFF, 0x06, (byte) 0XFF, (byte) 0xff
         };
-        long[] values = ByteUtil.toLongs(bytes);
+        long[] values = ByteUtil.toLongArray(bytes);
         for (long value : values) {
             System.out.println(value);
         }

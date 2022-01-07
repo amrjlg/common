@@ -178,27 +178,49 @@ public class ByteUtil {
         return HexUtil.parse(src, separator);
     }
 
-
-    public static int higherHalf(byte src) {
-        // 0XF0=11110000
-        return src & 0xF0;
-    }
-
-
+    /**
+     * get byte high 4 bit as int value
+     *
+     * @param src byte
+     * @return high 4 bit as int value
+     */
     public static int lowerHalf(byte src) {
         // 0X0F=00001111
         return src & 0x0F;
     }
 
-
-    public static byte toByte(int src) {
-        return (byte) (0XFF & src);
+    /**
+     * get byte low 4 bit as int value
+     *
+     * @param src byte
+     * @return low 4 bit as int value
+     */
+    public static int higherHalf(byte src) {
+        // 0XF0=11110000
+        return src & 0xF0;
     }
 
+    /**
+     * parse byte to int
+     *
+     * @param src byte
+     * @return the byte plain as int
+     */
     public static int toInt(byte src) {
         return src & 0XFF;
     }
 
+    /**
+     * parse byte array to int <br />
+     * ex. {@code  0x06 0xFF -> 0x06<< 8 | 0xFF -> 0x06FF}
+     *
+     * @param bytes array
+     * @param start start index
+     * @param end   end position
+     * @return the byte array form start to end plain as int
+     * @throws IndexOutOfBoundsException if start less than 0 or start bigger equal end or end bigger equal array length
+     * @throws IllegalArgumentException  if end - start > {@value INTEGER_BYTE_WIDTH}
+     */
     public static int toInt(byte[] bytes, int start, int end) {
         ArrayUtil.rangeCheck(bytes.length, start, end);
         if (end - start > INTEGER_BYTE_WIDTH) {
@@ -211,7 +233,13 @@ public class ByteUtil {
         return num;
     }
 
-    public static int[] toInts(byte[] bytes) {
+    /**
+     * parse byte array to int array
+     *
+     * @param bytes byte array
+     * @return int array
+     */
+    public static int[] toIntArray(byte[] bytes) {
         if (ArrayUtil.empty(bytes)) {
             return new int[0];
         }
@@ -224,22 +252,27 @@ public class ByteUtil {
         return numbers;
     }
 
+    /**
+     * parse byte to int
+     *
+     * @param bytes byte array
+     * @return the byte plain as long
+     */
     public static long toLong(byte[] bytes) {
-        return toLong(bytes,0,bytes.length);
+        return toLong(bytes, 0, bytes.length);
     }
 
-    public static long[] toLongs(byte[] bytes) {
-        int count = computeCount(bytes.length, LONG_BYTE_WIDTH);
-
-        long[] numbers = new long[count];
-        for (int i = 0; i < numbers.length; i++) {
-            int start = i * LONG_BYTE_WIDTH;
-            numbers[i] = toLong(bytes, start, Math.min(start + LONG_BYTE_WIDTH, bytes.length));
-        }
-
-        return numbers;
-    }
-
+    /**
+     * parse byte array to int <br />
+     * ex. {@code  0x06 0xFF -> 0x06<< 8 | 0xFF -> 0x06FF}
+     *
+     * @param bytes array
+     * @param start start index
+     * @param end   end position
+     * @return the byte array form start to end plain as long
+     * @throws IndexOutOfBoundsException if start less than 0 or start bigger equal end or end bigger equal array length
+     * @throws IllegalArgumentException  if end - start > {@value LONG_BYTE_WIDTH}
+     */
     public static long toLong(byte[] bytes, int start, int end) {
         ArrayUtil.rangeCheck(bytes.length, start, end);
         if (end - start > LONG_BYTE_WIDTH) {
@@ -252,8 +285,46 @@ public class ByteUtil {
         return num;
     }
 
+    public static long[] toLongArray(byte[] bytes) {
+        int count = computeCount(bytes.length, LONG_BYTE_WIDTH);
 
-    public static byte[] toBytes(int v) {
+        long[] numbers = new long[count];
+        for (int i = 0; i < numbers.length; i++) {
+            int start = i * LONG_BYTE_WIDTH;
+            numbers[i] = toLong(bytes, start, Math.min(start + LONG_BYTE_WIDTH, bytes.length));
+        }
+
+        return numbers;
+    }
+
+
+    /**
+     * parse int to byte
+     *
+     * @param src int
+     * @return the int value lower {@value BYTE_BIT_WIDTH} bit to byte
+     */
+    public static byte toByte(int src) {
+        return (byte) (0XFF & src);
+    }
+
+    /**
+     * parse int to byte
+     *
+     * @param src long
+     * @return the int value lower {@value BYTE_BIT_WIDTH} bit to byte
+     */
+    public static byte toByte(long src) {
+        return (byte) (0XFF & src);
+    }
+
+    /**
+     * parse int each {@value BYTE_BIT_WIDTH} bit to one byte and build to array
+     *
+     * @param v int value
+     * @return the array of byte
+     */
+    public static byte[] toByteArray(int v) {
         byte a = (byte) ((v & 0xff000000) >> 24);
         byte b = (byte) ((v & 0xff0000) >> 16);
         byte c = (byte) ((v & 0xff00) >> 8);
@@ -261,7 +332,13 @@ public class ByteUtil {
         return ArrayUtil.array(a, b, c, d);
     }
 
-    public static byte[] toBytes(long v) {
+    /**
+     * parse int each {@value BYTE_BIT_WIDTH} bit to one byte and build to array
+     *
+     * @param v long value
+     * @return the array of byte
+     */
+    public static byte[] toByteArray(long v) {
         byte a = (byte) ((v & 0xff00000000000000L) >> 56);
         byte b = (byte) ((v & 0xff000000000000L) >> 48);
         byte c = (byte) ((v & 0xff0000000000L) >> 40);
@@ -273,6 +350,13 @@ public class ByteUtil {
         return ArrayUtil.array(a, b, c, d, e, f, g, h);
     }
 
+    /**
+     * compute count
+     *
+     * @param length total
+     * @param width  member width
+     * @return the count of length separate by width
+     */
     public static int computeCount(int length, int width) {
         int count = length / width;
         if (count * width < length) {
