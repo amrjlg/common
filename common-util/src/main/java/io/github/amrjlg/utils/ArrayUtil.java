@@ -1,17 +1,17 @@
 /*
- *  Copyright (c) 2021-2021 the original author or authors.
+ *  Copyright (c) 2021-2022 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *       https://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ *   limitations under the License.
  */
 
 package io.github.amrjlg.utils;
@@ -30,6 +30,7 @@ import io.github.amrjlg.function.ShortToIntFunction;
 import io.github.amrjlg.function.ShortToLongFunction;
 
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.IntConsumer;
@@ -100,6 +101,7 @@ public class ArrayUtil {
         return elements;
     }
 
+    @SuppressWarnings("unchecked")
     public static <T> T[] arrays(T... elements) {
         if (elements == null) {
             return (T[]) new Object[0];
@@ -516,23 +518,24 @@ public class ArrayUtil {
         if (src == null || src.length == 0 || des == null || des.length == 0 || length < 1) {
             return;
         }
-        int srcTotal = src.length;
-        if (start >= srcTotal) {
-            throw new IndexOutOfBoundsException(String.format("index start:{%d} out of range,should be {0,%d}", start, srcTotal - 1));
-        }
-        if (srcTotal < start + length) {
-            throw new IllegalArgumentException(String.format("src array not enough only %d form %d and total is %d", srcTotal - start, start, srcTotal));
-        }
-        int desTotal = des.length;
-        if (desTotal <= destStart) {
-            throw new IndexOutOfBoundsException(String.format("index start:{%d} out of range,should be {0,%d}", destStart, desTotal - 1));
-        }
-        if (desTotal < start + length) {
-            throw new IllegalArgumentException(String.format("src array not enough only %d form %d and total is %d", desTotal - destStart, destStart, desTotal));
-        }
+        rangeCheck(src, start, start + length);
+        rangeCheck(des, destStart, destStart + length);
         for (int i = start; i < start + length; i++) {
             des[i] = transform.apply(src[i]);
         }
 
+    }
+
+    public static <T> void rangeCheck(T[] array, int start, int end) {
+        if (Objects.isNull(array)) {
+            throw new NullPointerException("array is null");
+        }
+        rangeCheck(array.length, start, end);
+    }
+
+    public static void rangeCheck(int length, int start, int end) {
+        if (start < 0 || end > length || start >= length || start > end) {
+            throw new IndexOutOfBoundsException(String.format("length %d, start %d, end %d", length, start, end));
+        }
     }
 }
