@@ -1,17 +1,17 @@
 /*
- *  Copyright (c) 2021-2021 the original author or authors.
+ *  Copyright (c) 2021-2022 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *       https://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ *   limitations under the License.
  */
 
 package io.github.amrjlg.utils;
@@ -25,8 +25,15 @@ package io.github.amrjlg.utils;
  * @author amrjlg
  **/
 public class ByteUtil {
-    public static final int MAX_BIT = 8;
     public static final int MIN_BIT = 1;
+    public static final int MAX_BIT = 8;
+
+    public static final int BYTE_BIT_WIDTH = 8;
+
+    public static final int INTEGER_BYTE_WIDTH = 4;
+    public static final int INTEGER_BIT_WIDTH = BYTE_BIT_WIDTH * INTEGER_BYTE_WIDTH;
+    public static final int LONG_BYTE_WIDTH = 8;
+    public static final int LONG_BIT_WIDTH = BYTE_BIT_WIDTH * LONG_BYTE_WIDTH;
 
     /**
      * Gets the specified location(range 1 to 8) of the byte
@@ -192,39 +199,59 @@ public class ByteUtil {
         return src & 0XFF;
     }
 
+    public static int toInt(byte[] bytes, int start, int end) {
+        ArrayUtil.rangeCheck(bytes.length, start, end);
+        if (end - start > INTEGER_BYTE_WIDTH) {
+            throw new IllegalArgumentException("integer must be less or equal 4 byte");
+        }
+        int num = 0;
+        for (int i = start; i < end; i++) {
+            num = (num << BYTE_BIT_WIDTH) | toInt(bytes[i]);
+        }
+        return num;
+    }
+
     public static int[] toInts(byte[] bytes) {
         if (ArrayUtil.empty(bytes)) {
             return new int[0];
         }
-        int count = bytes.length / 4 + 1;
+        int count = computeCount(bytes.length, INTEGER_BYTE_WIDTH);
         int[] numbers = new int[count];
         for (int i = 0; i < numbers.length; i++) {
-            int j = i * 4;
-            if (j >= bytes.length) {
-                break;
-            }
-
-            int v = 0;
-            v = v | toInt(bytes[j]);
-            if (j + 1 >= bytes.length) {
-                numbers[i] = v;
-                break;
-            }
-            v = v << 8 | toInt(bytes[j + 1]);
-            if (j + 2 >= bytes.length) {
-                numbers[i] = v;
-                break;
-            }
-            v = v << 8 | toInt(bytes[j + 2]);
-            if (j + 3 >= bytes.length) {
-                numbers[i] = v;
-                break;
-            }
-            v = v << 8 | toInt(bytes[j + 3]);
-            numbers[i] = v;
+            int start = i * INTEGER_BYTE_WIDTH;
+            numbers[i] = toInt(bytes, start, Math.min(start + INTEGER_BYTE_WIDTH, bytes.length));
         }
         return numbers;
     }
+
+    public static long toLong(byte[] bytes) {
+        return toLong(bytes,0,bytes.length);
+    }
+
+    public static long[] toLongs(byte[] bytes) {
+        int count = computeCount(bytes.length, LONG_BYTE_WIDTH);
+
+        long[] numbers = new long[count];
+        for (int i = 0; i < numbers.length; i++) {
+            int start = i * LONG_BYTE_WIDTH;
+            numbers[i] = toLong(bytes, start, Math.min(start + LONG_BYTE_WIDTH, bytes.length));
+        }
+
+        return numbers;
+    }
+
+    public static long toLong(byte[] bytes, int start, int end) {
+        ArrayUtil.rangeCheck(bytes.length, start, end);
+        if (end - start > LONG_BYTE_WIDTH) {
+            throw new IllegalArgumentException("integer must be less or equal 8 byte");
+        }
+        long num = 0;
+        for (int i = start; i < end; i++) {
+            num = (num << BYTE_BIT_WIDTH) | toInt(bytes[i]);
+        }
+        return num;
+    }
+
 
     public static byte[] toBytes(int v) {
         byte a = (byte) ((v & 0xff000000) >> 24);
@@ -246,4 +273,11 @@ public class ByteUtil {
         return ArrayUtil.array(a, b, c, d, e, f, g, h);
     }
 
+    public static int computeCount(int length, int width) {
+        int count = length / width;
+        if (count * width < length) {
+            count++;
+        }
+        return count;
+    }
 }

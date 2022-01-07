@@ -27,12 +27,29 @@ class ByteUtilTest {
     void toInts() {
 
         byte[] bytes = new byte[]{
-
-                0x06,0x06,
+                0x06, 0x06, 0x06, 0x06,
+                0x06, 0x06,
         };
-        int[] ints = ByteUtil.toInts(bytes);
-        for (int i = 0; i < ints.length; i++) {
-            System.out.println(ints[i]);
+        int[] values = ByteUtil.toInts(bytes);
+        for (int value : values) {
+            System.out.println(value);
         }
+        System.out.println(0x06060606);
+        System.out.println(0x0606);
+
+    }
+
+    @Test
+    void toLongs() {
+        byte[] bytes = new byte[]{
+                (byte) 0x0F, (byte) 0XFF, (byte) 0xFF, (byte) 0XFF, (byte) 0xFF, (byte) 0XFF, (byte) 0xFF, (byte) 0XFF,
+                0x06, (byte) 0XFF, 0x06, (byte) 0XFF, (byte) 0xff
+        };
+        long[] values = ByteUtil.toLongs(bytes);
+        for (long value : values) {
+            System.out.println(value);
+        }
+        System.out.println(0x0FFFFFFFFFFFFFFFL);
+        System.out.println(0X06FF06FFFFL);
     }
 }
