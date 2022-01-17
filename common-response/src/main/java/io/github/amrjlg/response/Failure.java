@@ -16,6 +16,8 @@
 
 package io.github.amrjlg.response;
 
+import java.util.function.Supplier;
+
 /**
  * failure result
  * <p>
@@ -64,5 +66,16 @@ public interface Failure<T> extends Result<T> {
      */
     static <T> Failure<T> failure() {
         return ResponseCodeMessage.FAILURE::getMessage;
+    }
+
+    /**
+     * build with supplier
+     *
+     * @param supplier supplier failure message
+     * @param <T>      generic type for response
+     * @return failure with message
+     */
+    static <T> Failure<T> failure(Supplier<String> supplier) {
+        return supplier::get;
     }
 }

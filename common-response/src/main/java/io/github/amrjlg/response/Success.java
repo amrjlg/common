@@ -62,12 +62,17 @@ public interface Success<T> extends Result<T> {
      * @return success with single data
      */
     static <T> Success<T> ok(T data) {
-        if (data == null) {
-            return ok();
-        }
         return () -> data;
     }
 
+    /**
+     * build result with data supplier
+     *
+     * @param supplier data supplier
+     * @param <T>      data type
+     * @return result with data
+     * @since 1.5
+     */
     static <T> Success<T> ok(Supplier<T> supplier) {
         return supplier::get;
     }
