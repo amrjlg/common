@@ -16,6 +16,8 @@
 
 package io.github.amrjlg.response;
 
+import io.github.amrjlg.api.CodeMessage;
+
 /**
  * common result
  * <p>
@@ -23,9 +25,10 @@ package io.github.amrjlg.response;
  *
  * @author amrjlg
  **/
-public interface Result<T> {
+public interface Result<T> extends CodeMessage {
     /**
      * status code
+     *
      * @return <code>int</code>
      */
     default int getCode() {
@@ -44,7 +47,8 @@ public interface Result<T> {
      *
      * @return message
      */
-    String getMsg();
+    @Override
+    String getMessage();
 
     /**
      * real data for the result
