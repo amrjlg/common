@@ -1,1 +1,5 @@
 description "common-response"
+
+dependencies {
+    implementation project(":common-interface")
+}
