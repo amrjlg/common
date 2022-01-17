@@ -69,34 +69,6 @@ public interface Success<T> extends Result<T> {
         return () -> data;
     }
 
-    /**
-     * Collection Result
-     *
-     * @param data response data could be null
-     * @param <T>  type
-     * @return success with collection data
-     */
-    static <T> Success<Collection<T>> ok(Collection<T> data) {
-        if (data == null) {
-            return ok();
-        }
-        return () -> data;
-    }
-
-    /**
-     * Array Result
-     *
-     * @param data response data could be null
-     * @param <T>  type
-     * @return success with array data
-     */
-    static <T> Success<T[]> ok(T[] data) {
-        if (data == null) {
-            return ok();
-        }
-        return () -> data;
-    }
-
     static <T> Success<T> ok(Supplier<T> supplier) {
         return supplier::get;
     }
