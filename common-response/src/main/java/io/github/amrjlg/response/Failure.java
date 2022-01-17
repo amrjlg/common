@@ -17,7 +17,6 @@
 package io.github.amrjlg.response;
 
 import java.util.function.Supplier;
-
 /**
  * failure result
  * <p>
