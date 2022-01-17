@@ -18,6 +18,7 @@ package io.github.amrjlg.response;
 
 
 import java.util.Collection;
+import java.util.function.Supplier;
 
 /**
  * Success result
@@ -28,14 +29,20 @@ import java.util.Collection;
  * @see Result
  **/
 public interface Success<T> extends Result<T> {
+
+    @Override
+    default int getCode() {
+        return ResponseCodeMessage.SUCCESS.getCode();
+    }
+
     @Override
     default boolean isSuccess() {
         return true;
     }
 
     @Override
-    default String getMsg() {
-        return "SUCCESS";
+    default String getMessage() {
+        return ResponseCodeMessage.SUCCESS.getMessage();
     }
 
     /**
@@ -88,5 +95,9 @@ public interface Success<T> extends Result<T> {
             return ok();
         }
         return () -> data;
+    }
+
+    static <T> Success<T> ok(Supplier<T> supplier) {
+        return supplier::get;
     }
 }
