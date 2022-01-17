@@ -38,7 +38,7 @@ id模块 id生成器
   - `reserved`
 - `io.github.amrjlg.utils.ByteUtil`
 - `io.github.amrjlg.utils.CollectionUtil`
-- `io.github.amrjlg.utils.DateTimeUtil`
+- ~~`io.github.amrjlg.utils.DateTimeUtil`~~ merge into date util at 1.5
 - `io.github.amrjlg.utils.DateUtil`
 - `io.github.amrjlg.utils.HexUtil`
 - `io.github.amrjlg.utils.StringUtil`
