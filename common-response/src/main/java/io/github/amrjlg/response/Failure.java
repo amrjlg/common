@@ -27,7 +27,7 @@ public interface Failure<T> extends Result<T> {
 
     @Override
     default int getCode() {
-        return 400;
+        return ResponseCodeMessage.FAILURE.getCode();
     }
 
     @Override
@@ -45,9 +45,6 @@ public interface Failure<T> extends Result<T> {
         return null;
     }
 
-    @Override
-    String getMsg();
-
     /**
      * default implements
      *
@@ -55,7 +52,17 @@ public interface Failure<T> extends Result<T> {
      * @param <T> directed set null
      * @return failure result with message
      */
-    static <T> Failure<T> msg(String msg) {
+    static <T> Failure<T> failure(String msg) {
         return () -> msg;
+    }
+
+    /**
+     * default failure
+     *
+     * @param <T> generic type
+     * @return simple failure with default message
+     */
+    static <T> Failure<T> failure() {
+        return ResponseCodeMessage.FAILURE::getMessage;
     }
 }
