@@ -23,3 +23,15 @@ configure(moduleProjects) { p ->
         mavenCentral()
     }
 }
+
+buildscript {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+    dependencies {
+        classpath("io.spring.javaformat:spring-javaformat-gradle-plugin:0.0.35")
+    }
+}
+
+apply plugin: 'io.spring.javaformat'

@@ -1,6 +1,6 @@
 description "common-function"
 
 dependencies {
-    compile project(":common-exception")
+    implementation project(":common-exception")
 }
 
